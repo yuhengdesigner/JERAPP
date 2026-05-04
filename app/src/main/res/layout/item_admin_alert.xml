@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp"
+    app:strokeColor="#D32F2F"
+    app:strokeWidth="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/adminAlertUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User: Choy Yu Heng"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#D32F2F"/>
+
+        <TextView
+            android:id="@+id/adminAlertType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type: Fire Emergency"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/adminAlertDept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assigned To: Balai Bomba Larkin"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/secondary"/>
+
+        <Button
+            android:id="@+id/btnViewOnMap"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Locate Victim on Map" />
+
+        <!-- Inside the LinearLayout of item_admin_alert.xml -->
+        <Button
+            android:id="@+id/btnResolve"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mark as Resolved"
+            android:textColor="#388E3C"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

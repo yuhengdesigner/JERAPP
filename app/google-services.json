@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1024280075099",
+    "project_id": "jerapp-2026",
+    "storage_bucket": "jerapp-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024280075099:android:e7903a9cb47f0d3423187e",
+        "android_client_info": {
+          "package_name": "com.example.jerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBePRmnJ-rcc76kARH0FNcKwbLFYvBRnWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
