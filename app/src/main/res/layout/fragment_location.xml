@@ -1,27 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_location"
-        android:contentDescription="Location Icon"
-        app:tint="@color/primary" />
+    <fragment
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <TextView
+    <!-- Layer Toggle Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_layer_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Real-Time Location"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary"
-        android:layout_marginTop="16dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_layers"
+        app:fabSize="mini"
+        app:maxImageSize="20dp"
+        app:backgroundTint="@color/white"
+        app:tint="@color/primary"
+        app:cardElevation="8dp"
+        app:pressedTranslationZ="4dp"
+        android:contentDescription="Toggle Map Type"/>
 
-</LinearLayout>
+    <!-- Custom My Location Button (New) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_my_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fab_layer_toggle"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_my_location"
+        app:fabSize="mini"
+        app:backgroundTint="@color/white"
+        app:tint="@color/primary" />
+
+    <!-- Info Overlay (Address & Lat/Lng) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/location_card_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Detecting address..."
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:textIsSelectable="true"/>
+
+            <TextView
+                android:id="@+id/tv_lat_lng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.00, 0.00"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textIsSelectable="true"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

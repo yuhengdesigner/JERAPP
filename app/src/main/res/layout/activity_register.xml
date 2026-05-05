@@ -158,15 +158,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account? " />
-
-            <TextView
+                android:text="Already have an account? Login"
                 android:id="@+id/tvLoginLink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Login"
-                android:textColor="@color/design_default_color_primary"
-                android:textStyle="bold"
+                android:textColor="@color/primary"
                 android:padding="8dp" />
         </LinearLayout>
 

@@ -1,13 +1,13 @@
 package com.example.jerapp;
 
 import android.app.DatePickerDialog;
-import android.content.Intent; // Added missing import
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView; // Added missing import
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
@@ -21,13 +21,13 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText nameInput, emailInput, phoneInput, addressInput, birthInput, passInput, confirmPassInput;
     private RadioGroup genderGroup;
     private FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // --- 1. Combined ActionBar logic here ---
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Back");
@@ -35,7 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Bind all IDs
+        // Setup Progress Dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating your account...");
+        progressDialog.setCancelable(false);
+
+        // Bind Views
         nameInput = findViewById(R.id.nameRegister);
         emailInput = findViewById(R.id.emailRegister);
         phoneInput = findViewById(R.id.regPhone);
@@ -45,7 +50,6 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPassInput = findViewById(R.id.regConfirmPassword);
         genderGroup = findViewById(R.id.genderGroup);
 
-        // Date Picker for Birth Date
         birthInput.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
             new DatePickerDialog(this, (view, year, month, day) ->
@@ -60,47 +64,76 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String email = emailInput.getText().toString();
-        String pass = passInput.getText().toString();
-        String confirm = confirmPassInput.getText().toString();
+        String name = nameInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
+        String phone = phoneInput.getText().toString().trim();
+        String address = addressInput.getText().toString().trim();
+        String birth = birthInput.getText().toString().trim();
+        String pass = passInput.getText().toString().trim();
+        String confirm = confirmPassInput.getText().toString().trim();
 
-        if (!pass.equals(confirm)) {
-            confirmPassInput.setError("Passwords do not match!");
-            return;
-        }
+        // Standard Validation
+        if (TextUtils.isEmpty(name)) { nameInput.setError("Required"); return; }
+        if (TextUtils.isEmpty(email)) { emailInput.setError("Required"); return; }
+        if (pass.length() < 6) { passInput.setError("Min 6 chars"); return; }
+        if (!pass.equals(confirm)) { confirmPassInput.setError("Mismatch"); return; }
 
-        if (TextUtils.isEmpty(email) || pass.length() < 6) {
-            Toast.makeText(this, "Valid email and 6-char password required", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        progressDialog.show();
 
         mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String uid = mAuth.getCurrentUser().getUid();
-                int selectedId = genderGroup.getCheckedRadioButtonId();
-                RadioButton rb = findViewById(selectedId);
 
+                // Data Map
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name", nameInput.getText().toString());
-                map.put("phone", phoneInput.getText().toString());
-                map.put("address", addressInput.getText().toString());
-                map.put("birthDate", birthInput.getText().toString());
-                map.put("gender", rb != null ? rb.getText().toString() : "Not Specified");
+                map.put("name", name);
+                map.put("email", email);
+                map.put("phone", phone);
+                map.put("address", address);
+                map.put("birthDate", birth);
 
-                FirebaseDatabase.getInstance().getReference("Users").child(uid).setValue(map)
-                        .addOnSuccessListener(aVoid -> {
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                // FIX: We use the direct database reference.
+                // If this hangs, it's a Firebase Rules issue.
+                FirebaseDatabase.getInstance().getReference("Users")
+                        .child(uid)
+                        .setValue(map)
+                        .addOnCompleteListener(dbTask -> {
+                            // This MUST dismiss the dialog
+                            if (progressDialog.isShowing()) progressDialog.dismiss();
+
+                            if (dbTask.isSuccessful()) {
+                                goToDashboard();
+                            } else {
+                                // If DB fails, we still let them in but warn them
+                                Toast.makeText(this, "Profile not saved: " + dbTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                goToDashboard();
+                            }
                         });
+
+                // SAFETY DISMISS: If the database takes longer than 5 seconds,
+                // force move to dashboard so user isn't stuck.
+                new android.os.Handler().postDelayed(() -> {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                        goToDashboard();
+                    }
+                }, 5000);
+
             } else {
-                Toast.makeText(this, "Auth Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(this, "Auth Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    // Handles the top-left back arrow click
+    private void goToDashboard() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        intent.putExtra("isGuest", false);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
