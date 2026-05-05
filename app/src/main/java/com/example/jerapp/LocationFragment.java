@@ -212,7 +212,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
             float d = getResources().getDisplayMetrics().density;
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) snackbarView.getLayoutParams();
             params.setMargins((int)(16*d), 0, (int)(16*d), (int)(10*d));
-            snackbarView.setLayoutParams(params); test
+            snackbarView.setLayoutParams(params);
 
             snackbar.setAction("Got it", v -> {
                 if (isGuestAccount) guestDismissedTutorialThisSession = true;
