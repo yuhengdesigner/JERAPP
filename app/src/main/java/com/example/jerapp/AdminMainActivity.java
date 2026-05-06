@@ -1,107 +1,97 @@
 package com.example.jerapp;
 
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class AdminMainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private List<AlertModel> alertList;
-    private AdminAdapter adminAdapter;
-    private int lastAlertCount = 0;
+    private DrawerLayout drawerLayout;
+    private String departmentName;
+    private String adminUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
 
-        // 1. Initialize UI
-        recyclerView = findViewById(R.id.adminAlertRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        alertList = new ArrayList<>();
+        // 1. Get data from Intent passed from LoginActivity
+        departmentName = getIntent().getStringExtra("admin_dept");
+        adminUsername = getIntent().getStringExtra("admin_user");
 
-        // 2. Start listening to Firebase
-        listenForAlerts();
+        drawerLayout = findViewById(R.id.drawer_layout_admin);
+        MaterialToolbar toolbar = findViewById(R.id.adminTopToolbar);
+        NavigationView navView = findViewById(R.id.admin_nav_view);
+        BottomNavigationView bottomNav = findViewById(R.id.admin_bottom_navigation);
+
+        // Toolbar Menu Toggle
+        toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        // 2. Setup Navigation Header (Username/Dept)
+        View headerView = navView.getHeaderView(0);
+        TextView deptNameHeader = headerView.findViewById(R.id.admin_nav_dept_name);
+        TextView usernameHeader = headerView.findViewById(R.id.admin_nav_username);
+
+        deptNameHeader.setText(departmentName);
+        usernameHeader.setText("Admin: " + adminUsername);
+
+        // 3. Style Logout Item
+        MenuItem logoutItem = navView.getMenu().findItem(R.id.nav_admin_logout);
+        if (logoutItem != null) {
+            SpannableString s = new SpannableString("Logout");
+            s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+            logoutItem.setTitle(s);
+        }
+
+        setupNavigation(navView, bottomNav);
+
+        // 4. Initial Fragment Load - Pass the departmentName!
+        if (savedInstanceState == null) {
+            loadFragment(AdminAlertsFragment.newInstance(departmentName));
+        }
     }
 
-    private void listenForAlerts() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ActiveAlerts");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Clear the list before adding new data
-                alertList.clear();
+    private void setupNavigation(NavigationView navView, BottomNavigationView bottomNav) {
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    AlertModel alert = ds.getValue(AlertModel.class);
-                    if (alert != null) {
-                        alert.setKey(ds.getKey());
-                        alertList.add(alert);
-                    }
-                }
-
-                // Play notification sound if a new alert arrives
-                if (snapshot.getChildrenCount() > lastAlertCount) {
-                    playNotificationSound();
-                }
-                lastAlertCount = (int) snapshot.getChildrenCount();
-
-                // 3. Setup the Adapter with click logic
-                adminAdapter = new AdminAdapter(alertList, new AdminAdapter.OnAlertClickListener() {
-                    @Override
-                    public void onLocate(AlertModel alert) {
-                        // Open Google Maps to show the victim's location
-                        String uri = "geo:" + alert.userLat + "," + alert.userLng +
-                                "?q=" + alert.userLat + "," + alert.userLng + "(Victim)";
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                        intent.setPackage("com.google.android.apps.maps");
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onResolve(AlertModel alert, String alertKey) {
-                        // Remove from Firebase - this updates the list automatically for everyone
-                        FirebaseDatabase.getInstance().getReference("ActiveAlerts")
-                                .child(alertKey)
-                                .removeValue()
-                                .addOnSuccessListener(aVoid ->
-                                        Toast.makeText(AdminMainActivity.this, "Emergency Resolved and Cleared", Toast.LENGTH_SHORT).show()
-                                );
-                    }
-                });
-
-                recyclerView.setAdapter(adminAdapter);
+            if (id == R.id.admin_nav_alerts) {
+                // IMPORTANT: Always use newInstance to pass the filter!
+                loadFragment(AdminAlertsFragment.newInstance(departmentName));
+            } else if (id == R.id.admin_nav_history) {
+                // Pass departmentName to history too so they only see their own archives
+                loadFragment(AdminHistoryFragment.newInstance(departmentName));
             }
+            return true;
+        });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(AdminMainActivity.this, "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        navView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_admin_logout) {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
     }
 
-    private void playNotificationSound() {
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.admin_fragment_container, fragment)
+                    .commit();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.jerapp;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,14 +8,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.ViewHolder> {
+public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<EmergencyModel> emergencyList;
-    private OnItemClickListener listener;
+    public static final int TYPE_HEADER = 0;
+    public static final int TYPE_ITEM = 1;
 
-    // Interface for handling clicks in the Fragment/Activity
+    private final List<EmergencyModel> emergencyList;
+    private final OnItemClickListener listener;
+
     public interface OnItemClickListener {
         void onItemClick(EmergencyModel model);
     }
@@ -24,43 +30,78 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
         this.listener = listener;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return (position == 0) ? TYPE_HEADER : TYPE_ITEM;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Ensure R.layout.item_emergency_card matches your XML file name exactly
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_emergency_card, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_header, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_emergency_card, parent, false);
+            return new ItemViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        EmergencyModel model = emergencyList.get(position);
-
-        if (model != null) {
-            holder.title.setText(model.getTitle());
-            holder.icon.setImageResource(model.getIconRes());
-
-            // Handle the click
-            holder.itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(model);
-                }
-            });
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeaderViewHolder) {
+            ((HeaderViewHolder) holder).bind();
+        } else if (holder instanceof ItemViewHolder) {
+            // Position 0 is header, so list index is position - 1
+            EmergencyModel model = emergencyList.get(position - 1);
+            ItemViewHolder itemHolder = (ItemViewHolder) holder;
+            itemHolder.title.setText(model.getTitle());
+            itemHolder.icon.setImageResource(model.getIconRes());
+            itemHolder.itemView.setOnClickListener(v -> listener.onItemClick(model));
         }
     }
 
     @Override
     public int getItemCount() {
-        return emergencyList != null ? emergencyList.size() : 0;
+        return emergencyList.size() + 1; // +1 for the header
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    // --- VIEW HOLDERS ---
+
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textDay, textDate, textTime;
+        private final Handler handler = new Handler();
+        private Runnable runnable;
+
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textDay = itemView.findViewById(R.id.textCurrentDay);
+            textDate = itemView.findViewById(R.id.textCurrentDate);
+            textTime = itemView.findViewById(R.id.textCurrentTime);
+        }
+
+        public void bind() {
+            if (runnable != null) handler.removeCallbacks(runnable);
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Calendar cal = Calendar.getInstance();
+                    textDay.setText(new SimpleDateFormat("EEEE", Locale.getDefault()).format(cal.getTime()));
+                    textDate.setText(new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(cal.getTime()));
+                    textTime.setText(new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(cal.getTime()));
+                    handler.postDelayed(this, 1000);
+                }
+            };
+            handler.post(runnable);
+        }
+    }
+
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Ensure these IDs match your item_emergency_card.xml
             icon = itemView.findViewById(R.id.cardIcon);
             title = itemView.findViewById(R.id.cardTitle);
         }

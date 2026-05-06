@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Header Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@color/primary"
+        android:padding="20dp">
+
+        <ImageButton
+            android:id="@+id/btnBackProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back_white" />
+
+        <RelativeLayout
+            android:id="@+id/avatarContainer"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImgLarge"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="2dp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="4dp"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                android:src="@drawable/ic_default_avatar"
+                android:scaleType="centerCrop"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnEditPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_camera"
+                app:backgroundTint="@color/white"
+                app:tint="@color/primary" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/avatarContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:text="User Full Name"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/profileEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profileName"
+            android:layout_centerHorizontal="true"
+            android:text="user@email.com"
+            android:textColor="#E0E0E0"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <!-- Scrollable Info Cards -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <include layout="@layout/item_profile_card" android:id="@+id/cardName" />
+            <include layout="@layout/item_profile_card" android:id="@+id/cardPhone" />
+            <include layout="@layout/item_profile_card" android:id="@+id/cardAddress" />
+            <include layout="@layout/item_profile_card" android:id="@+id/cardBirthDate" />
+            <include layout="@layout/item_profile_card" android:id="@+id/cardGender" />
+            <include layout="@layout/item_profile_card" android:id="@+id/cardPassword" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnProfileLogout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="Logout"
+                android:textColor="@color/white"
+                app:backgroundTint="#F44336"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

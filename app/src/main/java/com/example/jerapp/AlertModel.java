@@ -3,34 +3,26 @@ package com.example.jerapp;
 import com.google.firebase.database.Exclude;
 
 public class AlertModel {
-    public String userName, emergencyType, assignedDept, status;
+    public String userName, userPhone, userEmail, emergencyType, assignedDept, textAddress, status;
     public double userLat, userLng;
     public long timestamp;
-
-    // This field stores the unique Firebase ID (e.g., SAMPLE_ALERT_001)
     private String key;
 
-    // Required empty constructor for Firebase
-    public AlertModel() {}
+    public AlertModel() {} // Required for Firebase
 
-    public AlertModel(String userName, String emergencyType, String assignedDept, String status, double userLat, double userLng, long timestamp) {
-        this.userName = userName;
-        this.emergencyType = emergencyType;
-        this.assignedDept = assignedDept;
-        this.status = status;
-        this.userLat = userLat;
-        this.userLng = userLng;
-        this.timestamp = timestamp;
-    }
+    // Getters and Setters for Firebase and Fragment logic
+    public String getUserName() { return userName; }
+    public String getUserPhone() { return userPhone; }
+    public String getEmergencyType() { return emergencyType; }
+    public String getAssignedDept() { return assignedDept; }
+    public String getStatus() { return status; }
 
-    // Getters and Setters for the Key
-    @Exclude // We use @Exclude so the key doesn't get saved as a child inside itself in Firebase
-    public String getKey() {
-        return key;
-    }
+    // These match the onLocate logic
+    public double getLatitude() { return userLat; }
+    public double getLongitude() { return userLng; }
 
     @Exclude
-    public void setKey(String key) {
-        this.key = key;
-    }
+    public String getKey() { return key; }
+    @Exclude
+    public void setKey(String key) { this.key = key; }
 }

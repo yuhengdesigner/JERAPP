@@ -18,7 +18,6 @@ public class DashboardFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflates the layout with the Red/White theme and Safe Padding
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
@@ -27,9 +26,9 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = view.findViewById(R.id.dashboardRecyclerView);
-        List<EmergencyModel> emergencyList = new ArrayList<>();
 
-        // 1. Populate your full list of categories
+        // 1. Populate data
+        List<EmergencyModel> emergencyList = new ArrayList<>();
         emergencyList.add(new EmergencyModel("Fire & Explosion", R.drawable.ic_jerlogo, "fire"));
         emergencyList.add(new EmergencyModel("Natural Disaster", R.drawable.ic_disasterlogo, "disaster"));
         emergencyList.add(new EmergencyModel("Medical Emergency", R.drawable.ic_medicallogo, "medical"));
@@ -37,26 +36,30 @@ public class DashboardFragment extends Fragment {
         emergencyList.add(new EmergencyModel("Gas Leaking", R.drawable.ic_gaslogo, "gas"));
         emergencyList.add(new EmergencyModel("Wild Animals", R.drawable.ic_wildlogo, "wild"));
 
-        // 2. Setup the Click Listener
+        // 2. Initialize Adapter
         EmergencyAdapter adapter = new EmergencyAdapter(emergencyList, model -> {
             Intent intent = new Intent(requireActivity(), DepartmentListActivity.class);
-
-            // Pass the emergency type
             intent.putExtra("emergency_type", model.getType());
 
-            // IMPORTANT: Pass the GPS coords from MainActivity if they exist
-            if (getActivity() instanceof MainActivity) {
-                MainActivity main = (MainActivity) getActivity();
-                // These names must match what DepartmentListActivity is looking for
-                intent.putExtra("user_lat", 1.4588); // Replace with real variable if stored in MainActivity
-                intent.putExtra("user_lng", 103.7461);
-            }
+            // Example coordinates (replace with your location logic if needed)
+            intent.putExtra("user_lat", 1.4588);
+            intent.putExtra("user_lng", 103.7461);
 
             startActivity(intent);
         });
 
-        // 3. Initialize the Grid
+        // 3. Configure Grid Layout Manager (The key for scrolling everything)
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // position 0 is our Header (Clock + Title) -> spans 2 columns
+                // other positions are the grid items -> span 1 column
+                return (adapter.getItemViewType(position) == EmergencyAdapter.TYPE_HEADER) ? 2 : 1;
+            }
+        });
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
     }
 }

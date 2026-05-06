@@ -17,4 +17,7 @@
         <!-- 4. Cutout Support (For notch/hole-punch cameras) -->
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
+    <style name="CircleImage">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

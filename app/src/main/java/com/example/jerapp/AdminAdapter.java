@@ -3,10 +3,10 @@ package com.example.jerapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> {
@@ -15,8 +15,9 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     private OnAlertClickListener listener;
 
     public interface OnAlertClickListener {
+        void onDetailsClick(AlertModel alert);
+        void onResolve(AlertModel alert, String alertKey);
         void onLocate(AlertModel alert);
-        void onResolve(AlertModel alert, String alertKey); // Add alertKey to identify which one to delete
     }
 
     public AdminAdapter(List<AlertModel> alertList, OnAlertClickListener listener) {
@@ -27,6 +28,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Ensure this matches your new XML filename
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_alert, parent, false);
         return new ViewHolder(view);
     }
@@ -35,14 +37,29 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AlertModel alert = alertList.get(position);
 
-        holder.userName.setText("Victim: " + alert.userName);
-        holder.emergencyType.setText("Emergency: " + alert.emergencyType.toUpperCase());
-        holder.assignedDept.setText("Assigned: " + alert.assignedDept);
+        holder.tvVictimName.setText(alert.getUserName());
+        holder.tvEmergencyTag.setText(alert.getEmergencyType().toUpperCase());
+        holder.tvVictimPhone.setText("📞 " + alert.getUserPhone());
+        holder.tvVictimEmail.setText("✉️ " + alert.userEmail);
+        holder.tvVictimAddress.setText("📍 " + alert.textAddress);
 
-        holder.btnLocate.setOnClickListener(v -> listener.onLocate(alert));
-        holder.btnResolve.setOnClickListener(v ->
-                listener.onResolve(alert, alertList.get(position).getKey())
+        // --- HIDE RESOLVE BUTTON FOR HISTORY ---
+        // If the listener is the History Fragment, hide the button
+        if (listener instanceof AdminHistoryFragment) {
+            holder.btnResolveAlert.setVisibility(View.GONE);
+        } else {
+            holder.btnResolveAlert.setVisibility(View.VISIBLE);
+        }
+
+        // Click listeners using your new button IDs
+        holder.btnViewDetails.setOnClickListener(v -> listener.onDetailsClick(alert));
+
+        holder.btnResolveAlert.setOnClickListener(v ->
+                listener.onResolve(alert, alert.getKey())
         );
+
+        // If you want the whole card to open details:
+        holder.itemView.setOnClickListener(v -> listener.onDetailsClick(alert));
     }
 
     @Override
@@ -51,16 +68,19 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public View btnResolve;
-        TextView userName, emergencyType, assignedDept;
-        Button btnLocate;
+        TextView tvVictimName, tvEmergencyTag, tvVictimPhone, tvVictimEmail, tvVictimAddress;
+        MaterialButton btnResolveAlert, btnViewDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            userName = itemView.findViewById(R.id.adminAlertUser);
-            emergencyType = itemView.findViewById(R.id.adminAlertType);
-            assignedDept = itemView.findViewById(R.id.adminAlertDept);
-            btnLocate = itemView.findViewById(R.id.btnViewOnMap);
+            // Matching the IDs from your preferred XML design
+            tvVictimName = itemView.findViewById(R.id.tvVictimName);
+            tvEmergencyTag = itemView.findViewById(R.id.tvEmergencyTag);
+            tvVictimPhone = itemView.findViewById(R.id.tvVictimPhone);
+            tvVictimEmail = itemView.findViewById(R.id.tvVictimEmail);
+            tvVictimAddress = itemView.findViewById(R.id.tvVictimAddress);
+            btnResolveAlert = itemView.findViewById(R.id.btnResolveAlert);
+            btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
         }
     }
 }

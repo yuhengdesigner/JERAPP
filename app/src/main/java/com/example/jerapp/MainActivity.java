@@ -70,11 +70,19 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Initialize Header Views
+        // Inside onCreate, after initializing navigationView
         if (navigationView.getHeaderCount() > 0) {
-            userNameHeader = navigationView.getHeaderView(0).findViewById(R.id.nav_header_name);
-            userEmailHeader = navigationView.getHeaderView(0).findViewById(R.id.nav_header_email);
-            userProfileImage = navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
+            View headerView = navigationView.getHeaderView(0);
+            userNameHeader = headerView.findViewById(R.id.nav_header_name);
+            userEmailHeader = headerView.findViewById(R.id.nav_header_email);
+            userProfileImage = headerView.findViewById(R.id.nav_header_image);
+
+            // Make the entire header clickable to open Profile
+            headerView.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                drawerLayout.closeDrawer(GravityCompat.START);
+            });
         }
 
         MenuItem logoutItem = navigationView.getMenu().findItem(R.id.nav_logout);

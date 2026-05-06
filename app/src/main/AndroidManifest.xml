@@ -52,6 +52,11 @@
         <activity
             android:name=".TrackingActivity"
             android:exported="false" />
+        <activity
+            android:name=".EmergencyDetailActivity"
+            android:exported="false"
+            android:label="Emergency Details"
+            android:theme="@style/Theme.JERAPP" />
     </application>
 
 </manifest>

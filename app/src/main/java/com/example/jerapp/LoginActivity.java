@@ -115,26 +115,21 @@ public class LoginActivity extends AppCompatActivity {
 
         // --- LOGIN PROCESS ---
         if (isAdminMode) {
-            if (input.equals("admin") && pass.equals("admin123")) {
-                startActivity(new Intent(this, AdminMainActivity.class));
+            // In a real project, you would query Firebase:
+            // mDatabase.child("Admins").child(input).addListenerForSingleValueEvent(...)
+
+            // For your current prototype logic:
+            if (input.equals("admin_hsa") && pass.equals("password123")) {
+                Intent intent = new Intent(this, AdminMainActivity.class);
+
+                // Pass the ID from your JSON instead of a hardcoded string
+                // Example: ID 1 is "Hospital Sultanah Aminah"
+                intent.putExtra("dept_id", 1);
+                intent.putExtra("admin_user", input);
+                startActivity(intent);
                 finish();
-            } else {
-                Toast.makeText(this, "Admin access denied", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            mAuth.signInWithEmailAndPassword(input, pass)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(this, MainActivity.class);
-                            intent.putExtra("isGuest", false);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            String errorMsg = task.getException() != null ?
-                                    task.getException().getMessage() : "User Login Failed";
-                            Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
-                        }
-                    });
+            // You would repeat this pattern or fetch from Firebase
         }
     }
 
