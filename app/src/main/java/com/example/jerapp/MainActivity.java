@@ -24,6 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
 
@@ -201,12 +203,22 @@ public class MainActivity extends BaseActivity {
         });
 
         navView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_logout) {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_logout) {
                 FirebaseAuth.getInstance().signOut();
                 getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
+            } else if (id == R.id.nav_profile) {
+                // This is likely why "nothing happened" before
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            } else if (id == R.id.nav_settings) {
+                // Replace with your actual SettingsActivity class name
+                // startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                Toast.makeText(this, "Settings coming soon!", Toast.LENGTH_SHORT).show();
             }
+
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });

@@ -7,7 +7,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,10 +90,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginLogic() {
-        String input = emailInput.getText().toString().trim();
-        String pass = passwordInput.getText().toString().trim();
+        // Corrected variable names to match your global declarations
+        String input = (emailInput.getText() != null) ? emailInput.getText().toString().trim() : "";
+        String pass = (passwordInput.getText() != null) ? passwordInput.getText().toString().trim() : "";
 
-        // --- VALIDATION (Prevents "Jumping out" crash) ---
+        // --- VALIDATION ---
         boolean hasError = false;
 
         if (TextUtils.isEmpty(input)) {
@@ -111,25 +111,34 @@ public class LoginActivity extends AppCompatActivity {
             passwordInputLayout.setError(null);
         }
 
-        if (hasError) return; // Exit if validation fails
+        if (hasError) return;
 
         // --- LOGIN PROCESS ---
         if (isAdminMode) {
-            // In a real project, you would query Firebase:
-            // mDatabase.child("Admins").child(input).addListenerForSingleValueEvent(...)
-
-            // For your current prototype logic:
+            // Static Admin Check for Prototype
             if (input.equals("admin_hsa") && pass.equals("password123")) {
                 Intent intent = new Intent(this, AdminMainActivity.class);
-
-                // Pass the ID from your JSON instead of a hardcoded string
-                // Example: ID 1 is "Hospital Sultanah Aminah"
                 intent.putExtra("dept_id", 1);
                 intent.putExtra("admin_user", input);
                 startActivity(intent);
                 finish();
+            } else {
+                Toast.makeText(this, "Invalid Admin Credentials", Toast.LENGTH_SHORT).show();
             }
-            // You would repeat this pattern or fetch from Firebase
+        } else {
+            // Firebase User Login
+            mAuth.signInWithEmailAndPassword(input, pass)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            String error = task.getException() != null ? task.getException().getMessage() : "Authentication failed";
+                            Toast.makeText(LoginActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+                        }
+                    });
         }
     }
 
@@ -137,12 +146,10 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Reset Password");
 
-        // Use a TextInputLayout/TextInputEditText for consistent UI
         final TextInputEditText resetEmail = new TextInputEditText(this);
         resetEmail.setHint("Enter registered email");
         resetEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
-        // Styling the container for the EditText
         float density = getResources().getDisplayMetrics().density;
         int padding = (int) (24 * density);
         FrameLayout container = new FrameLayout(this);
@@ -162,7 +169,6 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Firebase sends the email based on the template you edited in the console
             mAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Check your email to reset password!", Toast.LENGTH_LONG).show();

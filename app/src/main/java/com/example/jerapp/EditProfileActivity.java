@@ -1,9 +1,11 @@
 package com.example.jerapp;
 
-import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,17 +14,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Calendar;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private String editType;
-    private TextInputLayout inputLayout, confirmLayout;
-    private TextInputEditText inputEditText, confirmEditText;
-    private TextView tvForgotPassword, tvEditTitle, tvEditDescription;
+    private TextInputLayout inputLayout, confirmLayout, currentLayout;
+    private TextInputEditText inputEditText, confirmEditText, currentEditText;
+    private RadioGroup rgGender;
+    private TextView tvEditTitle, tvEditDescription, tvForgotPwdInEdit; // Added variable here
     private FirebaseAuth mAuth;
+    private static final String DB_URL = "https://jerapp-2026-default-rtdb.asia-southeast1.firebasedatabase.app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,37 +38,60 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         mAuth = FirebaseAuth.getInstance();
-
-        // 1. Bind Views
         editType = getIntent().getStringExtra("edit_type");
+
+        // 1. Bind Views (CRITICAL: Added the missing tvForgotPwdInEdit binding)
         inputLayout = findViewById(R.id.editInputLayout);
         confirmLayout = findViewById(R.id.confirmInputLayout);
+        currentLayout = findViewById(R.id.currentPwdLayout);
         inputEditText = findViewById(R.id.etEditValue);
         confirmEditText = findViewById(R.id.etConfirmValue);
-        tvForgotPassword = findViewById(R.id.tvForgotPwdInEdit);
+        currentEditText = findViewById(R.id.etCurrentValue);
+        rgGender = findViewById(R.id.rgGender);
         tvEditTitle = findViewById(R.id.tvEditTitle);
         tvEditDescription = findViewById(R.id.tvEditDescription);
-        MaterialButton btnSave = findViewById(R.id.btnSaveEdit);
+        tvForgotPwdInEdit = findViewById(R.id.tvForgotPwdInEdit); // FIX: Bind it here
 
-        // 2. Setup UI based on editType
+        // 2. Setup Logic
         configureUI();
 
         // 3. Click Listeners
         findViewById(R.id.btnBackEdit).setOnClickListener(v -> finish());
+        findViewById(R.id.btnSaveEdit).setOnClickListener(v -> validateAndSave());
 
-        tvForgotPassword.setOnClickListener(v -> showPasswordResetDialog());
-
-        btnSave.setOnClickListener(v -> saveData());
+        // Forgot password logic
+        tvForgotPwdInEdit.setOnClickListener(v -> {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null && user.getEmail() != null) {
+                mAuth.sendPasswordResetEmail(user.getEmail())
+                        .addOnCompleteListener(task -> Toast.makeText(this, "Reset link sent to email", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
     private void configureUI() {
         if (editType == null) return;
+
+        // Reset visibility for re-usability
+        inputLayout.setVisibility(View.VISIBLE);
+        rgGender.setVisibility(View.GONE);
+        confirmLayout.setVisibility(View.GONE);
+        currentLayout.setVisibility(View.GONE);
+        tvForgotPwdInEdit.setVisibility(View.GONE);
 
         switch (editType) {
             case "name":
                 tvEditTitle.setText("Edit Name");
                 inputLayout.setHint("Full Name");
                 inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                break;
+
+            case "email":
+                tvEditTitle.setText("Change Email");
+                tvEditDescription.setText("Enter your new email address. You will need to verify this change.");
+                inputLayout.setHint("New Email Address");
+                currentLayout.setVisibility(View.VISIBLE); // Show "Current Password" for security
+                inputEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 break;
 
             case "phone":
@@ -71,104 +102,150 @@ public class EditProfileActivity extends AppCompatActivity {
 
             case "address":
                 tvEditTitle.setText("Edit Address");
-                inputLayout.setHint("Home Address");
+                inputLayout.setHint("Home Address"); // Hint for address set here
                 inputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 break;
 
             case "password":
                 tvEditTitle.setText("Change Password");
-                tvEditDescription.setText("Enter and confirm your new password.");
+                tvEditDescription.setText("Verify your identity to change password.");
                 inputLayout.setHint("New Password");
-                inputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                inputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
 
-                // Show extra password fields
+                // Show password specific fields
+                currentLayout.setVisibility(View.VISIBLE);
                 confirmLayout.setVisibility(View.VISIBLE);
-                tvForgotPassword.setVisibility(View.VISIBLE);
+                tvForgotPwdInEdit.setVisibility(View.VISIBLE); // Shows the link
+
+                // Mask input characters
+                inputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
 
             case "birthDate":
                 tvEditTitle.setText("Edit Birth Date");
-                inputLayout.setHint("DD/MM/YYYY");
+                inputLayout.setHint("Date of Birth");
+                inputEditText.setFocusable(false);
+                inputEditText.setOnClickListener(v -> showDatePicker());
+                break;
+
+            case "gender":
+                tvEditTitle.setText("Update Gender");
+                inputLayout.setVisibility(View.GONE);
+                rgGender.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void saveData() {
-        String newValue = inputEditText.getText().toString().trim();
+    private void showDatePicker() {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(this, (view, year, month, day) -> {
+            String date = day + "/" + (month + 1) + "/" + year;
+            inputEditText.setText(date);
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
 
-        if (newValue.isEmpty()) {
-            inputLayout.setError("Field cannot be empty");
-            return;
-        }
-
-        if ("password".equals(editType)) {
-            handlePasswordUpdate(newValue);
+    private void validateAndSave() {
+        if ("gender".equals(editType)) {
+            int selectedId = rgGender.getCheckedRadioButtonId();
+            if (selectedId == -1) {
+                Toast.makeText(this, "Please select gender", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String gender = (selectedId == R.id.rbMale) ? "Male" : "Female";
+            updateDatabase(gender);
+        } else if ("password".equals(editType)) {
+            changePasswordLogic();
         } else {
-            handleGeneralUpdate(newValue);
+            String val = inputEditText.getText().toString().trim();
+            if (val.isEmpty()) {
+                inputLayout.setError("Required");
+                return;
+            }
+            updateDatabase(val);
+        }
+        if ("email".equals(editType)) {
+            changeEmailLogic();
         }
     }
 
-    private void handlePasswordUpdate(String newPassword) {
-        String confirmPassword = confirmEditText.getText().toString().trim();
+    private void changeEmailLogic() {
+        String currentPwd = currentEditText.getText().toString().trim();
+        String newEmail = inputEditText.getText().toString().trim();
 
-        if (newPassword.length() < 6) {
-            inputLayout.setError("Password must be at least 6 characters");
+        if (currentPwd.isEmpty() || newEmail.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!newPassword.equals(confirmPassword)) {
-            confirmLayout.setError("Passwords do not match");
-            return;
-        }
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null && user.getEmail() != null) {
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPwd);
 
-        if (mAuth.getCurrentUser() != null) {
-            mAuth.getCurrentUser().updatePassword(newPassword)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
-                            finish();
+            // 1. Re-authenticate
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // 2. Update Email in Auth
+                    user.updateEmail(newEmail).addOnCompleteListener(emailTask -> {
+                        if (emailTask.isSuccessful()) {
+                            // 3. Sync with Realtime Database
+                            updateDatabase(newEmail);
                         } else {
-                            // If security delay is too long, Firebase requires re-authentication
-                            Toast.makeText(this, "Error: Re-login required for security", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, "Error: " + emailTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
-        }
-    }
-
-    private void handleGeneralUpdate(String newValue) {
-        String uid = mAuth.getUid();
-        if (uid != null) {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-            ref.child(editType).setValue(newValue).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(this, "Profile Updated!", Toast.LENGTH_SHORT).show();
-                    finish();
                 } else {
-                    Toast.makeText(this, "Failed to update database", Toast.LENGTH_SHORT).show();
+                    currentLayout.setError("Incorrect password");
                 }
             });
         }
     }
 
-    private void showPasswordResetDialog() {
-        if (mAuth.getCurrentUser() == null) return;
+    private void changePasswordLogic() {
+        String currentPwd = currentEditText.getText().toString().trim();
+        String newPwd = inputEditText.getText().toString().trim();
+        String confirmPwd = confirmEditText.getText().toString().trim();
 
-        String email = mAuth.getCurrentUser().getEmail();
+        if (currentPwd.isEmpty()) {
+            currentLayout.setError("Current password required");
+            return;
+        }
+        if (newPwd.length() < 6) {
+            inputLayout.setError("Minimum 6 characters");
+            return;
+        }
+        if (!newPwd.equals(confirmPwd)) {
+            confirmLayout.setError("Passwords do not match");
+            return;
+        }
 
-        new AlertDialog.Builder(this)
-                .setTitle("Reset Password")
-                .setMessage("We will send a reset link to " + email)
-                .setPositiveButton("Send Link", (dialog, which) -> {
-                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Check your email!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(this, "Failed to send email", Toast.LENGTH_SHORT).show();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null && user.getEmail() != null) {
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPwd);
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    user.updatePassword(newPwd).addOnCompleteListener(updateTask -> {
+                        if (updateTask.isSuccessful()) {
+                            Toast.makeText(this, "Password Updated", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     });
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+                } else {
+                    currentLayout.setError("Incorrect current password");
+                }
+            });
+        }
+    }
+
+    private void updateDatabase(String value) {
+        String uid = mAuth.getUid();
+        if (uid == null) return;
+
+        FirebaseDatabase.getInstance(DB_URL).getReference("Users").child(uid)
+                .child(editType).setValue(value)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
     }
 }

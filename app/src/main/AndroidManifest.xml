@@ -57,6 +57,11 @@
             android:exported="false"
             android:label="Emergency Details"
             android:theme="@style/Theme.JERAPP" />
+        <activity android:name=".ProfileActivity" android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

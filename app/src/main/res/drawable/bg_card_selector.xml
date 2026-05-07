@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#E0E0E0"> <!-- This is the color of the "ripple" wave when clicked -->
+
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="12dp" />
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+    <item>
+        <selector>
+            <!-- State when the user is pressing the card -->
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp" />
+                    <solid android:color="#F5F5F5" /> <!-- Light grey highlight -->
+                </shape>
+            </item>
+
+            <!-- Default state -->
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp" />
+                    <solid android:color="@color/white" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>

@@ -11,8 +11,11 @@
         android:id="@+id/btnBackEdit"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="-10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_back_black" />
+        android:src="@drawable/ic_back"
+        app:tint="@color/black"/>
 
     <TextView
         android:id="@+id/tvEditTitle"
@@ -30,14 +33,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Please enter your new details below."
-        android:textColor="@color/secondary" />
+        android:textColor="#757575" />
 
+    <!-- Current Password Field (Only for password change) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/currentPwdLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:visibility="gone"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCurrentValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Current Password"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- General Input Field (Used for Name, Phone, Address, DOB, and NEW Password) -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         app:boxCornerRadiusBottomEnd="12dp"
         app:boxCornerRadiusTopStart="12dp">
 
@@ -48,7 +72,7 @@
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- NEW: Confirm Password field (Hidden by default) -->
+    <!-- Confirm Password field (Hidden by default) -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -68,6 +92,30 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Gender Selection (Hidden by default) -->
+    <RadioGroup
+        android:id="@+id/rgGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/rbMale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Male" />
+
+        <RadioButton
+            android:id="@+id/rbFemale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Female" />
+    </RadioGroup>
+
     <TextView
         android:id="@+id/tvForgotPwdInEdit"
         android:layout_width="wrap_content"
@@ -75,7 +123,7 @@
         android:layout_marginTop="12dp"
         android:layout_gravity="end"
         android:text="Forgot Password?"
-        android:textColor="@color/primary"
+        android:textColor="#2196F3"
         android:textStyle="bold"
         android:visibility="gone" />
 

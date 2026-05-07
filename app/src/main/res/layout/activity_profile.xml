@@ -1,106 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
+    android:fitsSystemWindows="false"
     android:background="#F5F5F5">
 
-    <!-- Header Section -->
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:background="@color/primary"
-        android:padding="20dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/btnBackProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back_white" />
-
+        <!-- Header Section: Now inside the ScrollView -->
         <RelativeLayout
-            android:id="@+id/avatarContainer"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:background="@color/primary"
+            android:padding="20dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profileImgLarge"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="2dp"
-                app:strokeColor="@color/white"
-                app:strokeWidth="4dp"
-                app:shapeAppearanceOverlay="@style/CircleImage"
-                android:src="@drawable/ic_default_avatar"
-                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/btnBackProfile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="-10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnEditPhoto"
+            <RelativeLayout
+                android:id="@+id/avatarContainer"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImgLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="4dp"
+                    app:shapeAppearanceOverlay="@style/CircleImage"
+                    android:src="@drawable/ic_default_avatar"
+                    android:scaleType="centerCrop"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnEditPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_camera"
+                    app:backgroundTint="@color/white"
+                    app:tint="@color/primary" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/profileName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                app:fabSize="mini"
-                app:srcCompat="@drawable/ic_camera"
-                app:backgroundTint="@color/white"
-                app:tint="@color/primary" />
+                android:layout_below="@id/avatarContainer"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="User Full Name"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profileName"
+                android:layout_centerHorizontal="true"
+                android:text="user@email.com"
+                android:textColor="#E0E0E0"
+                android:textSize="14sp" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/profileName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/avatarContainer"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:text="User Full Name"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/profileEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/profileName"
-            android:layout_centerHorizontal="true"
-            android:text="user@email.com"
-            android:textColor="#E0E0E0"
-            android:textSize="14sp" />
-    </RelativeLayout>
-
-    <!-- Scrollable Info Cards -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        <!-- Information Cards Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <include layout="@layout/item_profile_card" android:id="@+id/cardName" />
-            <include layout="@layout/item_profile_card" android:id="@+id/cardPhone" />
-            <include layout="@layout/item_profile_card" android:id="@+id/cardAddress" />
-            <include layout="@layout/item_profile_card" android:id="@+id/cardBirthDate" />
-            <include layout="@layout/item_profile_card" android:id="@+id/cardGender" />
-            <include layout="@layout/item_profile_card" android:id="@+id/cardPassword" />
+            <include
+                android:id="@+id/cardName"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/cardEmail"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" />
+
+            <include
+                android:id="@+id/cardPhone"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <include
+                android:id="@+id/cardAddress"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <include
+                android:id="@+id/cardBirthDate"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <include
+                android:id="@+id/cardGender"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <include
+                android:id="@+id/cardPassword"
+                layout="@layout/item_profile_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnProfileLogout"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
                 android:text="Logout"
+                android:textColor="#F44336"
+                app:strokeColor="#F44336"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="32dp"
+                android:text="Delete Account"
                 android:textColor="@color/white"
                 app:backgroundTint="#F44336"
                 app:cornerRadius="12dp" />
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,23 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Use the name that matches your AndroidManifest.xml (usually Theme.JERAPP) -->
     <style name="Theme.JERAPP" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- 1. Your App Colors -->
+        <!-- Main Brand Color -->
         <item name="colorPrimary">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary</item>
 
-        <!-- 2. The Blending Magic -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-
-        <!-- 3. Icon Visibility -->
-        <!-- Set to 'false' if your toolbar is DARK (icons become white) -->
-        <!-- Set to 'true' if your toolbar is LIGHT (icons become dark) -->
+        <!-- Use light icons (white) on the dark red status bar -->
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">true</item>
 
-        <!-- 4. Cutout Support (For notch/hole-punch cameras) -->
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-    </style>
-    <style name="CircleImage">
-        <item name="cornerSize">50%</item>
+        <!-- Navigation bar at the bottom -->
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>

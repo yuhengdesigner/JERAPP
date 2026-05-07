@@ -117,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         goToDashboard();
                     }
-                }, 5000);
+                }, 1000);
 
             } else {
                 progressDialog.dismiss();
