@@ -191,6 +191,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupNavigation(NavigationView navView, BottomNavigationView bottomNav) {
+        // 1. Bottom Navigation
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == currentNavId) return false;
@@ -202,25 +203,34 @@ public class MainActivity extends BaseActivity {
             return true;
         });
 
+        // 2. Side Drawer - Consolidated
         navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.nav_logout) {
-                FirebaseAuth.getInstance().signOut();
-                getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
-            } else if (id == R.id.nav_profile) {
-                // This is likely why "nothing happened" before
+            if (id == R.id.nav_profile) {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            } else if (id == R.id.nav_settings) {
-                // Replace with your actual SettingsActivity class name
-                // startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                Toast.makeText(this, "Settings coming soon!", Toast.LENGTH_SHORT).show();
+            }
+            else if (id == R.id.nav_settings) {
+                // If the manifest is updated, this will now work perfectly
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+            else if (id == R.id.nav_logout) {
+                performLogout();
             }
 
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+    }
+
+    // Helper method for clean logout
+    private void performLogout() {
+        FirebaseAuth.getInstance().signOut();
+        getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

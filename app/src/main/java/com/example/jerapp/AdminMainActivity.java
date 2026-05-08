@@ -8,28 +8,39 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AdminMainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
-    private String departmentName;
-    private String adminUsername;
+    private String deptId;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
 
-        // 1. Get data from Intent passed from LoginActivity
-        departmentName = getIntent().getStringExtra("admin_dept");
-        adminUsername = getIntent().getStringExtra("admin_user");
+        mAuth = FirebaseAuth.getInstance();
+
+        // 1. Get Department ID passed from LoginActivity
+        // If coming from Auto-Login, we might need to fetch it from DB instead (handled below)
+        deptId = getIntent().getStringExtra("DEPT_ID");
 
         drawerLayout = findViewById(R.id.drawer_layout_admin);
         MaterialToolbar toolbar = findViewById(R.id.adminTopToolbar);
@@ -39,13 +50,8 @@ public class AdminMainActivity extends AppCompatActivity {
         // Toolbar Menu Toggle
         toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // 2. Setup Navigation Header (Username/Dept)
-        View headerView = navView.getHeaderView(0);
-        TextView deptNameHeader = headerView.findViewById(R.id.admin_nav_dept_name);
-        TextView usernameHeader = headerView.findViewById(R.id.admin_nav_username);
-
-        deptNameHeader.setText(departmentName);
-        usernameHeader.setText("Admin: " + adminUsername);
+        // 2. Setup Navigation Header and Fetch Admin Info
+        setupHeader(navView);
 
         // 3. Style Logout Item
         MenuItem logoutItem = navView.getMenu().findItem(R.id.nav_admin_logout);
@@ -57,29 +63,81 @@ public class AdminMainActivity extends AppCompatActivity {
 
         setupNavigation(navView, bottomNav);
 
-        // 4. Initial Fragment Load - Pass the departmentName!
-        if (savedInstanceState == null) {
-            loadFragment(AdminAlertsFragment.newInstance(departmentName));
+        // 4. Initial Fragment Load
+        if (savedInstanceState == null && deptId != null) {
+            loadFragment(AdminAlertsFragment.newInstance(deptId));
+        } else if (deptId == null) {
+            // If deptId is null (e.g. session resume), fetch it from Firebase
+            fetchDeptIdAndLoadInitialFragment();
         }
+    }
+
+    private void setupHeader(NavigationView navView) {
+        View headerView = navView.getHeaderView(0);
+        TextView deptNameHeader = headerView.findViewById(R.id.admin_nav_dept_name);
+        TextView usernameHeader = headerView.findViewById(R.id.admin_nav_username);
+
+        if (mAuth.getCurrentUser() != null) {
+            String uid = mAuth.getCurrentUser().getUid();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        String username = snapshot.child("username").getValue(String.class);
+                        deptNameHeader.setText(name);
+                        usernameHeader.setText("@" + username);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError error) {}
+            });
+        }
+    }
+
+    private void fetchDeptIdAndLoadInitialFragment() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String uid = mAuth.getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference("Users").child(uid).child("dept_id")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        deptId = snapshot.getValue(String.class);
+                        if (deptId != null) {
+                            loadFragment(AdminAlertsFragment.newInstance(deptId));
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError error) {}
+                });
     }
 
     private void setupNavigation(NavigationView navView, BottomNavigationView bottomNav) {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
+            if (deptId == null) {
+                Toast.makeText(this, "Loading department data...", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             if (id == R.id.admin_nav_alerts) {
-                // IMPORTANT: Always use newInstance to pass the filter!
-                loadFragment(AdminAlertsFragment.newInstance(departmentName));
+                loadFragment(AdminAlertsFragment.newInstance(deptId));
             } else if (id == R.id.admin_nav_history) {
-                // Pass departmentName to history too so they only see their own archives
-                loadFragment(AdminHistoryFragment.newInstance(departmentName));
+                loadFragment(AdminHistoryFragment.newInstance(deptId));
             }
             return true;
         });
 
         navView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_admin_logout) {
-                startActivity(new Intent(this, LoginActivity.class));
+                mAuth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 finish();
             }
             drawerLayout.closeDrawer(GravityCompat.START);

@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final String DB_URL = "https://jerapp-2026-default-rtdb.asia-southeast1.firebasedatabase.app";
+    private static final String DB_URL = "https://jerapp-2026-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,19 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        String uid = FirebaseAuth.getInstance().getUid();
-        if (uid == null) return;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Safety check
+        if (user == null) return;
+
+        // Handle Guest User immediately without calling Database
+        if (user.isAnonymous()) {
+            updateGuestUI();
+            return;
+        }
+
+        // Registered user: Load from Database
+        String uid = user.getUid();
         FirebaseDatabase.getInstance(DB_URL)
                 .getReference("Users").child(uid)
                 .addValueEventListener(new ValueEventListener() {
@@ -75,6 +85,25 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    private void updateGuestUI() {
+        TextView tvHeaderName = findViewById(R.id.profileName);
+        TextView tvHeaderEmail = findViewById(R.id.profileEmail);
+        if (tvHeaderName != null) tvHeaderName.setText("Guest User");
+        if (tvHeaderEmail != null) tvHeaderEmail.setText("No account registered");
+
+        com.google.android.material.button.MaterialButton btnDelete = findViewById(R.id.btnDeleteAccount);
+        if (btnDelete != null) {
+            btnDelete.setVisibility(View.VISIBLE);
+            btnDelete.setText("Create an account");
+            btnDelete.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+
+            // This is the ONLY place the click listener for guests should be defined
+            btnDelete.setOnClickListener(v -> {
+                startActivity(new Intent(ProfileActivity.this, RegisterActivity.class));
+            });
+        }
+    }
+
     private void updateUI(DataSnapshot s) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String name = s.child("name").getValue(String.class);
@@ -85,12 +114,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Header Updates
         TextView tvHeaderName = findViewById(R.id.profileName);
-        TextView tvHeaderEmail = findViewById(R.id.profileEmail); // Bind header email
+        TextView tvHeaderEmail = findViewById(R.id.profileEmail);
 
         tvHeaderName.setText(name != null ? name : "User Name");
 
         String email = (user != null) ? user.getEmail() : "";
-        if (tvHeaderEmail != null) tvHeaderEmail.setText(email); // Update header email
+        if (tvHeaderEmail != null) tvHeaderEmail.setText(email);
 
         // Card Updates
         updateCard(R.id.cardName, "Name", name, R.drawable.ic_user);
@@ -99,6 +128,21 @@ public class ProfileActivity extends AppCompatActivity {
         updateCard(R.id.cardAddress, "Address", address, R.drawable.ic_location);
         updateCard(R.id.cardBirthDate, "Birth Date", dob, R.drawable.ic_calendar);
         updateCard(R.id.cardGender, "Gender", gender, R.drawable.ic_gender);
+
+        // Show Delete button for Registered Users
+        View btnDelete = findViewById(R.id.btnDeleteAccount);
+        if (btnDelete != null) btnDelete.setVisibility(View.VISIBLE);
+
+        com.google.android.material.button.MaterialButton btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
+
+        if (btnDeleteAccount != null) {
+            btnDeleteAccount.setVisibility(View.VISIBLE);
+            btnDeleteAccount.setText("Delete Account");
+            // Set background to Red
+            btnDeleteAccount.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F44336")));
+
+            btnDeleteAccount.setOnClickListener(v -> showDeleteConfirmation());
+        }
     }
 
     private void updateCard(int cardId, String label, String value, int iconRes) {
@@ -140,8 +184,6 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        findViewById(R.id.btnDeleteAccount).setOnClickListener(v -> showDeleteConfirmation());
     }
 
     private void showDeleteConfirmation() {
@@ -150,7 +192,6 @@ public class ProfileActivity extends AppCompatActivity {
                 .setMessage("Are you sure? This will permanently delete your profile and data. This action cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> deleteUserAccount())
                 .setNegativeButton("Cancel", null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
 
@@ -182,8 +223,23 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void openEditPage(String fieldType) {
-        Intent intent = new Intent(this, EditProfileActivity.class);
-        intent.putExtra("edit_type", fieldType);
-        startActivity(intent);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null && user.isAnonymous()) {
+            // If guest tries to edit, show a snackbar or toast
+            new AlertDialog.Builder(this)
+                    .setTitle("Feature Locked")
+                    .setMessage("Please create an account to customize your profile details.")
+                    .setPositiveButton("Register Now", (dialog, which) -> {
+                        startActivity(new Intent(ProfileActivity.this, RegisterActivity.class));
+                    })
+                    .setNegativeButton("Later", null)
+                    .show();
+        } else {
+            // Proceed for registered users
+            Intent intent = new Intent(this, EditProfileActivity.class);
+            intent.putExtra("edit_type", fieldType);
+            startActivity(intent);
+        }
     }
 }
