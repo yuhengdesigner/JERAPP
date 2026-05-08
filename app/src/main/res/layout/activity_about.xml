@@ -144,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:layout_marginTop="12dp"
-                        android:text="DSPD2794: Project"
+                        android:text="DSPD 2794: Project"
                         android:textColor="#424242"
                         android:textSize="15sp"
                         android:lineSpacingExtra="4dp"/>
@@ -199,7 +199,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Director"
+                                android:text="Director &amp;\nLead Engineer"
                                 android:textColor="@color/primary"
                                 android:textSize="12sp"
                                 android:gravity="center"/>
@@ -298,7 +298,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="Dives a/l Balakrishnan"
+                                android:text="Dives A/L Balakrishnan"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 android:textStyle="bold"

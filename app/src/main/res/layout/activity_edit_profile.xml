@@ -35,6 +35,18 @@
         android:text="Please enter your new details below."
         android:textColor="#757575" />
 
+    <TextView
+        android:id="@+id/tvCurrentDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:background="#F0F0F0"
+        android:textColor="#555555"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
     <!-- Current Password Field (Only for password change) -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/currentPwdLayout"
@@ -44,8 +56,7 @@
         android:layout_marginTop="28dp"
         android:visibility="gone"
         app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp"
-        app:passwordToggleEnabled="true">
+        app:boxCornerRadiusTopStart="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCurrentValue"
@@ -63,7 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        app:boxCornerRadiusTopStart="12dp"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEditValue"

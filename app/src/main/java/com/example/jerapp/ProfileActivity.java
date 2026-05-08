@@ -19,8 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
+    private TextView tvProfileEmail;
+    // Add these at the top with your other variables
+    private String currentName, currentEmail, currentPhone, currentAddress, currentDob, currentGender;
 
-    private static final String DB_URL = "https://jerapp-2026-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    private static final String DB_URL = "https://jerapp-2026-default-rtdb.asia-southeast1.firebasedatabase.app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class ProfileActivity extends AppCompatActivity {
         );
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_profile);
+
+        // FIX 1: Initialize the GLOBAL variable here
+        tvProfileEmail = findViewById(R.id.profileEmail);
 
         // 1. Initialize Visuals (Labels and Icons)
         setupInitialCards();
@@ -106,28 +112,33 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateUI(DataSnapshot s) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String name = s.child("name").getValue(String.class);
-        String phone = s.child("phone").getValue(String.class);
-        String address = s.child("address").getValue(String.class);
-        String dob = s.child("birthDate").getValue(String.class);
-        String gender = s.child("gender").getValue(String.class);
+
+        // Assign values to the class-level variables we just created
+        currentName = s.child("name").getValue(String.class);
+        currentPhone = s.child("phone").getValue(String.class);
+        currentAddress = s.child("address").getValue(String.class);
+        currentDob = s.child("birthDate").getValue(String.class);
+        currentGender = s.child("gender").getValue(String.class);
+        currentEmail = (user != null) ? user.getEmail() : "";
 
         // Header Updates
         TextView tvHeaderName = findViewById(R.id.profileName);
-        TextView tvHeaderEmail = findViewById(R.id.profileEmail);
 
-        tvHeaderName.setText(name != null ? name : "User Name");
+        if (tvHeaderName != null) {
+            tvHeaderName.setText(currentName != null ? currentName : "User Name");
+        }
 
-        String email = (user != null) ? user.getEmail() : "";
-        if (tvHeaderEmail != null) tvHeaderEmail.setText(email);
+        if (tvProfileEmail != null) {
+            tvProfileEmail.setText(currentEmail);
+        }
 
         // Card Updates
-        updateCard(R.id.cardName, "Name", name, R.drawable.ic_user);
-        updateCard(R.id.cardEmail, "Email", email, R.drawable.ic_email);
-        updateCard(R.id.cardPhone, "Phone", phone, R.drawable.ic_phone);
-        updateCard(R.id.cardAddress, "Address", address, R.drawable.ic_location);
-        updateCard(R.id.cardBirthDate, "Birth Date", dob, R.drawable.ic_calendar);
-        updateCard(R.id.cardGender, "Gender", gender, R.drawable.ic_gender);
+        updateCard(R.id.cardName, "Name", currentName, R.drawable.ic_user);
+        updateCard(R.id.cardEmail, "Email", currentEmail, R.drawable.ic_email);
+        updateCard(R.id.cardPhone, "Phone", currentPhone, R.drawable.ic_phone);
+        updateCard(R.id.cardAddress, "Address", currentAddress, R.drawable.ic_location);
+        updateCard(R.id.cardBirthDate, "Birth Date", currentDob, R.drawable.ic_calendar);
+        updateCard(R.id.cardGender, "Gender", currentGender, R.drawable.ic_gender);
 
         // Show Delete button for Registered Users
         View btnDelete = findViewById(R.id.btnDeleteAccount);
@@ -236,10 +247,75 @@ public class ProfileActivity extends AppCompatActivity {
                     .setNegativeButton("Later", null)
                     .show();
         } else {
-            // Proceed for registered users
             Intent intent = new Intent(this, EditProfileActivity.class);
             intent.putExtra("edit_type", fieldType);
+
+            // Pass the correct current value based on the type
+            switch (fieldType) {
+                case "name": intent.putExtra("current_value", currentName); break;
+                case "email": intent.putExtra("current_value", currentEmail); break;
+                case "phone": intent.putExtra("current_value", currentPhone); break;
+                case "address": intent.putExtra("current_value", currentAddress); break;
+                case "birthDate": intent.putExtra("current_value", currentDob); break;
+                case "gender": intent.putExtra("current_value", currentGender); break;
+            }
+
             startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Only attempt reload if it's a registered user (not a guest)
+        if (user != null && !user.isAnonymous()) {
+            user.reload().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // If reload succeeds, update the UI and DB with new data
+                    syncAuthEmailToDatabase();
+                } else {
+                    loadUserData();
+                }
+            });
+        }
+    }
+
+    private void syncAuthEmailToDatabase() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && !user.isAnonymous()) {
+            String authEmail = user.getEmail();
+            String uid = user.getUid();
+
+            if (authEmail != null) {
+                // Check if the email is actually different from what we last loaded
+                // This prevents the Toast from showing up every time the user rotates the screen
+                if (currentEmail != null && !authEmail.equalsIgnoreCase(currentEmail)) {
+
+                    // Show the encouragement Toast
+                    Toast.makeText(this, "Email verified! Please log out and in again to secure your session.", Toast.LENGTH_LONG).show();
+                }
+
+                // 1. Sync the verified email to Realtime Database
+                FirebaseDatabase.getInstance(DB_URL)
+                        .getReference("Users")
+                        .child(uid)
+                        .child("email")
+                        .setValue(authEmail);
+
+                // 2. Update the Header
+                if (tvProfileEmail != null) {
+                    tvProfileEmail.setText(authEmail);
+                }
+
+                // 3. Update the Email Card
+                updateCard(R.id.cardEmail, "Email", authEmail, R.drawable.ic_email);
+
+                // Update the global variable so the "if" check above works correctly
+                currentEmail = authEmail;
+            }
         }
     }
 }
