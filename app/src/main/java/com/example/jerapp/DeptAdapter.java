@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import android.content.Intent;
 
 public class DeptAdapter extends RecyclerView.Adapter<DeptAdapter.ViewHolder> {
 
@@ -40,6 +41,13 @@ public class DeptAdapter extends RecyclerView.Adapter<DeptAdapter.ViewHolder> {
         holder.distance.setText("Active Responder Found");
 
         holder.btnSelect.setOnClickListener(v -> listener.onSelect(dept));
+
+        holder.itemView.setOnClickListener(v -> {
+            if ("SOS FLASH LIGHT".equalsIgnoreCase(dept.name)) {
+                Intent intent = new Intent(v.getContext(), FlashlightActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
