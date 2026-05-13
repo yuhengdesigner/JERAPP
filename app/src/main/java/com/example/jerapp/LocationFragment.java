@@ -87,7 +87,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         // --- Original UI Features ---
         mMap.getUiSettings().setCompassEnabled(true);       // Shows compass when map is rotated
         mMap.getUiSettings().setMapToolbarEnabled(true);   // Shows "Open in Maps/Directions" when markers clicked
-        mMap.getUiSettings().setZoomControlsEnabled(true);  // Original +/- buttons
         mMap.getUiSettings().setMyLocationButtonEnabled(true); // Standard "Center on me" button
 
         // Allow users to naturally tilt and rotate
