@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -69,6 +70,9 @@
             android:theme="@style/Theme.JERAPP" />
         <activity android:name=".TermsActivity" android:exported="false" />
         <activity android:name=".AboutActivity" android:exported="false" />
+        <activity
+            android:name=".FlashlightActivity"
+            android:theme="@style/Theme.JERAPP" />
     </application>
 
 </manifest>

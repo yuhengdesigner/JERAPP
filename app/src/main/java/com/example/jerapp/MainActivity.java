@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.util.Log;
 import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,8 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import android.view.View;
 import android.widget.Toast;
+import com.google.android.gms.maps.MapsInitializer; // REQUIRED for 3D
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback; // REQUIRED for 3D
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCallback {
 
     private DrawerLayout drawerLayout;
     private TextView userNameHeader, userEmailHeader;
@@ -47,11 +50,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         isGuest = getIntent().getBooleanExtra("isGuest", false);
-
         drawerLayout = findViewById(R.id.drawer_layout);
         MaterialToolbar toolbar = findViewById(R.id.topToolbar);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -107,6 +111,19 @@ public class MainActivity extends BaseActivity {
 
         if (savedInstanceState == null) {
             loadFragment(new DashboardFragment());
+        }
+    }
+
+    // --- 2. MANDATORY: Callback for Map Initialization ---
+    @Override
+    public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer) {
+        switch (renderer) {
+            case LATEST:
+                Log.d("MAP_RENDERER", "The latest 3D renderer is being used.");
+                break;
+            case LEGACY:
+                Log.d("MAP_RENDERER", "The legacy renderer is being used.");
+                break;
         }
     }
 
@@ -187,7 +204,9 @@ public class MainActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isGuest", isGuest);
         fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void setupNavigation(NavigationView navView, BottomNavigationView bottomNav) {

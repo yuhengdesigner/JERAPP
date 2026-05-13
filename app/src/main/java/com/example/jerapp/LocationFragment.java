@@ -83,10 +83,29 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+
+        // --- Original UI Features ---
+        mMap.getUiSettings().setCompassEnabled(true);       // Shows compass when map is rotated
+        mMap.getUiSettings().setMapToolbarEnabled(true);   // Shows "Open in Maps/Directions" when markers clicked
+        mMap.getUiSettings().setZoomControlsEnabled(true);  // Original +/- buttons
+        mMap.getUiSettings().setMyLocationButtonEnabled(true); // Standard "Center on me" button
+
+        // Allow users to naturally tilt and rotate
         mMap.getUiSettings().setTiltGesturesEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
         mMap.setBuildingsEnabled(true);
+
+        // Coordinates for UTM (or your preferred starting point)
+        LatLng utmJohor = new LatLng(1.5591, 103.6375);
+
+        CameraPosition initial3DTopView = new CameraPosition.Builder()
+                .target(utmJohor)
+                .zoom(18.5f) // Buildings only appear in 3D at zoom > 17
+                .tilt(45f)   // A 10 degree tilt looks "top down" but enables 3D rendering
+                .build();
+
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(initial3DTopView));
 
         setupFabListeners();
         checkAndRequestPermission();
@@ -135,34 +154,32 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                 .addOnSuccessListener(location -> {
                     if (location != null && isAdded()) {
-                        // Pass 'false' to force 2D (0 degree tilt)
-                        updateMapUI(location.getLatitude(), location.getLongitude(), false);
+                        // ALWAYS use 3D here
+                        updateMapUI(location.getLatitude(), location.getLongitude(), true);
                     } else {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(lastLoc -> {
-                            if (lastLoc != null) updateMapUI(lastLoc.getLatitude(), lastLoc.getLongitude(), false);
+                            if (lastLoc != null) updateMapUI(lastLoc.getLatitude(), lastLoc.getLongitude(), true);
                         });
                     }
                 });
     }
 
-    // Updated to accept a boolean for 3D or 2D
     private void updateMapUI(double lat, double lng, boolean use3D) {
         if (mMap == null) return;
 
         LatLng current = new LatLng(lat, lng);
 
-        // If use3D is false (My Location tapped), tilt is 0. If true, tilt is 60.
-        float targetTilt = use3D ? 60f : 0f;
-
+        // If you want the "Original Look", only animate the camera if it's the first time
+        // or if the user isn't currently moving the map themselves.
         CameraPosition cp = new CameraPosition.Builder()
                 .target(current)
-                .zoom(18f)
-                .tilt(targetTilt)
+                .zoom(mMap.getCameraPosition().zoom) // Maintain current user zoom
+                .tilt(mMap.getCameraPosition().tilt) // Maintain current user tilt
                 .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-        tvLatLng.setText(String.format(Locale.getDefault(), "Latitude: %.5f, Longitude: %.5f", lat, lng));
+        tvLatLng.setText(String.format(Locale.getDefault(), "Lat: %.5f, Lng: %.5f", lat, lng));
         updateAddressFromLocation(lat, lng);
     }
 
