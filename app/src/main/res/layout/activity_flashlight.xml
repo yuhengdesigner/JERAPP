@@ -10,25 +10,30 @@
     <!-- Header with Back Button -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/primary"
-        android:paddingTop="20dp">
+        android:layout_height="100dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/primary">
+
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_back"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-10dp"
+            android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp" />
+            android:src="@drawable/ic_back"
+            app:tint="@color/white" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SOS Flashlight"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="SOS FlashLight"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_centerInParent="true" />
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <ScrollView
