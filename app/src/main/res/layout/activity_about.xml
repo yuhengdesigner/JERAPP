@@ -323,7 +323,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
-            android:text="© 2026 JER - Group 20. All rights reserved."
+            android:text="© 2026 JER - Choy Yu Heng. All rights reserved."
             android:textColor="#9E9E9E"
             android:textSize="12sp" />
         </LinearLayout>
