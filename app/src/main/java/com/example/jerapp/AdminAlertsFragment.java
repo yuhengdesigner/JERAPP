@@ -137,15 +137,23 @@ public class AdminAlertsFragment extends Fragment {
                 });
     }
 
+    // Inside AdminAlertsFragment.java
+
     private void moveAlertToHistory(AlertModel alert) {
         DatabaseReference activeRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(alert.getKey());
         DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference("ResolvedAlerts").child(alert.getKey());
 
-        // 1. Copy data to ResolvedAlerts node
+        alert.status = "Resolved"; // Update the status
+
+        // Move to Admin History
         historyRef.setValue(alert).addOnSuccessListener(aVoid -> {
-            // 2. Remove from ActiveAlerts node
             activeRef.removeValue().addOnSuccessListener(unused -> {
-                Toast.makeText(requireContext(), "Case resolved and archived", Toast.LENGTH_SHORT).show();
+
+                // CRITICAL: Also update the status in the User's personal history
+                FirebaseDatabase.getInstance().getReference("UserHistory")
+                        .child(alert.userId).child(alert.getKey()).child("status").setValue("Resolved");
+
+                Toast.makeText(requireContext(), "Case archived.", Toast.LENGTH_SHORT).show();
             });
         });
     }

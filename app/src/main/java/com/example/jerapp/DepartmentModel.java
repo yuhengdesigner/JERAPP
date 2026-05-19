@@ -1,19 +1,25 @@
 package com.example.jerapp;
 
 public class DepartmentModel {
-    public String name, type, status, contact, capability;
-    public double lat, lng;
+    public String place_name, type, district, category, full_address, contact, fee_detail, status;
+    public double latitude, longitude;
+    public double distance;
 
-    // Required empty constructor for Firebase
     public DepartmentModel() {}
 
-    public DepartmentModel(String name, String type, String status, String contact, String capability, double lat, double lng) {
-        this.name = name;
+    public DepartmentModel(String place_name, String type, String district,
+                           String category, String full_address, String status,
+                           String contact, String fee_detail,
+                           double latitude, double longitude) {
+        this.place_name = place_name;
         this.type = type;
+        this.district = district;
+        this.category = category;
+        this.full_address = full_address;
         this.status = status;
         this.contact = contact;
-        this.capability = capability;
-        this.lat = lat;
-        this.lng = lng;
+        this.fee_detail = fee_detail;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

@@ -1,0 +1,49 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/histType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FIRE EMERGENCY"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/histDept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Responded by: Johor Bahru Fire Dept"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/histDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 May 2024, 14:30"
+            android:textColor="#757575"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/histStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="RESOLVED"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

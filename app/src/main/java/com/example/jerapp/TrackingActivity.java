@@ -32,9 +32,13 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_tracking);
 
         // --- 1. SET UP THE ACTION BAR (Back Button) ---
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Back");
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle("Emergency Tracking");
+            }
         }
 
         // --- 2. GET DATA FROM INTENT ---
@@ -88,24 +92,42 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         sendAlertToAdmin();
     }
 
+    // Inside TrackingActivity.java
+
     private void sendAlertToAdmin() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) return;
 
+        // Get the REAL user coordinates passed from the previous activity
+        double userLat = getIntent().getDoubleExtra("user_lat", 1.4588);
+        double userLng = getIntent().getDoubleExtra("user_lng", 103.7461);
+
         String uid = mAuth.getUid();
-        DatabaseReference alertRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").push();
+        DatabaseReference activeAlertsRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts");
+        String alertKey = activeAlertsRef.push().getKey();
 
         HashMap<String, Object> alertData = new HashMap<>();
-        alertData.put("userName", "User_" + (uid != null && uid.length() > 5 ? uid.substring(0, 5) : uid));
+        alertData.put("userId", uid);
+        alertData.put("userName", "Choy Yu Heng");
+        alertData.put("userEmail", mAuth.getCurrentUser().getEmail());
+        alertData.put("userPhone", "+60123456789");
         alertData.put("emergencyType", getIntent().getStringExtra("emergency_type"));
         alertData.put("assignedDept", deptName);
-        alertData.put("userLat", 1.4588); // Static for now
-        alertData.put("userLng", 103.7461); // Static for now
+        alertData.put("userLat", userLat); // Updated from hardcoded
+        alertData.put("userLng", userLng); // Updated from hardcoded
+        alertData.put("textAddress", "UTM Faculty of Computing, Skudai");
+        alertData.put("status", "Pending");
         alertData.put("timestamp", System.currentTimeMillis());
 
-        alertRef.setValue(alertData).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Emergency reported to " + deptName, Toast.LENGTH_SHORT).show();
-        });
+        // 1. Alert the Admin
+        activeAlertsRef.child(alertKey).setValue(alertData);
+
+        // 2. Save to User's History
+        FirebaseDatabase.getInstance().getReference("UserHistory")
+                .child(uid).child(alertKey).setValue(alertData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Emergency reported to " + deptName, Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

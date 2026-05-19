@@ -3,7 +3,7 @@ package com.example.jerapp;
 import com.google.firebase.database.Exclude;
 
 public class AlertModel {
-    public String userName, userPhone, userEmail, emergencyType, assignedDept, textAddress, status;
+    public String userId, userName, userPhone, userEmail, emergencyType, assignedDept, textAddress, status;
     public double userLat, userLng;
     public long timestamp;
     private String key;
@@ -11,6 +11,7 @@ public class AlertModel {
     public AlertModel() {} // Required for Firebase
 
     // Getters and Setters for Firebase and Fragment logic
+    public String getUserId() { return userId; }
     public String getUserName() { return userName; }
     public String getUserPhone() { return userPhone; }
     public String getEmergencyType() { return emergencyType; }

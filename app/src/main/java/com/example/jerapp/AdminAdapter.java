@@ -43,12 +43,11 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
         holder.tvVictimEmail.setText("✉️ " + alert.userEmail);
         holder.tvVictimAddress.setText("📍 " + alert.textAddress);
 
-        // --- HIDE RESOLVE BUTTON FOR HISTORY ---
-        // If the listener is the History Fragment, hide the button
+        // Inside AdminAdapter's onBindViewHolder
         if (listener instanceof AdminHistoryFragment) {
-            holder.btnResolveAlert.setVisibility(View.GONE);
+            holder.btnResolveAlert.setVisibility(View.GONE); // Hide resolve for history
         } else {
-            holder.btnResolveAlert.setVisibility(View.VISIBLE);
+            holder.btnResolveAlert.setVisibility(View.VISIBLE); // Show for active alerts
         }
 
         // Click listeners using your new button IDs
