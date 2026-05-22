@@ -43,17 +43,16 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         tvCoords = findViewById(R.id.tvCoordinates);
         videoView = findViewById(R.id.videoView);
 
-        // Back button (handle both toolbar and custom back button)
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        // Setup Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        loadAlertDetails();
+        if (alertKey != null) {
+            loadAlertDetails(0); // Start searching from index 0
+        }
 
-        // Single implementation for the Map Button
         findViewById(R.id.btnOpenInMaps).setOnClickListener(v -> {
             if (userLat != 0) {
                 String uri = "google.navigation:q=" + userLat + "," + userLng;
@@ -62,33 +61,39 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         });
     }
 
-    private void loadAlertDetails() {
-        FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(alertKey)
+    private void loadAlertDetails(int index) {
+        String[] paths = {"ActiveAlerts", "ProcessingAlerts", "ResolvedAlerts"};
+        if (index >= paths.length) return; // Search finished, not found
+
+        FirebaseDatabase.getInstance().getReference(paths[index]).child(alertKey)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        AlertModel alert = snapshot.getValue(AlertModel.class);
-                        if (alert != null) {
-                            userLat = alert.userLat;
-                            userLng = alert.userLng;
+                        if (snapshot.exists()) {
+                            AlertModel alert = snapshot.getValue(AlertModel.class);
+                            if (alert != null) {
+                                userLat = alert.userLat;
+                                userLng = alert.userLng;
 
-                            tvName.setText(alert.userName);
-                            tvPhone.setText("Phone: " + alert.userPhone);
-                            tvEmail.setText("Email: " + alert.userEmail);
-                            tvAddress.setText("Address: " + alert.textAddress);
-                            tvType.setText("Emergency: " + alert.emergencyType.toUpperCase());
-                            tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
+                                tvName.setText(alert.userName != null ? alert.userName : "Unknown");
+                                tvPhone.setText("Phone: " + (alert.userPhone != null ? alert.userPhone : "N/A"));
+                                tvEmail.setText("Email: " + (alert.userEmail != null ? alert.userEmail : "N/A"));
+                                tvAddress.setText("Address: " + (alert.textAddress != null ? alert.textAddress : "N/A"));
+                                tvType.setText("Emergency: " + (alert.emergencyType != null ? alert.emergencyType.toUpperCase() : "N/A"));
+                                tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
 
-                            updateMapLocation();
+                                updateMapLocation();
 
-                            // Setup Video with Media Controller
-                            if (alert.getVideoUrl() != null && !alert.getVideoUrl().isEmpty()) {
-                                MediaController mediaController = new MediaController(EmergencyDetailActivity.this);
-                                mediaController.setAnchorView(videoView);
-                                videoView.setMediaController(mediaController);
-                                videoView.setVideoURI(Uri.parse(alert.getVideoUrl()));
-                                // Optional: videoView.start(); // Auto-play might be blocked on some devices
+                                if (alert.getVideoUrl() != null && !alert.getVideoUrl().isEmpty()) {
+                                    MediaController mediaController = new MediaController(EmergencyDetailActivity.this);
+                                    mediaController.setAnchorView(videoView);
+                                    videoView.setMediaController(mediaController);
+                                    videoView.setVideoURI(Uri.parse(alert.getVideoUrl()));
+                                }
                             }
+                        } else {
+                            // Recursively try the next path if not found in this one
+                            loadAlertDetails(index + 1);
                         }
                     }
                     @Override

@@ -17,8 +17,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     public interface OnAlertClickListener {
         void onDetailsClick(AlertModel alert);
         void onResolve(AlertModel alert, String alertKey);
-        void onLocate(AlertModel alert);
-        void onConfirmArrival(AlertModel alert);
+        void onReceive(AlertModel alert);
     }
 
     public AdminAdapter(List<AlertModel> alertList, OnAlertClickListener listener) {
@@ -38,31 +37,28 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AlertModel alert = alertList.get(position);
 
+        // Using the getters from the AlertModel
         holder.tvVictimName.setText(alert.getUserName());
+        holder.tvVictimGender.setText("⚧ Gender: " + alert.getGender());
         holder.tvEmergencyTag.setText(alert.getEmergencyType().toUpperCase());
-        holder.tvVictimPhone.setText("Phone: " + alert.getUserPhone());
-        holder.tvVictimEmail.setText("Email: " + alert.userEmail);
-        holder.tvVictimAddress.setText("Location: " + alert.textAddress);
+        holder.tvVictimPhone.setText("📞 " + alert.getUserPhone());
+        holder.tvVictimEmail.setText("✉️ " + alert.getUserEmail());
+        holder.tvVictimAddress.setText("📍 " + alert.getTextAddress());
         holder.tvCoordinates.setText("Lat: " + alert.userLat + " | Lng: " + alert.userLng);
-        holder.btnArrived.setOnClickListener(v -> listener.onConfirmArrival(alert));
 
-        // Inside AdminAdapter's onBindViewHolder
-        if (listener instanceof AdminHistoryFragment) {
-            holder.btnResolveAlert.setVisibility(View.GONE); // Hide resolve for history
-        } else {
-            holder.btnResolveAlert.setVisibility(View.VISIBLE); // Show for active alerts
-        }
-
-        // Click listeners using your new button IDs
-        holder.btnViewDetails.setOnClickListener(v -> listener.onDetailsClick(alert));
-
-        holder.btnResolveAlert.setOnClickListener(v ->
-                listener.onResolve(alert, alert.getKey())
-        );
-
-        // If you want the whole card to open details:
+        // Buttons
+        holder.btnReceive.setOnClickListener(v -> listener.onReceive(alert));
+        holder.btnResolve.setOnClickListener(v -> listener.onResolve(alert, alert.getKey()));
         holder.itemView.setOnClickListener(v -> listener.onDetailsClick(alert));
-        holder.btnArrived.setOnClickListener(v -> listener.onConfirmArrival(alert));
+
+        // UI Logic
+        if ("Processing".equals(alert.getStatus())) {
+            holder.btnReceive.setEnabled(false);
+            holder.btnReceive.setText("Received");
+        } else {
+            holder.btnReceive.setEnabled(true);
+            holder.btnReceive.setText("Receive");
+        }
     }
 
     @Override
@@ -72,8 +68,8 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // 1. Add btnArrived here
-        TextView tvVictimName, tvEmergencyTag, tvVictimPhone, tvVictimEmail, tvVictimAddress, tvCoordinates;
-        MaterialButton btnResolveAlert, btnViewDetails, btnArrived;
+        TextView tvVictimName, tvEmergencyTag, tvVictimPhone, tvVictimEmail, tvVictimAddress, tvCoordinates, tvVictimGender;
+        MaterialButton btnReceive, btnResolve;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,12 +78,10 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
             tvVictimPhone = itemView.findViewById(R.id.tvVictimPhone);
             tvVictimEmail = itemView.findViewById(R.id.tvVictimEmail);
             tvVictimAddress = itemView.findViewById(R.id.tvVictimAddress);
-            btnResolveAlert = itemView.findViewById(R.id.btnResolveAlert);
-            btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
             tvCoordinates = itemView.findViewById(R.id.tvCoordinates);
-
-            // 2. Link it to the XML ID
-            btnArrived = itemView.findViewById(R.id.btnArrived);
+            tvVictimGender = itemView.findViewById(R.id.tvVictimGender);
+            btnReceive = itemView.findViewById(R.id.btnReceive);
+            btnResolve = itemView.findViewById(R.id.btnResolve);
         }
     }
 }

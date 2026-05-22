@@ -55,7 +55,6 @@ public class AdminHistoryFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.adminAlertRecyclerView);
         statusText = view.findViewById(R.id.adminStatus);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // We reuse the AdminAdapter, but we can leave the resolve button disabled or hidden
@@ -71,13 +70,8 @@ public class AdminHistoryFragment extends Fragment {
             }
 
             @Override
-            public void onLocate(AlertModel alert) {
-                // Optional: show where the incident happened
-            }
-
-            @Override
-            public void onConfirmArrival(AlertModel alert) {
-                // Resolved items don't need arrival confirmation, so leave blank
+            public void onReceive(AlertModel alert) {
+                // Already resolved/history, so do nothing here
             }
         });
 

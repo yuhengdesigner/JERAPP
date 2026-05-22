@@ -3,45 +3,62 @@ package com.example.jerapp;
 import com.google.firebase.database.Exclude;
 
 public class AlertModel {
-    public String userId, userName, userPhone, userEmail, emergencyType, assignedDept, textAddress, status;
-    public String videoUrl, deptName, deptPhone;
+    // Firebase Fields
+    public String userId, userName, gender, userPhone, userEmail, emergencyType, status;
+    public String textAddress, videoUrl, deptName, deptPhone;
+
+    // Dept identification fields
+    public String assignedDept;
+    public String dept_id;
+
     public double userLat, userLng, deptLat, deptLng;
     public long timestamp;
+
     private String key;
 
-    public AlertModel() {} // Required for Firebase
+    public AlertModel() {}
 
-    // Getters and Setters for Firebase and Fragment logic
+    // --- KEY MANAGEMENT ---
+    @Exclude public String getKey() { return key; }
+    @Exclude public void setKey(String key) { this.key = key; }
+
+    // --- GETTERS ---
+    public String getUserName() { return userName != null ? userName : "Unknown User"; }
+    public String getGender() { return gender != null ? gender : "N/A"; }
+    public String getUserPhone() { return userPhone != null ? userPhone : "N/A"; }
+    public String getUserEmail() { return userEmail != null ? userEmail : "No Email Provided"; }
+    public String getEmergencyType() { return emergencyType != null ? emergencyType : "EMERGENCY"; }
+    public String getTextAddress() { return textAddress != null ? textAddress : "No address provided"; }
+    public String getStatus() { return status != null ? status : "Pending"; }
     public String getVideoUrl() { return videoUrl; }
-    public String getUserId() { return userId; }
-    public String getUserName() { return userName; }
-    public String getUserPhone() { return userPhone; }
-    public String getEmergencyType() { return emergencyType; }
-    public String getAssignedDept() { return assignedDept; }
-    public String getStatus() { return status; }
+    public String getDeptName() { return deptName != null ? deptName : "Unknown Department"; }
+    public String getDeptPhone() { return deptPhone != null ? deptPhone : "N/A"; }
+    public long getTimestamp() { return timestamp; }
+    public double getDeptLat() { return deptLat; }
+    public double getDeptLng() { return deptLng; }
 
-    // These match the onLocate logic
-    public double getLatitude() { return userLat; }
-    public double getLongitude() { return userLng; }
-
-    public long getTimestamp() {
-        return timestamp;
+    public String getAssignedDept() {
+        if (dept_id != null && !dept_id.isEmpty()) return dept_id;
+        return assignedDept != null ? assignedDept : "";
     }
 
-    public String getDeptPhone() {
-        return deptPhone;
-    }
-
-    public double getDeptLat() {
-        return deptLat;
-    }
-
-    public double getDeptLng() {
-        return deptLng;
-    }
-
-    @Exclude
-    public String getKey() { return key; }
-    @Exclude
-    public void setKey(String key) { this.key = key; }
+    // --- SETTERS ---
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setUserName(String userName) { this.userName = userName; }
+    public void setGender(String gender) { this.gender = gender; }
+    public void setUserPhone(String userPhone) { this.userPhone = userPhone; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public void setEmergencyType(String emergencyType) { this.emergencyType = emergencyType; }
+    public void setStatus(String status) { this.status = status; }
+    public void setTextAddress(String textAddress) { this.textAddress = textAddress; }
+    public void setVideoUrl(String videoUrl) { this.videoUrl = videoUrl; }
+    public void setDeptName(String deptName) { this.deptName = deptName; }
+    public void setDeptPhone(String deptPhone) { this.deptPhone = deptPhone; }
+    public void setAssignedDept(String assignedDept) { this.assignedDept = assignedDept; }
+    public void setDept_id(String dept_id) { this.dept_id = dept_id; }
+    public void setUserLat(double userLat) { this.userLat = userLat; }
+    public void setUserLng(double userLng) { this.userLng = userLng; }
+    public void setDeptLat(double deptLat) { this.deptLat = deptLat; }
+    public void setDeptLng(double deptLng) { this.deptLng = deptLng; }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 }

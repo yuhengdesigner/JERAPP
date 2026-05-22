@@ -188,6 +188,13 @@ public class LoginActivity extends AppCompatActivity {
                     if (isAdminMode) {
                         // Check for admin role (Case-Insensitive)
                         if ("admin".equalsIgnoreCase(role)) {
+                            // 1. SAVE THE DEPT_ID TO SHARED PREFERENCES (This is the missing link!)
+                            getSharedPreferences("AdminPrefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("dept_id", deptId) // Save the ID retrieved from snapshot
+                                    .apply();
+
+                            // 2. Proceed with navigation
                             Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
                             intent.putExtra("DEPT_ID", deptId);
                             startActivity(intent);

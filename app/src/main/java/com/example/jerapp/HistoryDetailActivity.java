@@ -58,8 +58,20 @@ public class HistoryDetailActivity extends AppCompatActivity {
 
                         // Navigation Button
                         btnNavigate.setOnClickListener(v -> {
-                            String geoUri = "http://maps.google.com/maps?daddr=" + alert.getDeptLat() + "," + alert.getDeptLng();
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri)));
+                            // Correct format for Google Maps URI
+                            String geoUri = "geo:" + alert.getDeptLat() + "," + alert.getDeptLng() +
+                                    "?q=" + alert.getDeptLat() + "," + alert.getDeptLng() + "(" + alert.getDeptName() + ")";
+
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                            mapIntent.setPackage("com.google.android.apps.maps"); // Ensures it opens in Google Maps
+
+                            // Check if Google Maps is installed
+                            if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(mapIntent);
+                            } else {
+                                // Fallback to browser if Maps app isn't installed
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/search/?api=1&query=" + alert.getDeptLat() + "," + alert.getDeptLng())));
+                            }
                         });
                     }
                     @Override public void onCancelled(DatabaseError error) {}

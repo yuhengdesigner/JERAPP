@@ -32,16 +32,20 @@ import org.json.JSONObject;
 import java.io.IOException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.firebase.database.DatabaseError;
 
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private String deptName, deptPhone;
+    private String deptName, deptPhone, deptId;
     private double deptLat, deptLng;
     private ActivityResultLauncher<Intent> videoLauncher;
     private String alertKey;
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng userLoc;
+    private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         // --- 2. GET DATA FROM INTENT ---
         deptName = getIntent().getStringExtra("dept_name");
         deptPhone = getIntent().getStringExtra("dept_phone");
+        deptId = getIntent().getStringExtra("dept_id");
         deptLat = getIntent().getDoubleExtra("dept_lat", 0);
         deptLng = getIntent().getDoubleExtra("dept_lng", 0);
 
@@ -98,11 +103,11 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         // Record Video Button
         findViewById(R.id.btnRecord).setOnClickListener(v -> {
-            Intent takeVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-            if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
-                videoLauncher.launch(takeVideoIntent);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                launchCamera();
             } else {
-                Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show();
+                // Request the permission if it's not granted
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE);
             }
         });
 
@@ -129,7 +134,43 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 }
             }
         });
+
     }
+    private void launchCamera() {
+        Intent takeVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            videoLauncher.launch(takeVideoIntent);
+        } else {
+            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, now we can safely open the camera
+                launchCamera();
+            } else {
+                Toast.makeText(this, "Permission denied. Cannot record video.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void checkPermissions() {
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        // Check if permissions are already granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+        }
+    }
+
 
     private void drawComplexRoute(LatLng origin, LatLng destination) {
         // Construct the URL for Directions API
@@ -195,52 +236,86 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) return;
 
-        // Get the REAL user coordinates passed from the previous activity
-        double userLat = getIntent().getDoubleExtra("user_lat", 1.4588);
-        double userLng = getIntent().getDoubleExtra("user_lng", 103.7461);
+        // Retrieve the extras passed into this activity
+        double userLat = getIntent().getDoubleExtra("user_lat", 0.0);
+        double userLng = getIntent().getDoubleExtra("user_lng", 0.0);
+        String emergencyType = getIntent().getStringExtra("emergency_type");
 
         String uid = mAuth.getUid();
         DatabaseReference activeAlertsRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts");
         this.alertKey = activeAlertsRef.push().getKey();
 
-        HashMap<String, Object> alertData = new HashMap<>();
-        alertData.put("userId", uid);
-        alertData.put("userName", "Choy Yu Heng");
-        alertData.put("userEmail", mAuth.getCurrentUser().getEmail());
-        alertData.put("userPhone", "+60123456789");
-        alertData.put("emergencyType", getIntent().getStringExtra("emergency_type"));
-        alertData.put("assignedDept", deptName);
-        alertData.put("userLat", userLat); // Updated from hardcoded
-        alertData.put("userLng", userLng); // Updated from hardcoded
-        alertData.put("textAddress", "UTM Faculty of Computing, Skudai");
-        alertData.put("status", "Pending");
-        alertData.put("timestamp", System.currentTimeMillis());
+        // Use the full package path or ensure imports are correct for ValueEventListener and DatabaseError
+        FirebaseDatabase.getInstance().getReference("Users").child(uid)
+                .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        String phone = snapshot.child("phone").getValue(String.class);
 
-        // 1. Alert the Admin
-        activeAlertsRef.child(alertKey).setValue(alertData);
+                        HashMap<String, Object> alertData = new HashMap<>();
+                        alertData.put("userId", uid);
+                        alertData.put("userName", name != null ? name : "Unknown User");
+                        alertData.put("userEmail", mAuth.getCurrentUser().getEmail());
+                        alertData.put("userPhone", phone != null ? phone : "N/A");
+                        alertData.put("emergencyType", emergencyType != null ? emergencyType : "General");
+                        alertData.put("assignedDept", deptId);
+                        alertData.put("userLat", userLat);
+                        alertData.put("userLng", userLng);
+                        alertData.put("textAddress", "UTM Faculty of Computing, Skudai");
+                        alertData.put("status", "Pending");
+                        alertData.put("timestamp", System.currentTimeMillis());
+                        alertData.put("deptName", deptName);
+                        alertData.put("deptPhone", deptPhone);
+                        alertData.put("deptLat", deptLat);
+                        alertData.put("deptLng", deptLng);
 
-        // 2. Save to User's History
-        FirebaseDatabase.getInstance().getReference("UserHistory")
-                .child(uid).child(alertKey).setValue(alertData)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Emergency reported to " + deptName, Toast.LENGTH_SHORT).show();
+                        activeAlertsRef.child(alertKey).setValue(alertData);
+
+                        FirebaseDatabase.getInstance().getReference("UserHistory")
+                                .child(uid).child(alertKey).setValue(alertData);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // This method must be here and match the signature
+                        android.util.Log.e("Firebase", "Database error: " + error.getMessage());
+                    }
                 });
     }
 
     private void confirmArrivalWithFirebase() {
-        if (this.alertKey != null) {
-            FirebaseDatabase.getInstance().getReference("ActiveAlerts")
-                    .child(this.alertKey).child("status").setValue("Arrived")
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Arrival Confirmed!", Toast.LENGTH_SHORT).show();
+        if (this.alertKey == null) return;
 
-                        // Redirect to History Page
-                        Intent intent = new Intent(TrackingActivity.this, UserHistoryActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    });
-        }
+        // 1. Update status to "Arrived" in ActiveAlerts
+        // This allows the Admin to still see the card in their list.
+        FirebaseDatabase.getInstance().getReference("ActiveAlerts")
+                .child(this.alertKey)
+                .child("status")
+                .setValue("Arrived")
+                .addOnSuccessListener(aVoid -> {
+
+                    // 2. Optional: Also update the history node so the user sees the status update
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    if (mAuth.getUid() != null) {
+                        FirebaseDatabase.getInstance().getReference("UserHistory")
+                                .child(mAuth.getUid())
+                                .child(this.alertKey)
+                                .child("status")
+                                .setValue("Arrived");
+                    }
+
+                    Toast.makeText(TrackingActivity.this, "Arrival confirmed! Alert remains for Admin.", Toast.LENGTH_SHORT).show();
+
+                    // 3. Redirect the user to the history/home screen
+                    Intent intent = new Intent(TrackingActivity.this, UserHistoryActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(TrackingActivity.this, "Failed to update status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

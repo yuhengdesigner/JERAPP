@@ -34,12 +34,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AlertModel alert = historyList.get(position);
 
-        holder.tvType.setText(alert.getEmergencyType().toUpperCase());
-        holder.tvDept.setText("Responded by: " + alert.getAssignedDept());
+        // Emergency Type
+        String type = (alert.getEmergencyType() != null) ? alert.getEmergencyType().toUpperCase() : "EMERGENCY";
+        holder.tvType.setText(type);
 
-        // Format the timestamp to a readable date
-        String date = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(alert.getTimestamp()));
-        holder.tvDate.setText(date);
+        // Department Name (Using the getter added to AlertModel)
+        String deptName = (alert.getDeptName() != null) ? alert.getDeptName() : "Unknown Department";
+        holder.tvDept.setText("Responded by: " + deptName);
+
+        // Date Formatting
+        if (alert.getTimestamp() > 0) {
+            String date = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(alert.getTimestamp()));
+            holder.tvDate.setText(date);
+        } else {
+            holder.tvDate.setText("Date unavailable");
+        }
 
         holder.tvStatus.setText(alert.getStatus()); // e.g., "RESOLVED"
 

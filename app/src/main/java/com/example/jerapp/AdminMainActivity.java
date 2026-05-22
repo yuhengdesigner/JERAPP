@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Build;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -24,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AdminMainActivity extends AppCompatActivity {
 
@@ -70,6 +73,10 @@ public class AdminMainActivity extends AppCompatActivity {
             // If deptId is null (e.g. session resume), fetch it from Firebase
             fetchDeptIdAndLoadInitialFragment();
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
     }
 
     private void setupHeader(NavigationView navView) {
@@ -106,12 +113,19 @@ public class AdminMainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         deptId = snapshot.getValue(String.class);
+                        // Add a log to debug if this is actually returning a value
+                        Log.d("DEBUG_DEPT", "Fetched Dept ID: " + deptId);
+
                         if (deptId != null) {
                             loadFragment(AdminAlertsFragment.newInstance(deptId));
+                        } else {
+                            Toast.makeText(AdminMainActivity.this, "Dept ID not found for user!", Toast.LENGTH_SHORT).show();
                         }
                     }
                     @Override
-                    public void onCancelled(DatabaseError error) {}
+                    public void onCancelled(DatabaseError error) {
+                        Log.e("DEBUG_DEPT", "Database error: " + error.getMessage());
+                    }
                 });
     }
 
@@ -124,21 +138,23 @@ public class AdminMainActivity extends AppCompatActivity {
                 return false;
             }
 
-            if (id == R.id.admin_nav_alerts) {
-                loadFragment(AdminAlertsFragment.newInstance(deptId));
-            } else if (id == R.id.admin_nav_history) {
-                loadFragment(AdminHistoryFragment.newInstance(deptId));
-            }
+            if (id == R.id.admin_nav_alerts) loadFragment(AdminAlertsFragment.newInstance(deptId));
+            else if (id == R.id.admin_nav_processing) loadFragment(AdminProcessingFragment.newInstance(deptId));
+            else if (id == R.id.admin_nav_history) loadFragment(AdminHistoryFragment.newInstance(deptId));
             return true;
         });
 
         navView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_admin_logout) {
-                mAuth.signOut();
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                // --- FIX: UNSUBSCRIBE FROM ALERTS ON LOGOUT ---
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("admin_alerts")
+                        .addOnCompleteListener(task -> {
+                            mAuth.signOut();
+                            Intent intent = new Intent(this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        });
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
@@ -150,6 +166,15 @@ public class AdminMainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.admin_fragment_container, fragment)
                     .commit();
+        }
+    }
+
+    // Add this to onCreate to ensure they are subscribed if they are already logged in
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuth.getCurrentUser() != null) {
+            FirebaseMessaging.getInstance().subscribeToTopic("admin_alerts");
         }
     }
 }

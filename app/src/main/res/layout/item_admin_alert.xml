@@ -52,6 +52,13 @@
             android:background="#EEEEEE" />
 
         <TextView
+            android:id="@+id/tvVictimGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚧ Gender: N/A"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
             android:id="@+id/tvVictimPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,6 +88,22 @@
             android:layout_height="wrap_content"
             android:text='@{"Lat: " + alert.userLat + ", Lng: " + alert.userLng}' />
 
+        <TextView
+            android:id="@+id/statusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Arrived"
+            android:textColor="#2196F3"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="#EEEEEE" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,29 +111,22 @@
             android:gravity="end">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnResolveAlert"
-                style="@style/Widget.Material3.Button.TextButton"
+                android:id="@+id/btnReceive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Receive"
+                android:textColor="@color/background"
+                android:backgroundTint="#D32F2F"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResolve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Resolve"
-                android:textColor="#4CAF50" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnArrived"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Arrived"
-                android:backgroundTint="#2196F3"
-                android:textColor="@color/white" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnViewDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Details"
-                app:cornerRadius="8dp" />
+                android:backgroundTint="#388E3C" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 public class DepartmentListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -147,31 +152,56 @@ public class DepartmentListActivity extends AppCompatActivity {
             });
         }
 
-        // Fetch user live coordinate before querying database
-        getUserLiveLocation();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            getUserLiveLocation();
+        } else {
+            // Request permission if not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted: Get live location
+                getUserLiveLocation();
+            } else {
+                // Permission denied: Use default fallback location and warn user
+                Toast.makeText(this, "Location permission denied. Using default location for accuracy.",
+                        Toast.LENGTH_LONG).show();
+                // Proceed with existing default coordinates (already initialized in onCreate)
+                findNearestDepartments(selectedType, userLat, userLng);
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
     private void getUserLiveLocation() {
-        // Since permissions are checked at launch in MainActivity, we directly request coordinates.
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        // Successfully fetched real hardware coordinates
-                        userLat = location.getLatitude();
-                        userLng = location.getLongitude();
-                    } else {
-                        // GPS might be toggled off on device settings, using default fallback
-                        Toast.makeText(this, "Unable to get live location. Using default location.", Toast.LENGTH_SHORT).show();
-                    }
+        // 1. Double-check permission before calling API
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            findNearestDepartments(selectedType, userLat, userLng);
+            return;
+        }
 
-                    // Proceed to retrieve database departments with updated location variables
-                    findNearestDepartments(selectedType, userLat, userLng);
-                })
-                .addOnFailureListener(this, e -> {
-                    // Fallback to initial layout configuration if task execution errors out
-                    findNearestDepartments(selectedType, userLat, userLng);
-                });
+        // 2. Fetch the location
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                userLat = location.getLatitude();
+                userLng = location.getLongitude();
+            } else {
+                Toast.makeText(this, "Unable to get live location. Using default.", Toast.LENGTH_SHORT).show();
+            }
+            findNearestDepartments(selectedType, userLat, userLng);
+        }).addOnFailureListener(e -> {
+            // Fallback on failure
+            findNearestDepartments(selectedType, userLat, userLng);
+        });
     }
 
     private void findNearestDepartments(String type, double lat, double lng) {
@@ -186,6 +216,9 @@ public class DepartmentListActivity extends AppCompatActivity {
                     DepartmentModel dept = ds.getValue(DepartmentModel.class);
 
                     if (dept != null) {
+                        // MANUALLY SET THE ID HERE
+                        dept.id = ds.getKey();
+
                         String dbType = (dept.type != null) ? dept.type.trim().toLowerCase() : "";
                         String dbCategory = (dept.category != null) ? dept.category.trim().toLowerCase() : "";
                         String dbName = (dept.place_name != null) ? dept.place_name.trim().toLowerCase() : "";
@@ -267,6 +300,10 @@ public class DepartmentListActivity extends AppCompatActivity {
 
     private void moveToEmergencyPage(DepartmentModel dept) {
         Intent intent = new Intent(this, ConfirmationActivity.class);
+
+        // CRITICAL: You must extract the ID from the 'dept' object and put it in the intent
+        // Ensure "dept.id" matches the key in your JSON file (e.g., "id_1")
+        intent.putExtra("dept_id", dept.id);
 
         intent.putExtra("dept_name", dept.place_name);
         intent.putExtra("dept_phone", dept.contact);
