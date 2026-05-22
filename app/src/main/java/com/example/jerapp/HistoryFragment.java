@@ -23,6 +23,7 @@ import java.util.List;
 
 public class HistoryFragment extends Fragment {
     private RecyclerView recyclerView;
+    private HistoryAdapter adapter; // Defined the adapter type
     private List<AlertModel> historyList;
 
     @Nullable
@@ -35,18 +36,17 @@ public class HistoryFragment extends Fragment {
 
         historyList = new ArrayList<>();
 
-        // Initialize your adapter here once created
-        // adapter = new HistoryAdapter(historyList);
-        // recyclerView.setAdapter(adapter);
+        // 1. Initialize the adapter with the context and the list
+        HistoryAdapter adapter = new HistoryAdapter(getContext(), historyList);
+        recyclerView.setAdapter(adapter);
 
-        loadUserHistory();
+        loadUserHistory(adapter);
 
         return view;
     }
-    private void loadUserHistory() {
-        // FirebaseAuth requires the import: com.google.firebase.auth.FirebaseAuth
-        String uid = FirebaseAuth.getInstance().getUid();
 
+    private void loadUserHistory(HistoryAdapter adapter) {
+        String uid = FirebaseAuth.getInstance().getUid();
         if (uid == null) return;
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("UserHistory").child(uid);
@@ -62,18 +62,10 @@ public class HistoryFragment extends Fragment {
                         historyList.add(alert);
                     }
                 }
-                // Collections requires the import: java.util.Collections
                 Collections.reverse(historyList);
-
-                // if (adapter != null) adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(); // Update the UI
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

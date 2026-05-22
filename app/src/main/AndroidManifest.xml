@@ -73,6 +73,8 @@
         <activity
             android:name=".FlashlightActivity"
             android:theme="@style/Theme.JERAPP" />
+        <activity android:name=".DispatchActivity" android:exported="false" />
+        <activity android:name=".ConfirmationActivity" android:exported="false" />
     </application>
 
 </manifest>

@@ -37,14 +37,18 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-    // Google Maps & Location
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation 'com.google.android.gms:play-services-maps:18.2.0'
 
+    // Google Maps & Location
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.8.2'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     // Firebase
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
-    implementation platform('com.google.firebase:firebase-bom:33.1.1')
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
 }

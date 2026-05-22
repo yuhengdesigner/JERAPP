@@ -72,12 +72,14 @@ public class AdminAlertsFragment extends Fragment {
                 startActivity(intent);
             }
 
-            // Fixed: Added the String parameter to match your Interface
             @Override
-            public void onResolve(AlertModel alert, String status) {
-                // If you want to update the status to "Resolved" before moving
-                alert.status = "Resolved";
-                moveAlertToHistory(alert);
+            public void onResolve(AlertModel alert, String alertKey) {
+                resolveAlert(alert, alertKey);
+            }
+
+            @Override
+            public void onConfirmArrival(AlertModel alert) {
+                confirmArrival(alert.getKey());
             }
 
             @Override
@@ -92,6 +94,27 @@ public class AdminAlertsFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         listenForAlerts();
+    }
+
+    // Inside AdminAlertsFragment.java
+
+    private void confirmArrival(String alertKey) {
+        FirebaseDatabase.getInstance().getReference("ActiveAlerts")
+                .child(alertKey).child("status").setValue("Arrived")
+                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Status: Arrived", Toast.LENGTH_SHORT).show());
+    }
+
+    private void resolveAlert(AlertModel alert, String alertKey) {
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+
+        // 1. Save to ResolvedAlerts
+        root.child("ResolvedAlerts").child(alertKey).setValue(alert);
+
+        // 2. Remove from ActiveAlerts
+        root.child("ActiveAlerts").child(alertKey).removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Incident Closed & Archived.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void listenForAlerts() {
@@ -145,16 +168,10 @@ public class AdminAlertsFragment extends Fragment {
 
         alert.status = "Resolved"; // Update the status
 
-        // Move to Admin History
+        // Simply setting the whole object copies all fields (including videoUrl, if it exists)
         historyRef.setValue(alert).addOnSuccessListener(aVoid -> {
-            activeRef.removeValue().addOnSuccessListener(unused -> {
-
-                // CRITICAL: Also update the status in the User's personal history
-                FirebaseDatabase.getInstance().getReference("UserHistory")
-                        .child(alert.userId).child(alert.getKey()).child("status").setValue("Resolved");
-
-                Toast.makeText(requireContext(), "Case archived.", Toast.LENGTH_SHORT).show();
-            });
+            activeRef.removeValue();
+            Toast.makeText(requireContext(), "Case archived.", Toast.LENGTH_SHORT).show();
         });
     }
 

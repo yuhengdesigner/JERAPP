@@ -18,6 +18,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
+import android.widget.SeekBar;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+
+import com.google.maps.android.PolyUtil;
+import java.util.List;
+import okhttp3.*; // Ensure you add OkHttp dependency to build.gradle
+import org.json.JSONObject;
+import java.io.IOException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -25,20 +39,23 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     private String deptName, deptPhone;
     private double deptLat, deptLng;
     private ActivityResultLauncher<Intent> videoLauncher;
+    private String alertKey;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LatLng userLoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        // --- 1. SET UP THE ACTION BAR (Back Button) ---
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("Emergency Tracking");
-            }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        checkLocationPermissionAndFetch();
+
+        android.widget.ImageButton btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                onBackPressed(); // This triggers your existing logic
+            });
         }
 
         // --- 2. GET DATA FROM INTENT ---
@@ -63,8 +80,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         videoLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Toast.makeText(this, "Evidence saved successfully!", Toast.LENGTH_SHORT).show();
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri videoUri = result.getData().getData();
+                        uploadVideoToFirebase(videoUri);
                     }
                 }
         );
@@ -90,6 +108,85 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         // --- 6. AUTO-REPORT TO ADMIN ---
         sendAlertToAdmin();
+
+        // --- 7. SLIDE-TO-CONFIRM LOGIC ---
+        SeekBar btnSwipe = findViewById(R.id.btnSwipe);
+        btnSwipe.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Since we have padding/offset, 100% might not be reached perfectly.
+                // 90-95 is a safe threshold for "end of track".
+                if (progress >= 99) {
+                    confirmArrivalWithFirebase();
+                    seekBar.setEnabled(false);
+                    seekBar.setAlpha(0.5f);
+                }
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
+                if (seekBar.getProgress() < 99) {
+                    seekBar.setProgress(0);
+                }
+            }
+        });
+    }
+
+    private void drawComplexRoute(LatLng origin, LatLng destination) {
+        // Construct the URL for Directions API
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="
+                + origin.latitude + "," + origin.longitude
+                + "&destination=" + destination.latitude + "," + destination.longitude
+                + "&key=AIzaSyAbO5sV2U6P2q5e4jxVPAoTdkg5R4lhQU8";
+
+        // Use a background thread (OkHttp or AsyncTask) to fetch the JSON
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String jsonData = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonData);
+
+                    // Log the response to Logcat to see if we get 'REQUEST_DENIED' or 'ZERO_RESULTS'
+                    android.util.Log.d("DIRECTIONS_API", jsonData);
+
+                    if (jsonObject.getString("status").equals("OK")) {
+                        String encodedPath = jsonObject.getJSONArray("routes")
+                                .getJSONObject(0).getJSONObject("overview_polyline").getString("points");
+
+                        List<LatLng> decodedPath = PolyUtil.decode(encodedPath);
+                        runOnUiThread(() -> {
+                            mMap.addPolyline(new com.google.android.gms.maps.model.PolylineOptions()
+                                    .addAll(decodedPath)
+                                    .width(12)
+                                    .color(android.graphics.Color.BLUE));
+                        });
+                    } else {
+                        android.util.Log.e("DIRECTIONS_API", "Status: " + jsonObject.getString("status"));
+                    }
+                } catch (Exception e) {
+                    android.util.Log.e("DIRECTIONS_API", "Error parsing JSON", e);
+                }
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                android.util.Log.e("DIRECTIONS_API", "Network failure", e);
+            }
+        });
+    }
+
+    private void checkLocationPermissionAndFetch() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    userLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                    // Refresh map with new user location
+                    if (mMap != null) updateMapWithRoute();
+                }
+            });
+        }
     }
 
     // Inside TrackingActivity.java
@@ -104,7 +201,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         String uid = mAuth.getUid();
         DatabaseReference activeAlertsRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts");
-        String alertKey = activeAlertsRef.push().getKey();
+        this.alertKey = activeAlertsRef.push().getKey();
 
         HashMap<String, Object> alertData = new HashMap<>();
         alertData.put("userId", uid);
@@ -130,18 +227,73 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 });
     }
 
+    private void confirmArrivalWithFirebase() {
+        if (this.alertKey != null) {
+            FirebaseDatabase.getInstance().getReference("ActiveAlerts")
+                    .child(this.alertKey).child("status").setValue("Arrived")
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Arrival Confirmed!", Toast.LENGTH_SHORT).show();
+
+                        // Redirect to History Page
+                        Intent intent = new Intent(TrackingActivity.this, UserHistoryActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    });
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng location = new LatLng(deptLat, deptLng);
-        mMap.addMarker(new MarkerOptions().position(location).title(deptName));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true); // Shows the blue dot
+        }
+        updateMapWithRoute();
     }
 
-    // Handles the physical back arrow click at the top
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    private void updateMapWithRoute() {
+        if (userLoc == null || deptLat == 0) return;
+
+        LatLng deptLoc = new LatLng(deptLat, deptLng);
+        mMap.clear();
+
+        // 1. Add markers
+        mMap.addMarker(new MarkerOptions().position(userLoc).title("Your Location"));
+        mMap.addMarker(new MarkerOptions().position(deptLoc).title(deptName));
+
+        // 2. Fetch and Draw the REAL route
+        drawComplexRoute(userLoc, deptLoc);
+
+        // 3. Adjust camera
+        com.google.android.gms.maps.model.LatLngBounds.Builder builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
+        builder.include(userLoc);
+        builder.include(deptLoc);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 150));
+    }
+
+    private void uploadVideoToFirebase(Uri videoUri) {
+        if (alertKey == null) {
+            Toast.makeText(this, "Alert key not ready yet.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(this, "Uploading evidence...", Toast.LENGTH_SHORT).show();
+
+        // Ensure you have imported: com.google.firebase.storage.FirebaseStorage;
+        // Ensure you have imported: com.google.firebase.storage.StorageReference;
+        StorageReference ref = FirebaseStorage.getInstance().getReference("Evidence/" + alertKey);
+
+        ref.putFile(videoUri).addOnSuccessListener(taskSnapshot -> {
+            ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Save the URL to the existing alert in Firebase
+                FirebaseDatabase.getInstance().getReference("ActiveAlerts")
+                        .child(alertKey).child("videoUrl").setValue(uri.toString());
+
+                Toast.makeText(this, "Evidence uploaded successfully!", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 }

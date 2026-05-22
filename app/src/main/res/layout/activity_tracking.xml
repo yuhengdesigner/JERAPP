@@ -3,13 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
-        app:titleTextColor="@color/white"
-        app:navigationIconTint="@color/white" />
+        android:layout_height="100dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/primary">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-10dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="Emergency Tracking"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <!-- The Map View -->
     <androidx.fragment.app.FragmentContainerView
@@ -17,7 +38,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/header"/>
 
     <!-- Status Overlay Card -->
     <com.google.android.material.card.MaterialCardView
@@ -68,6 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="Call Dept"
                     app:icon="@android:drawable/ic_menu_call" />
@@ -80,7 +102,35 @@
                     android:text="Record Evidence"
                     android:backgroundTint="#D32F2F"
                     app:icon="@android:drawable/presence_video_online" />
+
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/swipe_bg">
+
+                <SeekBar
+                    android:id="@+id/btnSwipe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:thumbOffset="1dp"
+                    android:splitTrack="false"
+                    android:progressDrawable="@drawable/progress_layer"
+                    android:thumb="@drawable/swipe_thumb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="SWIPE IF THEY ARRVED >>"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

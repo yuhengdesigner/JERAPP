@@ -74,6 +74,11 @@ public class AdminHistoryFragment extends Fragment {
             public void onLocate(AlertModel alert) {
                 // Optional: show where the incident happened
             }
+
+            @Override
+            public void onConfirmArrival(AlertModel alert) {
+                // Resolved items don't need arrival confirmation, so leave blank
+            }
         });
 
         recyclerView.setAdapter(adapter);
@@ -85,7 +90,6 @@ public class AdminHistoryFragment extends Fragment {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ResolvedAlerts");
 
-        // Filter by the same department so admins only see their own history
         ref.orderByChild("assignedDept").equalTo(departmentFilter)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -99,6 +103,7 @@ public class AdminHistoryFragment extends Fragment {
                             }
                         }
 
+                        // Optional: Update your status text to let you know if it's empty
                         if (historyList.isEmpty()) {
                             statusText.setText("No history for " + departmentFilter);
                         } else {
@@ -109,7 +114,9 @@ public class AdminHistoryFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle possible errors
+                    }
                 });
     }
 }

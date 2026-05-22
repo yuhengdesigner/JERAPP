@@ -29,7 +29,7 @@ public class DashboardFragment extends Fragment {
 
         // 1. Populate data
         List<EmergencyModel> emergencyList = new ArrayList<>();
-        emergencyList.add(new EmergencyModel("Fire & Explosion", R.drawable.ic_jerlogo, "fire"));
+        emergencyList.add(new EmergencyModel("Fire & Explosion", R.drawable.ic_firelogo, "fire"));
         emergencyList.add(new EmergencyModel("Natural Disaster", R.drawable.ic_disasterlogo, "disaster"));
         emergencyList.add(new EmergencyModel("Medical Emergency", R.drawable.ic_medicallogo, "medical"));
         emergencyList.add(new EmergencyModel("Police & Crime", R.drawable.ic_policelogo, "police"));

@@ -18,6 +18,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
         void onDetailsClick(AlertModel alert);
         void onResolve(AlertModel alert, String alertKey);
         void onLocate(AlertModel alert);
+        void onConfirmArrival(AlertModel alert);
     }
 
     public AdminAdapter(List<AlertModel> alertList, OnAlertClickListener listener) {
@@ -39,9 +40,11 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
 
         holder.tvVictimName.setText(alert.getUserName());
         holder.tvEmergencyTag.setText(alert.getEmergencyType().toUpperCase());
-        holder.tvVictimPhone.setText("📞 " + alert.getUserPhone());
-        holder.tvVictimEmail.setText("✉️ " + alert.userEmail);
-        holder.tvVictimAddress.setText("📍 " + alert.textAddress);
+        holder.tvVictimPhone.setText("Phone: " + alert.getUserPhone());
+        holder.tvVictimEmail.setText("Email: " + alert.userEmail);
+        holder.tvVictimAddress.setText("Location: " + alert.textAddress);
+        holder.tvCoordinates.setText("Lat: " + alert.userLat + " | Lng: " + alert.userLng);
+        holder.btnArrived.setOnClickListener(v -> listener.onConfirmArrival(alert));
 
         // Inside AdminAdapter's onBindViewHolder
         if (listener instanceof AdminHistoryFragment) {
@@ -59,6 +62,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
 
         // If you want the whole card to open details:
         holder.itemView.setOnClickListener(v -> listener.onDetailsClick(alert));
+        holder.btnArrived.setOnClickListener(v -> listener.onConfirmArrival(alert));
     }
 
     @Override
@@ -67,12 +71,12 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvVictimName, tvEmergencyTag, tvVictimPhone, tvVictimEmail, tvVictimAddress;
-        MaterialButton btnResolveAlert, btnViewDetails;
+        // 1. Add btnArrived here
+        TextView tvVictimName, tvEmergencyTag, tvVictimPhone, tvVictimEmail, tvVictimAddress, tvCoordinates;
+        MaterialButton btnResolveAlert, btnViewDetails, btnArrived;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Matching the IDs from your preferred XML design
             tvVictimName = itemView.findViewById(R.id.tvVictimName);
             tvEmergencyTag = itemView.findViewById(R.id.tvEmergencyTag);
             tvVictimPhone = itemView.findViewById(R.id.tvVictimPhone);
@@ -80,6 +84,10 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
             tvVictimAddress = itemView.findViewById(R.id.tvVictimAddress);
             btnResolveAlert = itemView.findViewById(R.id.btnResolveAlert);
             btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
+            tvCoordinates = itemView.findViewById(R.id.tvCoordinates);
+
+            // 2. Link it to the XML ID
+            btnArrived = itemView.findViewById(R.id.btnArrived);
         }
     }
 }

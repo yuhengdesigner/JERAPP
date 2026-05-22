@@ -3,7 +3,9 @@ package com.example.jerapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,7 +14,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,7 +24,8 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
     private String alertKey;
     private GoogleMap mMap;
     private double userLat, userLng;
-    private TextView tvName, tvPhone, tvEmail, tvAddress, tvType;
+    private TextView tvName, tvPhone, tvEmail, tvAddress, tvType, tvCoords;
+    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,11 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         tvEmail = findViewById(R.id.detEmail);
         tvAddress = findViewById(R.id.detAddress);
         tvType = findViewById(R.id.detType);
+        tvCoords = findViewById(R.id.tvCoordinates);
+        videoView = findViewById(R.id.videoView);
 
-        MaterialToolbar toolbar = findViewById(R.id.detailToolbar);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        // Back button (handle both toolbar and custom back button)
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         // Setup Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -49,9 +53,12 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
         loadAlertDetails();
 
+        // Single implementation for the Map Button
         findViewById(R.id.btnOpenInMaps).setOnClickListener(v -> {
-            String uri = "google.navigation:q=" + userLat + "," + userLng;
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+            if (userLat != 0) {
+                String uri = "google.navigation:q=" + userLat + "," + userLng;
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+            }
         });
     }
 
@@ -70,8 +77,18 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                             tvEmail.setText("Email: " + alert.userEmail);
                             tvAddress.setText("Address: " + alert.textAddress);
                             tvType.setText("Emergency: " + alert.emergencyType.toUpperCase());
+                            tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
 
                             updateMapLocation();
+
+                            // Setup Video with Media Controller
+                            if (alert.getVideoUrl() != null && !alert.getVideoUrl().isEmpty()) {
+                                MediaController mediaController = new MediaController(EmergencyDetailActivity.this);
+                                mediaController.setAnchorView(videoView);
+                                videoView.setMediaController(mediaController);
+                                videoView.setVideoURI(Uri.parse(alert.getVideoUrl()));
+                                // Optional: videoView.start(); // Auto-play might be blocked on some devices
+                            }
                         }
                     }
                     @Override
@@ -90,7 +107,7 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
             LatLng location = new LatLng(userLat, userLng);
             mMap.clear();
             mMap.addMarker(new MarkerOptions().position(location).title("Victim Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
         }
     }
 }
