@@ -270,7 +270,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                         alertData.put("deptLat", deptLat);
                         alertData.put("deptLng", deptLng);
 
-                        activeAlertsRef.child(alertKey).setValue(alertData);
+                        activeAlertsRef.child(deptId).child(alertKey).setValue(alertData);
 
                         FirebaseDatabase.getInstance().getReference("UserHistory")
                                 .child(uid).child(alertKey).setValue(alertData);
@@ -290,6 +290,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         // 1. Update status to "Arrived" in ActiveAlerts
         // This allows the Admin to still see the card in their list.
         FirebaseDatabase.getInstance().getReference("ActiveAlerts")
+                .child(this.deptId)
                 .child(this.alertKey)
                 .child("status")
                 .setValue("Arrived")

@@ -18,14 +18,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.ValueEventListener;
 
 public class EmergencyDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String alertKey;
     private GoogleMap mMap;
     private double userLat, userLng;
-    private TextView tvName, tvPhone, tvEmail, tvAddress, tvType, tvCoords;
+    private TextView tvName, tvPhone, tvEmail, tvAddress, tvType, tvCoords, tvGender, tvTimestamp;
     private VideoView videoView;
+    private String deptId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,10 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         tvType = findViewById(R.id.detType);
         tvCoords = findViewById(R.id.tvCoordinates);
         videoView = findViewById(R.id.videoView);
+        tvGender = findViewById(R.id.detGender);
+        tvTimestamp = findViewById(R.id.detTimestamp);
+        deptId = getIntent().getStringExtra("dept_id");
+        alertKey = getIntent().getStringExtra("alert_key");
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
@@ -49,7 +55,7 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                 .findFragmentById(R.id.mapFragment);
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        if (alertKey != null) {
+        if (alertKey != null && deptId != null) {
             loadAlertDetails(0); // Start searching from index 0
         }
 
@@ -63,9 +69,12 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
     private void loadAlertDetails(int index) {
         String[] paths = {"ActiveAlerts", "ProcessingAlerts", "ResolvedAlerts"};
-        if (index >= paths.length) return; // Search finished, not found
+        if (index >= paths.length) return;
 
-        FirebaseDatabase.getInstance().getReference(paths[index]).child(alertKey)
+        // Correct Path: Node / DeptId / AlertKey
+        FirebaseDatabase.getInstance().getReference(paths[index])
+                .child(deptId)
+                .child(alertKey)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -81,6 +90,13 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                                 tvAddress.setText("Address: " + (alert.textAddress != null ? alert.textAddress : "N/A"));
                                 tvType.setText("Emergency: " + (alert.emergencyType != null ? alert.emergencyType.toUpperCase() : "N/A"));
                                 tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
+                                tvGender.setText("Gender: " + (alert.getGender() != null ? alert.getGender() : "N/A"));
+
+                                if (alert.getTimestamp() > 0) {
+                                    String time = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
+                                            .format(new java.util.Date(alert.getTimestamp()));
+                                    tvTimestamp.setText("Time: " + time);
+                                }
 
                                 updateMapLocation();
 

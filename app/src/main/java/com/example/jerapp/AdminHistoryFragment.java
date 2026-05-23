@@ -82,10 +82,9 @@ public class AdminHistoryFragment extends Fragment {
     private void loadHistory() {
         if (departmentFilter == null) return;
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ResolvedAlerts");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ResolvedAlerts").child(departmentFilter);
 
-        ref.orderByChild("assignedDept").equalTo(departmentFilter)
-                .addValueEventListener(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         historyList.clear();
@@ -96,15 +95,8 @@ public class AdminHistoryFragment extends Fragment {
                                 historyList.add(alert);
                             }
                         }
-
-                        // Optional: Update your status text to let you know if it's empty
-                        if (historyList.isEmpty()) {
-                            statusText.setText("No history for " + departmentFilter);
-                        } else {
-                            statusText.setText("Showing resolved cases for " + departmentFilter);
-                        }
-
                         adapter.notifyDataSetChanged();
+                        statusText.setText(historyList.isEmpty() ? "No history for " + departmentFilter : "Resolved Cases");
                     }
 
                     @Override

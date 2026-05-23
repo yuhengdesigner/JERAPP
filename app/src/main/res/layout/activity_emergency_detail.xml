@@ -78,8 +78,33 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#EEE"
+                        android:background="@color/primary"
                         android:layout_marginVertical="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/detGender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gender: N/A"
+                            android:layout_weight="3"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/detTimestamp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Time: --:--"
+                            android:layout_weight="1"
+                            android:textColor="#757575"
+                            android:layout_marginBottom="8dp"/>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/detPhone"
@@ -144,12 +169,6 @@
                     android:layout_height="250dp"
                     android:background="#000000"
                     android:layout_marginBottom="20dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnOpenInMaps"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:text="Get Directions (Google Maps)" />
 
             </LinearLayout>
 

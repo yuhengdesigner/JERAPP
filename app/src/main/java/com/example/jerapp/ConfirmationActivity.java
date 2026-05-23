@@ -31,6 +31,12 @@ public class ConfirmationActivity extends AppCompatActivity {
             String deptId = incomingIntent.getStringExtra("dept_id");
             String deptName = incomingIntent.getStringExtra("dept_name");
 
+            // Inside ConfirmationActivity.java, inside the Confirm Button listener:
+            double lat = incomingIntent.getDoubleExtra("user_lat", 0.0);
+            double lng = incomingIntent.getDoubleExtra("user_lng", 0.0);
+
+            final String addressText = getAddressFromLocation(lat, lng);
+
             if (deptId == null || deptId.isEmpty()) {
                 Toast.makeText(this, "Error: Department ID missing!", Toast.LENGTH_LONG).show();
                 return;
@@ -60,10 +66,11 @@ public class ConfirmationActivity extends AppCompatActivity {
                             newAlert.setUserEmail(email != null ? email : "N/A");
                             newAlert.setGender(gender != null ? gender : "N/A");
 
+                            newAlert.setTextAddress(addressText);
+
                             newAlert.setEmergencyType(incomingIntent.getStringExtra("emergency_type"));
                             newAlert.setAssignedDept(deptId);
                             newAlert.setStatus("Pending");
-                            newAlert.setTextAddress(incomingIntent.getStringExtra("dept_address"));
                             newAlert.setUserLat(incomingIntent.getDoubleExtra("user_lat", 0.0));
                             newAlert.setUserLng(incomingIntent.getDoubleExtra("user_lng", 0.0));
                             newAlert.setVideoUrl(incomingIntent.getStringExtra("video_url"));
@@ -91,4 +98,17 @@ public class ConfirmationActivity extends AppCompatActivity {
                     });
         });
     }
+    private String getAddressFromLocation(double lat, double lng) {
+        try {
+            android.location.Geocoder geocoder = new android.location.Geocoder(this, java.util.Locale.getDefault());
+            java.util.List<android.location.Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                return addresses.get(0).getAddressLine(0);
+            }
+        } catch (Exception e) {
+            Log.e("GEOCODER", "Error: " + e.getMessage());
+        }
+        return "Address unavailable";
+    }
+
 }

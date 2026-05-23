@@ -17,12 +17,18 @@
         android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="12dp"/>
 
-    <!-- This matches: Cannot resolve symbol 'adminAlertRecyclerView' -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/adminAlertRecyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/adminAlertRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

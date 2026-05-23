@@ -52,7 +52,19 @@ public class AdminProcessingFragment extends Fragment {
                 startActivity(intent);
             }
             @Override
-            public void onResolve(AlertModel alert, String alertKey) { /* Add Resolve Logic */ }
+            public void onResolve(AlertModel alert, String alertKey) {
+                DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+                String deptId = alert.getAssignedDept();
+
+                alert.setStatus("Resolved");
+
+                // Move to Resolved node
+                root.child("ResolvedAlerts").child(deptId).child(alertKey).setValue(alert)
+                        .addOnSuccessListener(aVoid -> {
+                            // Remove from Processing
+                            root.child("ProcessingAlerts").child(deptId).child(alertKey).removeValue();
+                        });
+            }
             @Override
             public void onReceive(AlertModel alert) { /* Already in Processing */ }
         });
@@ -61,7 +73,7 @@ public class AdminProcessingFragment extends Fragment {
     }
 
     private void listenForProcessing() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ActiveAlerts");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProcessingAlerts").child(departmentFilter);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

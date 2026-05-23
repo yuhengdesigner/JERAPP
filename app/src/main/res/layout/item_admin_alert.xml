@@ -51,12 +51,32 @@
             android:layout_marginVertical="8dp"
             android:background="#EEEEEE" />
 
-        <TextView
-            android:id="@+id/tvVictimGender"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⚧ Gender: N/A"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tvVictimGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚧ Gender: N/A"
+                android:layout_weight="3"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvTimestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🕒 Time: --:--"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvVictimPhone"

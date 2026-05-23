@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.List;
+import android.content.Context;
 
 public class AdminAlertsFragment extends Fragment {
 
@@ -28,6 +29,10 @@ public class AdminAlertsFragment extends Fragment {
     private TextView statusText;
     private String departmentFilter;
     private boolean isInitialLoad = true;
+    private androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefresh;
+    private MediaPlayer mediaPlayer;
+    private DatabaseReference listenerRef;
+    private ValueEventListener valueEventListener;
 
     public static AdminAlertsFragment newInstance(String dept) {
         AdminAlertsFragment fragment = new AdminAlertsFragment();
@@ -55,6 +60,7 @@ public class AdminAlertsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.adminAlertRecyclerView);
         statusText = view.findViewById(R.id.adminStatus);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         adapter = new AdminAdapter(alertList, new AdminAdapter.OnAlertClickListener() {
             @Override
@@ -72,9 +78,15 @@ public class AdminAlertsFragment extends Fragment {
 
             @Override
             public void onReceive(AlertModel alert) {
-                // FIX: Now matches the 2-argument signature
+                stopAlarm();
                 moveAlert(alert, "ProcessingAlerts");
             }
+        });
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            // Manual refresh: just reload the listener
+            listenForAlerts();
+            swipeRefresh.setRefreshing(false); // Stop the animation
         });
 
         recyclerView.setAdapter(adapter);
@@ -82,19 +94,32 @@ public class AdminAlertsFragment extends Fragment {
     }
 
     private void moveAlert(AlertModel alert, String targetNode) {
-        String deptId = alert.getAssignedDept(); // Use the dept_id from the alert
+        if (alert == null || alert.getKey() == null) {
+            Log.e("ADMIN_ERROR", "Move failed: Alert or Key is null");
+            return;
+        }
+
+        String deptId = alert.getAssignedDept();
+        if (deptId == null || deptId.isEmpty()) {
+            deptId = "default_dept"; // Fallback to avoid null path
+        }
+
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         String key = alert.getKey();
 
-        // Source node now needs the deptId path too!
-        final String sourceNode = "ActiveAlerts/" + deptId;
+        // Source path: ActiveAlerts/{deptId}/{key}
+        final String sourcePath = "ActiveAlerts/" + deptId + "/" + key;
+        final String targetPath = targetNode + "/" + deptId + "/" + key;
 
         alert.setStatus(targetNode.equals("ProcessingAlerts") ? "Processing" : "Resolved");
 
-        // Move data to: ProcessingAlerts/DEPT_ID/KEY
-        root.child(targetNode).child(deptId).child(key).setValue(alert).addOnCompleteListener(task -> {
+        // Perform the move
+        root.child(targetPath).setValue(alert).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                root.child(sourceNode).child(key).removeValue();
+                root.child(sourcePath).removeValue().addOnFailureListener(e ->
+                        Log.e("ADMIN_ERROR", "Removal failed: " + e.getMessage()));
+            } else {
+                Log.e("ADMIN_ERROR", "Move failed: " + task.getException().getMessage());
             }
         });
     }
@@ -107,14 +132,14 @@ public class AdminAlertsFragment extends Fragment {
     private void listenForAlerts() {
         // Replace this with your actual way to get the logged-in admin's dept
         // If you don't have a MySession class, use SharedPreferences directly:
-        String adminDeptId = requireContext().getSharedPreferences("AdminPrefs", requireContext().MODE_PRIVATE)
+        String adminDeptId = requireContext().getSharedPreferences("AdminPrefs", Context.MODE_PRIVATE)
                 .getString("dept_id", "default_dept");
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
+//        Log.d("URGENT_DEBUG", "Listening to path: " + ref.toString());
 
-        Log.d("URGENT_DEBUG", "Listening to path: " + ref.toString());
-
-        ref.addValueEventListener(new ValueEventListener() {
+        listenerRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
+        valueEventListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         // ADD THIS LOG
@@ -139,14 +164,17 @@ public class AdminAlertsFragment extends Fragment {
 
 
                         // Update UI
-                        getActivity().runOnUiThread(() -> {
-                            alertList.clear();
-                            alertList.addAll(newList);
-                            adapter.notifyDataSetChanged();
-                            if (statusText != null) {
-                                statusText.setText(alertList.isEmpty() ? "No pending alerts for " + departmentFilter : "Active Alerts");
-                            }
-                        });
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+                                alertList.clear();
+                                alertList.addAll(newList);
+                                adapter.notifyDataSetChanged();
+                                if (statusText != null) {
+                                    statusText.setText(alertList.isEmpty() ? "No pending alerts for " + departmentFilter : "Active Alerts");
+                                }
+                            });
+                        }
 
                         if (!isInitialLoad && hasNewAlerts) playSound();
                         isInitialLoad = false;
@@ -154,7 +182,8 @@ public class AdminAlertsFragment extends Fragment {
                     @Override public void onCancelled(@NonNull DatabaseError error) {
                         Log.e("DEBUG_ALERT", "Error: " + error.getMessage());
                     }
-                });
+                };
+        listenerRef.addValueEventListener(valueEventListener);
     }
 
     private AlertModel getAlertFromList(String key) {
@@ -164,13 +193,45 @@ public class AdminAlertsFragment extends Fragment {
 
     private void playSound() {
         try {
+            stopAlarm(); // Clear old instance
+            mediaPlayer = new MediaPlayer(); // Initialize it here!
             Uri soundUri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.emergency_alert_sound);
-            MediaPlayer mp = new MediaPlayer();
-            mp.setDataSource(requireContext(), soundUri);
-            mp.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
-            mp.prepare();
-            mp.start();
-            mp.setOnCompletionListener(MediaPlayer::release);
-        } catch (Exception e) { e.printStackTrace(); }
+
+            mediaPlayer.setDataSource(requireContext(), soundUri);
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        } catch (Exception e) {
+            Log.e("SOUND_ERROR", "Error: " + e.getMessage());
+        }
+    }
+    private void stopAlarm() {
+        try {
+            if (mediaPlayer != null) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+                mediaPlayer.release();
+            }
+        } catch (Exception e) {
+            Log.e("SOUND_ERROR", "Could not stop alarm safely: " + e.getMessage());
+        } finally {
+            mediaPlayer = null;
+        }
+    }
+    // Add this to ensure sound stops if the admin leaves the screen
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopAlarm();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (listenerRef != null && valueEventListener != null) {
+            listenerRef.removeEventListener(valueEventListener); // You would need to store the listener as a field
+        }
     }
 }
