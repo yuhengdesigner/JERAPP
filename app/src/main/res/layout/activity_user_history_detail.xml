@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView android:id="@+id/histType" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/primary"/>
+    <TextView android:id="@+id/histDept" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+    <TextView android:id="@+id/histAddress" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+    <TextView android:id="@+id/histStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textStyle="bold"/>
+
+    <Button android:id="@+id/btnNavigate" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Navigate to Dept" android:layout_marginTop="16dp"/>
+    <Button android:id="@+id/btnCall" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Call Dept" style="@style/Widget.Material3.Button.TonalButton"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Evidence Videos" android:layout_marginTop="24dp" android:textStyle="bold"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videoRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

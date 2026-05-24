@@ -18,7 +18,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.ValueEventListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+import android.util.Log;
+import android.view.View;
+
 
 public class EmergencyDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -53,6 +58,7 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
+
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
         if (alertKey != null && deptId != null) {
@@ -75,7 +81,7 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         FirebaseDatabase.getInstance().getReference(paths[index])
                 .child(deptId)
                 .child(alertKey)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
@@ -100,11 +106,13 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
                                 updateMapLocation();
 
-                                if (alert.getVideoUrl() != null && !alert.getVideoUrl().isEmpty()) {
-                                    MediaController mediaController = new MediaController(EmergencyDetailActivity.this);
-                                    mediaController.setAnchorView(videoView);
-                                    videoView.setMediaController(mediaController);
-                                    videoView.setVideoURI(Uri.parse(alert.getVideoUrl()));
+                                // Inside loadAlertDetails, specifically inside the onDataChange method:
+                                if (alert.getVideoUrls() != null) {
+                                    setupVideoGallery(alert.getVideoUrls());
+                                } else {
+                                    Log.d("DEBUG_VIDEO", "Video list is null, skipping gallery setup.");
+                                    // Optionally: hide the RecyclerView to avoid empty state issues
+                                    findViewById(R.id.rvVideoGallery).setVisibility(View.GONE);
                                 }
                             }
                         } else {
@@ -115,6 +123,30 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
+    }
+
+    private void setupVideoGallery(List<String> urls) {
+        RecyclerView rv = findViewById(R.id.rvVideoGallery);
+
+        VideoGalleryAdapter adapter = new VideoGalleryAdapter(this, urls, url -> {
+            // 1. Ensure the container is visible
+            videoView.setVisibility(View.VISIBLE);
+
+            // 2. Set URI
+            videoView.setVideoURI(Uri.parse(url));
+
+            // 3. IMPORTANT: Set up the controller so they can actually press Play
+            MediaController mediaController = new MediaController(this);
+            videoView.setMediaController(mediaController);
+            mediaController.setAnchorView(videoView);
+
+            // 4. Request focus to ensure playback starts
+            videoView.requestFocus();
+            videoView.start();
+        });
+
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rv.setAdapter(adapter);
     }
 
     @Override

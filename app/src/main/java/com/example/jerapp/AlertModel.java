@@ -1,6 +1,9 @@
 package com.example.jerapp;
 
 import com.google.firebase.database.Exclude;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AlertModel {
     // Firebase Fields
@@ -13,6 +16,7 @@ public class AlertModel {
 
     public double userLat, userLng, deptLat, deptLng;
     public long timestamp;
+    private List<String> videoUrls = new ArrayList<>();
 
     private String key;
 
@@ -21,6 +25,9 @@ public class AlertModel {
     // --- KEY MANAGEMENT ---
     @Exclude public String getKey() { return key; }
     @Exclude public void setKey(String key) { this.key = key; }
+
+    public List<String> getVideoUrls() { return videoUrls == null ? new ArrayList<>() : videoUrls; }
+    public void setVideoUrls(List<String> videoUrls) { this.videoUrls = videoUrls; }
 
     // --- GETTERS ---
     public String getUserName() { return userName != null ? userName : "Unknown User"; }
@@ -36,6 +43,9 @@ public class AlertModel {
     public long getTimestamp() { return timestamp; }
     public double getDeptLat() { return deptLat; }
     public double getDeptLng() { return deptLng; }
+    // Add these to AlertModel.java
+    public double getUserLat() { return userLat; }
+    public double getUserLng() { return userLng; }
 
     public String getAssignedDept() {
         if (dept_id != null && !dept_id.isEmpty()) return dept_id;

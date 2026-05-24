@@ -57,7 +57,8 @@
             android:exported="false" />
         <activity
             android:name=".TrackingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".EmergencyDetailActivity"
             android:exported="false"
@@ -79,6 +80,8 @@
             android:theme="@style/Theme.JERAPP" />
         <activity android:name=".ConfirmationActivity" android:exported="false" />
         <activity android:name=".DispatchActivity" android:exported="false" />
+        <activity android:name=".UserHistoryActivity" android:exported="false" />
+        <activity android:name=".UserHistoryDetailActivity" android:exported="false" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -88,5 +91,13 @@
             </intent-filter>
         </service>
     </application>
-
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="google.navigation" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
+    </queries>
 </manifest>

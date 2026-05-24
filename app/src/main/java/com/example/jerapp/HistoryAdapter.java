@@ -58,6 +58,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             intent.putExtra("alert_key", alert.getKey());
             context.startActivity(intent);
         });
+
     }
 
     @Override
