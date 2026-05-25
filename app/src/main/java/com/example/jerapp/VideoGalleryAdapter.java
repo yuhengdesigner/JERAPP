@@ -8,7 +8,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-import android.widget.TextView; // Add this line
+import android.widget.TextView;
 
 public class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewHolder> {
     private List<String> urls;
@@ -42,5 +42,10 @@ public class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapte
             super(v);
             btn = v.findViewById(android.R.id.text1);
         }
+    }
+
+    public void updateData(List<String> newUrls) {
+        this.urls = newUrls;
+        notifyDataSetChanged(); // This tells the UI to redraw the list
     }
 }

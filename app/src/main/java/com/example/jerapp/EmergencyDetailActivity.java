@@ -23,6 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.media.MediaPlayer;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.common.MediaItem;
+import androidx.media3.ui.PlayerView;
+import java.util.ArrayList;
 
 
 public class EmergencyDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -33,6 +41,11 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
     private TextView tvName, tvPhone, tvEmail, tvAddress, tvType, tvCoords, tvGender, tvTimestamp;
     private VideoView videoView;
     private String deptId;
+    private ExoPlayer exoPlayer;
+    private PlayerView playerView;
+    private VideoGalleryAdapter adapter;
+    private List<String> currentVideoUrls;
+    private ValueEventListener currentListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +61,11 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         tvAddress = findViewById(R.id.detAddress);
         tvType = findViewById(R.id.detType);
         tvCoords = findViewById(R.id.tvCoordinates);
-        videoView = findViewById(R.id.videoView);
         tvGender = findViewById(R.id.detGender);
         tvTimestamp = findViewById(R.id.detTimestamp);
         deptId = getIntent().getStringExtra("dept_id");
         alertKey = getIntent().getStringExtra("alert_key");
+        playerView = findViewById(R.id.playerView);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
@@ -77,34 +90,17 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         String[] paths = {"ActiveAlerts", "ProcessingAlerts", "ResolvedAlerts"};
         if (index >= paths.length) return;
 
-        // Correct Path: Node / DeptId / AlertKey
-        FirebaseDatabase.getInstance().getReference(paths[index])
-                .child(deptId)
-                .child(alertKey)
-                .addValueEventListener(new ValueEventListener() {
+        if (currentListener != null) {
+            FirebaseDatabase.getInstance().getReference().removeEventListener(currentListener);
+        }
+
+        currentListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             AlertModel alert = snapshot.getValue(AlertModel.class);
                             if (alert != null) {
-                                userLat = alert.userLat;
-                                userLng = alert.userLng;
-
-                                tvName.setText(alert.userName != null ? alert.userName : "Unknown");
-                                tvPhone.setText("Phone: " + (alert.userPhone != null ? alert.userPhone : "N/A"));
-                                tvEmail.setText("Email: " + (alert.userEmail != null ? alert.userEmail : "N/A"));
-                                tvAddress.setText("Address: " + (alert.textAddress != null ? alert.textAddress : "N/A"));
-                                tvType.setText("Emergency: " + (alert.emergencyType != null ? alert.emergencyType.toUpperCase() : "N/A"));
-                                tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
-                                tvGender.setText("Gender: " + (alert.getGender() != null ? alert.getGender() : "N/A"));
-
-                                if (alert.getTimestamp() > 0) {
-                                    String time = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
-                                            .format(new java.util.Date(alert.getTimestamp()));
-                                    tvTimestamp.setText("Time: " + time);
-                                }
-
-                                updateMapLocation();
+                                updateUI(alert);
 
                                 // Inside loadAlertDetails, specifically inside the onDataChange method:
                                 if (alert.getVideoUrls() != null) {
@@ -122,31 +118,88 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
-                });
+                };
+        FirebaseDatabase.getInstance().getReference(paths[index])
+                .child(deptId)
+                .child(alertKey)
+                .addValueEventListener(currentListener);
     }
 
     private void setupVideoGallery(List<String> urls) {
-        RecyclerView rv = findViewById(R.id.rvVideoGallery);
+        if (adapter == null) {
+            RecyclerView rv = findViewById(R.id.rvVideoGallery);
+            android.widget.ProgressBar progressBar = findViewById(R.id.videoProgressBar);
+            currentVideoUrls = new ArrayList<>(urls);
 
-        VideoGalleryAdapter adapter = new VideoGalleryAdapter(this, urls, url -> {
-            // 1. Ensure the container is visible
-            videoView.setVisibility(View.VISIBLE);
+            adapter = new VideoGalleryAdapter(this, currentVideoUrls, url -> {
+                // 1. Ensure the container is visible
+                playerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
-            // 2. Set URI
-            videoView.setVideoURI(Uri.parse(url));
+                // Get screen width to calculate a 16:9 aspect ratio height
+                int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                int calculatedHeight = (int) (screenWidth * 9.0 / 16.0); // 16:9 ratio
 
-            // 3. IMPORTANT: Set up the controller so they can actually press Play
-            MediaController mediaController = new MediaController(this);
-            videoView.setMediaController(mediaController);
-            mediaController.setAnchorView(videoView);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        calculatedHeight
+                );
 
-            // 4. Request focus to ensure playback starts
-            videoView.requestFocus();
-            videoView.start();
-        });
+                playerView.setLayoutParams(params);
 
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        rv.setAdapter(adapter);
+                // 3. Initialize ExoPlayer if null
+                if (exoPlayer == null) {
+                    exoPlayer = new androidx.media3.exoplayer.ExoPlayer.Builder(this).build();
+                    playerView.setPlayer(exoPlayer);
+                }
+
+                // 4. Load and Play
+                androidx.media3.common.MediaItem mediaItem = androidx.media3.common.MediaItem.fromUri(url);
+                exoPlayer.setMediaItem(mediaItem);
+                exoPlayer.prepare();
+
+                // 5. Listener for when it's ready
+                exoPlayer.addListener(new androidx.media3.common.Player.Listener() {
+                    @Override
+                    public void onPlaybackStateChanged(int playbackState) {
+                        if (playbackState == androidx.media3.common.Player.STATE_READY) {
+                            progressBar.setVisibility(View.GONE);
+                            exoPlayer.play();
+                        }
+                    }
+
+                    @Override
+                    public void onPlayerError(@NonNull androidx.media3.common.PlaybackException error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(EmergencyDetailActivity.this, "Playback error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+
+            rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            rv.setAdapter(adapter);
+        } else {
+            adapter.updateData(urls);
+        }
+    }
+
+    private void updateUI(AlertModel alert) {
+        userLat = alert.userLat;
+        userLng = alert.userLng;
+        tvName.setText(alert.userName != null ? alert.userName : "Unknown");
+        tvPhone.setText("Phone: " + (alert.userPhone != null ? alert.userPhone : "N/A"));
+        tvEmail.setText("Email: " + (alert.userEmail != null ? alert.userEmail : "N/A"));
+        tvAddress.setText("Address: " + (alert.textAddress != null ? alert.textAddress : "N/A"));
+        tvType.setText("Emergency: " + (alert.emergencyType != null ? alert.emergencyType.toUpperCase() : "N/A"));
+        tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
+        tvGender.setText("Gender: " + (alert.getGender() != null ? alert.getGender() : "N/A"));
+
+        if (alert.getTimestamp() > 0) {
+            String time = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
+                    .format(new java.util.Date(alert.getTimestamp()));
+            tvTimestamp.setText("Time: " + time);
+        }
+        updateMapLocation();
     }
 
     @Override
@@ -161,6 +214,15 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
             mMap.clear();
             mMap.addMarker(new MarkerOptions().position(location).title("Victim Location"));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
         }
     }
 }

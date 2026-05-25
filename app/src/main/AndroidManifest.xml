@@ -62,6 +62,7 @@
         <activity
             android:name=".EmergencyDetailActivity"
             android:exported="false"
+            android:hardwareAccelerated="true"
             android:label="Emergency Details"
             android:theme="@style/Theme.JERAPP" />
         <activity android:name=".ProfileActivity" android:exported="false" />

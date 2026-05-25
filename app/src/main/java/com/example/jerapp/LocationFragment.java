@@ -34,9 +34,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import android.location.Location;
+import org.json.JSONObject;
+import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import android.util.Log;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
@@ -47,6 +57,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static boolean guestDismissedTutorialThisSession = false;
     private final android.os.Handler tutorialHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable tutorialRunnable;
+    private Location lastKnownLocation;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -114,6 +125,29 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         } else if (!isGuestAccount && !isTutorialDone()) {
             show3DTutorial();
         }
+
+        loadDepartments(mMap);
+
+        mMap.setOnMarkerClickListener(marker -> {
+            Department dept = (Department) marker.getTag();
+            if (dept == null) return false;
+
+            // FIX: Add a safe check here
+            if (lastKnownLocation != null) {
+                Location deptLoc = new Location("");
+                deptLoc.setLatitude(dept.latitude);
+                deptLoc.setLongitude(dept.longitude);
+
+                float distance = lastKnownLocation.distanceTo(deptLoc) / 1000;
+                marker.setSnippet(String.format("Distance: %.2f km", distance));
+            } else {
+                // Handle case where location isn't ready yet
+                marker.setSnippet("Distance: Location not available");
+            }
+
+            marker.showInfoWindow();
+            return true; // Return true to consume the click
+        });
     }
 
     private void setupFabListeners() {
@@ -153,7 +187,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                 .addOnSuccessListener(location -> {
                     if (location != null && isAdded()) {
-                        // ALWAYS use 3D here
+                        this.lastKnownLocation = location;
                         updateMapUI(location.getLatitude(), location.getLongitude(), true);
                     } else {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(lastLoc -> {
@@ -243,6 +277,63 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
             snackbar.show();
         };
         tutorialHandler.postDelayed(tutorialRunnable, 1500);
+    }
+
+    private void loadDepartments(GoogleMap map) {
+        String json = loadJSONFromAssets();
+
+        // FIX: Guard clause to prevent the crash
+        if (json == null || json.isEmpty()) {
+            Log.e("LocationFragment", "Failed to load JSON: String is empty or null");
+            return;
+        }
+
+        try {
+            JSONObject root = new JSONObject(json);
+            Log.d("DEBUG_JSON", "Root keys: " + root.keys().toString()); // See what's actually in the root
+
+            if (root.has("emergency_departments")) {
+                JSONObject allDepts = root.getJSONObject("emergency_departments");
+                Log.d("DEBUG_JSON", "Number of departments: " + allDepts.length());
+                Iterator<String> keys = allDepts.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    JSONObject d = allDepts.getJSONObject(key);
+
+                    String name = d.getString("place_name");
+                    double lat = d.getDouble("latitude");
+                    double lng = d.getDouble("longitude");
+
+                    Log.d("DEBUG_MARKER", "Adding marker: " + name + " at " + lat + ", " + lng);
+                    Marker marker = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(lat, lng))
+                            .title(name));
+
+                    // Tag with the model object
+                    marker.setTag(new Department(name, lat, lng));
+                }
+            } else {
+                Log.e("DEBUG_JSON", "Key 'emergency_departments' not found!");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String loadJSONFromAssets() {
+        String json = null;
+        try {
+            java.io.InputStream is = requireContext().getAssets().open("Emergency_Departments.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return ""; // Return an empty string instead of null
+        }
+        return json;
     }
 
     @Override
