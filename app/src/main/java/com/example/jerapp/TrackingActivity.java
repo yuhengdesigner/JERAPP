@@ -129,8 +129,17 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         Toast.makeText(TrackingActivity.this, "Arrival confirmed!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(TrackingActivity.this, UserHistoryActivity.class));
-        finish();
+        // After the arrival logic is successful
+        Intent intent = new Intent(TrackingActivity.this, MainActivity.class);
+
+        // Clear the backstack so the user can't "back" into the tracking session
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Send the command to open the history tab
+        intent.putExtra("NAVIGATE_TO", "HISTORY");
+
+        startActivity(intent);
+        finish(); // Close tracking page
     }
 
     private void uploadVideoToFirebase(Uri videoUri) {
@@ -248,5 +257,46 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         // Animate the camera to fit the bounds
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    private void initiateAlertInFirebase() {
+        // Ensure you have valid data before writing
+        if (deptId == null || alertKey == null) return;
+
+        DatabaseReference alertRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey);
+
+        // Get the current User ID
+        String uid = FirebaseAuth.getInstance().getCurrentUser() != null ?
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : "guest_user";
+
+        HashMap<String, Object> alertMap = new HashMap<>();
+
+        // 1. Status and Timing
+        alertMap.put("status", "Pending");
+        alertMap.put("startTime", ServerValue.TIMESTAMP);
+        alertMap.put("timestamp", System.currentTimeMillis()); // For history sorting
+
+        // 2. Reporter/User Details (You should ideally fetch these from your 'Users' node)
+        alertMap.put("userId", uid);
+        // Add your user name/contact here if you store them in the user profile
+
+        // 3. Emergency Details
+        alertMap.put("emergencyType", "General Emergency"); // You can pass this via Intent
+        alertMap.put("assignedDept", deptName);
+        alertMap.put("deptPhone", deptPhone);
+        alertMap.put("deptLat", deptLat);
+        alertMap.put("deptLng", deptLng);
+
+        // 4. Evidence structure
+        alertMap.put("videoUrls", new ArrayList<String>());
+
+        // Write to Firebase
+        alertRef.setValue(alertMap).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "Emergency alert initiated.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to start alert.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

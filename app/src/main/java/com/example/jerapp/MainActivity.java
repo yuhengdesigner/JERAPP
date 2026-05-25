@@ -112,6 +112,15 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
         if (savedInstanceState == null) {
             loadFragment(new DashboardFragment());
         }
+
+        // Check if we were told to open a specific tab
+        if (getIntent().hasExtra("NAVIGATE_TO")) {
+            String target = getIntent().getStringExtra("NAVIGATE_TO");
+            if ("HISTORY".equals(target)) {
+                // Select the history item in the bottom nav
+                bottomNav.setSelectedItemId(R.id.nav_history);
+            }
+        }
     }
 
     // --- 2. MANDATORY: Callback for Map Initialization ---
@@ -201,6 +210,12 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
     }
 
     private void loadFragment(Fragment fragment) {
+        // Check if the fragment is already visible to prevent reloading
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
+            return;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putBoolean("isGuest", isGuest);
         fragment.setArguments(bundle);

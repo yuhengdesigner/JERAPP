@@ -55,6 +55,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         // Handle card click to open detail view
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, HistoryDetailActivity.class);
+            // Pass the unique key to the detail activity
             intent.putExtra("alert_key", alert.getKey());
             context.startActivity(intent);
         });
