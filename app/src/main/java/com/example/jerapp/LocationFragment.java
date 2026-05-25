@@ -308,6 +308,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                     Marker marker = map.addMarker(new MarkerOptions()
                             .position(new LatLng(lat, lng))
                             .title(name));
+                    marker.setVisible(true);
 
                     // Tag with the model object
                     marker.setTag(new Department(name, lat, lng));
