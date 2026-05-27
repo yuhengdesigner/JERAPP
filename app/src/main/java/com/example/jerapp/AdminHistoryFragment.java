@@ -73,6 +73,13 @@ public class AdminHistoryFragment extends Fragment {
             public void onReceive(AlertModel alert) {
                 // Already resolved/history, so do nothing here
             }
+
+            @Override
+            public void onDelete(AlertModel alert) {
+                // History is usually read-only, but if you want to allow deletion:
+                FirebaseDatabase.getInstance().getReference("ResolvedAlerts")
+                        .child(departmentFilter).child(alert.getKey()).removeValue();
+            }
         });
 
         recyclerView.setAdapter(adapter);

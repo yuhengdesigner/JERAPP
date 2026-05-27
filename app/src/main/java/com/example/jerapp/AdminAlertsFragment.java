@@ -81,6 +81,29 @@ public class AdminAlertsFragment extends Fragment {
                 stopAlarm();
                 moveAlert(alert, "ProcessingAlerts");
             }
+
+            @Override
+            public void onDelete(AlertModel alert) {
+                String deptId = alert.getAssignedDept();
+                String alertKey = alert.getKey();
+
+                // Debugging: Log the path before deleting
+                String path = (deptId == null || deptId.isEmpty()) ? "UnknownAlerts" : "ActiveAlerts/" + deptId;
+                Log.d("DELETE_DEBUG", "Attempting to delete at path: " + path + "/" + alertKey);
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(alertKey);
+
+                ref.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Deleted successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // This will tell us if it's a permission error or a bad path
+                        String error = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                        Log.e("DELETE_DEBUG", "Error: " + error);
+                        Toast.makeText(getContext(), "Delete failed: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         });
 
         swipeRefresh.setOnRefreshListener(() -> {

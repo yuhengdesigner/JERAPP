@@ -67,6 +67,18 @@ public class AdminProcessingFragment extends Fragment {
             }
             @Override
             public void onReceive(AlertModel alert) { /* Already in Processing */ }
+
+            @Override
+            public void onDelete(AlertModel alert) {
+                // Logic to delete the card from the Processing node
+                String deptId = alert.getAssignedDept();
+                if (deptId != null && alert.getKey() != null) {
+                    FirebaseDatabase.getInstance().getReference("ProcessingAlerts")
+                            .child(deptId)
+                            .child(alert.getKey())
+                            .removeValue();
+                }
+            }
         });
         recyclerView.setAdapter(adapter);
         listenForProcessing();

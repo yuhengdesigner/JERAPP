@@ -31,6 +31,10 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.common.MediaItem;
 import androidx.media3.ui.PlayerView;
 import java.util.ArrayList;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import java.util.Map;
+
 
 
 public class EmergencyDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -90,16 +94,24 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         String[] paths = {"ActiveAlerts", "ProcessingAlerts", "ResolvedAlerts"};
         if (index >= paths.length) return;
 
-        if (currentListener != null) {
-            FirebaseDatabase.getInstance().getReference().removeEventListener(currentListener);
-        }
+        // Use a reference specifically for this path
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(paths[index])
+                .child(deptId)
+                .child(alertKey);
 
-        currentListener = new ValueEventListener() {
+        // Use SingleValueEvent to get the initial data without it constantly refreshing
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
+                            // Log the raw snapshot structure
+                            Log.d("FIREBASE_DEBUG", "Raw JSON: " + snapshot.getValue().toString());
+
                             AlertModel alert = snapshot.getValue(AlertModel.class);
-                            if (alert != null) {
+                            // ADD THIS: If Name is null, it means Firebase couldn't map the data!
+                            if (alert.getUserName() == null && alert.getUserPhone() == null) {
+                                Log.e("DEBUG_DATA", "Firebase returned an empty/null object! Check your AlertModel structure.");
+                            } else {
                                 updateUI(alert);
 
                                 // Inside loadAlertDetails, specifically inside the onDataChange method:
@@ -118,11 +130,7 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
-                };
-        FirebaseDatabase.getInstance().getReference(paths[index])
-                .child(deptId)
-                .child(alertKey)
-                .addValueEventListener(currentListener);
+                });
     }
 
     private void setupVideoGallery(List<String> urls) {
@@ -184,13 +192,20 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
     }
 
     private void updateUI(AlertModel alert) {
-        userLat = alert.userLat;
-        userLng = alert.userLng;
-        tvName.setText(alert.userName != null ? alert.userName : "Unknown");
-        tvPhone.setText("Phone: " + (alert.userPhone != null ? alert.userPhone : "N/A"));
-        tvEmail.setText("Email: " + (alert.userEmail != null ? alert.userEmail : "N/A"));
-        tvAddress.setText("Address: " + (alert.textAddress != null ? alert.textAddress : "N/A"));
-        tvType.setText("Emergency: " + (alert.emergencyType != null ? alert.emergencyType.toUpperCase() : "N/A"));
+        // 1. Add a safety check: if data is missing, don't wipe existing UI
+        if (alert == null) return;
+
+        // ADD THIS LOG TO SEE IF DATA IS ACTUALLY NULL
+        Log.d("DEBUG_DATA", "Name: " + alert.getUserName() + " | Phone: " + alert.getUserPhone());
+
+        userLat = alert.getUserLat();
+        userLng = alert.getUserLng();
+
+        tvName.setText(alert.getUserName() != null ? alert.getUserName() : "Unknown");
+        tvPhone.setText("Phone: " + (alert.getUserPhone() != null ? alert.getUserPhone() : "N/A"));
+        tvEmail.setText("Email: " + (alert.getUserEmail() != null ? alert.getUserEmail() : "N/A"));
+        tvAddress.setText("Address: " + (alert.getTextAddress() != null ? alert.getTextAddress() : "N/A"));
+        tvType.setText("Emergency: " + (alert.getEmergencyType() != null ? alert.getEmergencyType().toUpperCase() : "N/A"));
         tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
         tvGender.setText("Gender: " + (alert.getGender() != null ? alert.getGender() : "N/A"));
 

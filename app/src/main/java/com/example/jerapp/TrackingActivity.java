@@ -155,8 +155,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 @Override
                 public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                     // 1. Get the current value as a list
-                    GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
-                    List<String> list = mutableData.getValue(t);
+                    List<String> list = mutableData.getValue(new GenericTypeIndicator<List<String>>() {});
 
                     // 2. If it's null (first time), initialize a new ArrayList
                     if (list == null) {

@@ -12,13 +12,16 @@ public class DispatchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dispatch); // Create this layout (see below)
 
-        // Receive the data from the previous activity
-        Intent incomingIntent = getIntent();
+        // Get the Bundle of extras specifically
+        Bundle extras = getIntent().getExtras();
 
         // Automatically move to TrackingActivity after 1.5 seconds
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(DispatchActivity.this, TrackingActivity.class);
-            intent.putExtras(incomingIntent); // Pass all data forward
+            // Pass the extras bundle if it's not null
+            if (extras != null) {
+                intent.putExtras(extras);
+            }
             startActivity(intent);
             finish(); // Close this activity so user can't go back to the progress screen
         }, 1500);

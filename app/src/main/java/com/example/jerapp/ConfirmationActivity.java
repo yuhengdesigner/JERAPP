@@ -101,7 +101,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                                         Toast.makeText(ConfirmationActivity.this, "Alert sent to " + deptName, Toast.LENGTH_SHORT).show();
 
                                         // Pass the generatedKey to TrackingActivity
-                                        Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
+                                        Intent intent = new Intent(ConfirmationActivity.this, DispatchActivity.class);
                                         intent.putExtra("alert_key", generatedKey);
                                         intent.putExtra("dept_id", deptId);
                                         intent.putExtra("dept_name", deptName);
