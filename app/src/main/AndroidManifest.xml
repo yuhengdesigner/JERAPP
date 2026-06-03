@@ -118,6 +118,31 @@
             android:name=".UserHistoryDetailActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".CprGeneralActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JERAPP" />
+
+        <activity
+            android:name=".CprAdultActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JERAPP" />
+
+        <activity
+            android:name=".CprChildActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JERAPP" />
+
+        <activity
+            android:name=".CprInfantActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JERAPP" />
+
+        <activity
+            android:name=".CprNeonateActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JERAPP" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">

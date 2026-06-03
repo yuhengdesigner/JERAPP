@@ -153,13 +153,13 @@ public class AdminAlertsFragment extends Fragment {
     }
 
     private void listenForAlerts() {
-        // Replace this with your actual way to get the logged-in admin's dept
-        // If you don't have a MySession class, use SharedPreferences directly:
         String adminDeptId = requireContext().getSharedPreferences("AdminPrefs", Context.MODE_PRIVATE)
                 .getString("dept_id", "default_dept");
 
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
-//        Log.d("URGENT_DEBUG", "Listening to path: " + ref.toString());
+        // Detach old listener if it exists to prevent cross-firing data calls when switching fragments
+        if (listenerRef != null && valueEventListener != null) {
+            listenerRef.removeEventListener(valueEventListener);
+        }
 
         listenerRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
         valueEventListener = new ValueEventListener() {
@@ -174,20 +174,26 @@ public class AdminAlertsFragment extends Fragment {
 
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             AlertModel alert = ds.getValue(AlertModel.class);
+
                             if (alert != null) {
                                 alert.setKey(ds.getKey());
+
+                                // 🔍 ADD THIS TEMPORARY PRINT TRACE HERE
+                                Log.d("TIMESTAMP_DEBUG", "Key: " + ds.getKey() + " | Raw DB Value: " + ds.child("timestamp").getValue());
+
                                 newList.add(alert);
                                 }
 
                                 // Check if this is a new arrival
-                                if (getAlertFromList(alert.getKey()) == null) {
+                                if (!isInitialLoad && getAlertFromList(alert.getKey()) == null) {
                                     hasNewAlerts = true;
                                 }
                             }
 
 
-                        // Update UI
+                        // Update UI on UI Thread safely
                         if (isAdded() && getActivity() != null) {
+                            final boolean flashAlarm = hasNewAlerts;
                             getActivity().runOnUiThread(() -> {
                                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                                 alertList.clear();
@@ -196,6 +202,11 @@ public class AdminAlertsFragment extends Fragment {
                                 if (statusText != null) {
                                     statusText.setText(alertList.isEmpty() ? "No pending alerts for " + departmentFilter : "Active Alerts");
                                 }
+
+                                if (!isInitialLoad && flashAlarm) {
+                                    playSound();
+                                }
+                                isInitialLoad = false;
                             });
                         }
 

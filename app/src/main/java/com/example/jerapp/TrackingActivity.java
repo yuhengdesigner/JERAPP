@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import android.util.Log;
 
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -143,7 +144,11 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void uploadVideoToFirebase(Uri videoUri) {
-        if (alertKey == null) return;
+        // Safety check: ensure alertKey isn't empty or null before handling database calls
+        if (alertKey == null || alertKey.trim().isEmpty()) {
+            Toast.makeText(this, "Error: Lost transaction key context. Cannot sync video.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         StorageReference ref = FirebaseStorage.getInstance().getReference("Evidence/" + alertKey + "/" + System.currentTimeMillis() + ".mp4");
         ref.putFile(videoUri).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -173,11 +178,15 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 @Override
                 public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
                     if (committed) {
-                        Toast.makeText(TrackingActivity.this, "Video added!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TrackingActivity.this, "Evidence video synced successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e("DATABASE_WRITE_ERROR", "Transaction failure: " + (error != null ? error.getMessage() : "unknown"));
                     }
                 }
             });
-        }));
+        })).addOnFailureListener(e -> {
+            Toast.makeText(TrackingActivity.this, "Failed uploading evidence file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void launchCamera() {

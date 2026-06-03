@@ -100,6 +100,15 @@ public class ConfirmationActivity extends AppCompatActivity {
                             alertRef.setValue(newAlert).addOnSuccessListener(aVoid -> {
                                         Toast.makeText(ConfirmationActivity.this, "Alert sent to " + deptName, Toast.LENGTH_SHORT).show();
 
+                                        //  FIXED: Save history node ONLY when the official active push succeeds
+                                        String uid = FirebaseAuth.getInstance().getUid();
+                                        if (uid != null) {
+                                            FirebaseDatabase.getInstance().getReference("UserHistory")
+                                                    .child(uid)
+                                                    .child(generatedKey)
+                                                    .setValue(newAlert);
+                                        }
+
                                         // Pass the generatedKey to TrackingActivity
                                         Intent intent = new Intent(ConfirmationActivity.this, DispatchActivity.class);
                                         intent.putExtra("alert_key", generatedKey);
@@ -115,16 +124,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                                         v.setEnabled(true);
                                         Toast.makeText(ConfirmationActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     });
-                            // Inside onSuccessListener after alertRef.setValue(newAlert)
-                            String uid = FirebaseAuth.getInstance().getUid();
-                            if (uid != null) {
-                                FirebaseDatabase.getInstance().getReference("UserHistory")
-                                        .child(uid)
-                                        .child(generatedKey)
-                                        .setValue(newAlert);
-                            }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             v.setEnabled(true);

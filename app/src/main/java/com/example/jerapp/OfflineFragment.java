@@ -15,17 +15,37 @@ public class OfflineFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout
         View view = inflater.inflate(R.layout.fragment_offline, container, false);
 
-        // Find the single SOS card
+        // Bind layouts securely
         MaterialCardView cardSos = view.findViewById(R.id.cardSosFlashlight);
+        MaterialCardView cardGeneralCpr = view.findViewById(R.id.cardGeneralCpr);
+        MaterialCardView cardAdultCpr = view.findViewById(R.id.cardAdultCpr);
+        MaterialCardView cardChildCpr = view.findViewById(R.id.cardChildCpr);
+        MaterialCardView cardInfantCpr = view.findViewById(R.id.cardInfantCpr);
+        MaterialCardView cardNeonateCpr = view.findViewById(R.id.cardNeonateCpr);
 
-        // Set click listener to open the FlashlightActivity
+        // SOS Flashlight Click Execution
         cardSos.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FlashlightActivity.class);
             startActivity(intent);
         });
+
+        // Direct isolated class navigations
+        cardGeneralCpr.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), CprGeneralActivity.class)));
+
+        cardAdultCpr.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), CprAdultActivity.class)));
+
+        cardChildCpr.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), CprChildActivity.class)));
+
+        cardInfantCpr.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), CprInfantActivity.class)));
+
+        cardNeonateCpr.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), CprNeonateActivity.class)));
 
         return view;
     }

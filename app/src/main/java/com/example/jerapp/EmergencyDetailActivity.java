@@ -101,33 +101,35 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
         // Use SingleValueEvent to get the initial data without it constantly refreshing
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            // Log the raw snapshot structure
-                            Log.d("FIREBASE_DEBUG", "Raw JSON: " + snapshot.getValue().toString());
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getValue() != null) {
+                    Log.d("FIREBASE_DEBUG", "Raw JSON: " + snapshot.getValue().toString());
 
-                            AlertModel alert = snapshot.getValue(AlertModel.class);
-                            // ADD THIS: If Name is null, it means Firebase couldn't map the data!
-                            if (alert.getUserName() == null && alert.getUserPhone() == null) {
-                                Log.e("DEBUG_DATA", "Firebase returned an empty/null object! Check your AlertModel structure.");
-                            } else {
-                                updateUI(alert);
+                    AlertModel alert = snapshot.getValue(AlertModel.class);
 
-                                // Inside loadAlertDetails, specifically inside the onDataChange method:
-                                if (alert.getVideoUrls() != null) {
-                                    setupVideoGallery(alert.getVideoUrls());
-                                } else {
-                                    Log.d("DEBUG_VIDEO", "Video list is null, skipping gallery setup.");
-                                    // Optionally: hide the RecyclerView to avoid empty state issues
-                                    findViewById(R.id.rvVideoGallery).setVisibility(View.GONE);
-                                }
-                            }
+                    //  FIXED: Guard against completely empty database snapshots mapping to null objects
+                    if (alert == null) {
+                        Log.e("DEBUG_DATA", "AlertModel mapping failed completely.");
+                        return;
+                    }
+
+                    if (alert.getUserName() == null && alert.getUserPhone() == null) {
+                        Log.e("DEBUG_DATA", "Firebase returned an empty/null data structure.");
+                    } else {
+                        updateUI(alert);
+
+                        if (alert.getVideoUrls() != null) {
+                            setupVideoGallery(alert.getVideoUrls());
                         } else {
-                            // Recursively try the next path if not found in this one
-                            loadAlertDetails(index + 1);
+                            findViewById(R.id.rvVideoGallery).setVisibility(View.GONE);
                         }
                     }
+                } else {
+                    // Recursively try the next path if not found in this one
+                    loadAlertDetails(index + 1);
+                }
+            }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
@@ -159,6 +161,9 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
                 if (exoPlayer == null) {
                     exoPlayer = new androidx.media3.exoplayer.ExoPlayer.Builder(this).build();
                     playerView.setPlayer(exoPlayer);
+                } else {
+                    exoPlayer.stop();
+                    exoPlayer.clearMediaItems();
                 }
 
                 // 4. Load and Play
@@ -209,11 +214,42 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         tvCoords.setText("Lat: " + userLat + " | Lng: " + userLng);
         tvGender.setText("Gender: " + (alert.getGender() != null ? alert.getGender() : "N/A"));
 
-        if (alert.getTimestamp() > 0) {
-            String time = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
-                    .format(new java.util.Date(alert.getTimestamp()));
-            tvTimestamp.setText("Time: " + time);
+        // === FIXED TIMESTAMP PARSING BLOCK ===
+        Object rawTimestamp = alert.getTimestamp();
+
+        if (rawTimestamp != null) {
+            if (rawTimestamp instanceof Long) {
+                // Case A: The timestamp is stored as a numerical Epoch millisecond value (Long)
+                long timeLong = (Long) rawTimestamp;
+                if (timeLong > 0) {
+                    String time = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
+                            .format(new java.util.Date(timeLong));
+                    tvTimestamp.setText("Time: " + time);
+                } else {
+                    tvTimestamp.setText("Time: Unavailable");
+                }
+            } else if (rawTimestamp instanceof String) {
+                // Case B: The timestamp is already stored as a formatted String string value
+                String timeString = (String) rawTimestamp;
+
+                // Truncate long sub-second nanosecond precision traces for clean readability
+                if (timeString.contains(".") && timeString.length() > 16) {
+                    try {
+                        timeString = timeString.substring(0, 16); // e.g., turns "2026-05-31 15:17:15..." to "2026-05-31 15:17"
+                    } catch (Exception e) {
+                        // Keep original if substring operation hits bounds exceptions
+                    }
+                }
+                tvTimestamp.setText("Time: " + timeString);
+            } else {
+                // Fallback for any other data variants
+                tvTimestamp.setText("Time: " + rawTimestamp.toString());
+            }
+        } else {
+            tvTimestamp.setText("Time: Unavailable");
         }
+        // =====================================
+
         updateMapLocation();
     }
 
@@ -235,6 +271,9 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onStop() {
         super.onStop();
+        if (playerView != null) {
+            playerView.setPlayer(null);
+        }
         if (exoPlayer != null) {
             exoPlayer.release();
             exoPlayer = null;

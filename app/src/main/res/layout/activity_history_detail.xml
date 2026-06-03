@@ -162,9 +162,11 @@
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="230dp"
                 android:layout_margin="8dp"
-                android:background="@android:color/black" />
+                android:background="#000000"
+                app:shutter_background_color="#000000"
+                app:use_controller="true" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

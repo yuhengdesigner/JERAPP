@@ -49,9 +49,9 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
             holder.tvVictimName.setText(alert.getUserName() != null ? alert.getUserName() : "Unknown User");
             holder.tvVictimGender.setText("⚧ Gender: " + alert.getGender());
             holder.tvEmergencyTag.setText(alert.getEmergencyType().toUpperCase());
-            holder.tvVictimPhone.setText("📞 " + alert.getUserPhone() != null ? alert.getUserPhone() : "N/A");
-            holder.tvVictimEmail.setText("✉️ " + alert.getUserEmail());
-            holder.tvVictimAddress.setText("📍 " + alert.getTextAddress());
+            holder.tvVictimPhone.setText("📞 " + (alert.getUserPhone() != null ? alert.getUserPhone() : "N/A"));
+            holder.tvVictimEmail.setText("✉️ " + (alert.getUserEmail() != null ? alert.getUserEmail() : "N/A"));
+            holder.tvVictimAddress.setText("📍 " + (alert.getTextAddress() != null ? alert.getTextAddress() : "N/A"));
             holder.tvCoordinates.setText("Lat: " + alert.getUserLat() + " | Lng: " + alert.getUserLng());
 
             // Buttons
@@ -67,14 +67,41 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
                 v.getContext().startActivity(intent);
             });
 
-            // Bind Timestamp
-            if (alert.getTimestamp() > 0) {
-                String dateString = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
-                        .format(new java.util.Date(alert.getTimestamp()));
-                holder.tvTimestamp.setText("🕒 " + dateString);
+            // === CORRECTED TIMESTAMP PARSING FOR ADMIN ADAPTER ===
+            Object rawTimestamp = alert.getTimestamp();
+
+            if (rawTimestamp != null) {
+                if (rawTimestamp instanceof Long) {
+                    // Case A: The timestamp is a numerical Epoch millisecond value (Long)
+                    long timeLong = (Long) rawTimestamp;
+                    if (timeLong > 0) {
+                        String dateString = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
+                                .format(new java.util.Date(timeLong));
+                        holder.tvTimestamp.setText("🕒 " + dateString);
+                    } else {
+                        holder.tvTimestamp.setText("🕒 Time unavailable");
+                    }
+                } else if (rawTimestamp instanceof String) {
+                    // Case B: The timestamp is already a formatted String (e.g., "2026-05-31 15:17:15...")
+                    String timeString = (String) rawTimestamp;
+
+                    // Clean up the string length if it contains nanoseconds/timezone traces
+                    if (timeString.contains(".") && timeString.length() > 16) {
+                        try {
+                            timeString = timeString.substring(0, 16); // Shortens down to "2026-05-31 15:17"
+                        } catch (Exception e) {
+                            // Fallback to original if truncation fails
+                        }
+                    }
+                    holder.tvTimestamp.setText("🕒 " + timeString);
+                } else {
+                    // Fallback for any other unexpected data formats
+                    holder.tvTimestamp.setText("🕒 " + rawTimestamp.toString());
+                }
             } else {
                 holder.tvTimestamp.setText("🕒 Time unavailable");
             }
+// ====================================================
 
             // Button Logic
             if ("Resolved".equals(status) || "Completed".equals(status)) {

@@ -35,6 +35,7 @@ public class AlertModel {
     @PropertyName("timestamp") long getTimestamp() { return timestamp; }
     @PropertyName("dept_lat") public double getDeptLat() { return deptLat; }
     @PropertyName("dept_lng") public double getDeptLng() { return deptLng; }
+    @PropertyName("dept_id") public String getDept_id() { return dept_id != null ? dept_id : ""; }
 
     @PropertyName("user_address") public String getUserAddress() { return textAddress != null ? textAddress : "N/A"; }
     @PropertyName("dept_address") public String getDeptAddress() { return "Address not available"; }
