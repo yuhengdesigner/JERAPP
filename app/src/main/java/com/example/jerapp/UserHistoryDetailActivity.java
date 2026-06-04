@@ -130,17 +130,30 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
         tvDetailDept.setText("Dept: " + alert.getDeptName());
         tvDetailAddress.setText("Address: " + alert.getTextAddress());
 
-        // Sync Time Stamp Display Format
+        // REPLACE YOUR TIMESTAMP VIEW CONFIGURATION IN UserHistoryDetailActivity.java WITH THIS:
         String displayTime = "Unavailable";
-        Object timeObj = alert.getTimestamp();
-        if (timeObj instanceof Long) {
-            long timeLong = (Long) timeObj;
-            if (timeLong > 0) {
-                displayTime = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(timeLong));
+        Object timeObj = currentAlert.getTimestamp(); // Make sure this matches your local AlertModel object name
+
+        if (timeObj != null) {
+            try {
+                long timeLong = 0;
+                if (timeObj instanceof Long) {
+                    timeLong = (Long) timeObj;
+                } else if (timeObj instanceof Double) {
+                    timeLong = ((Double) timeObj).longValue();
+                } else if (timeObj instanceof String) {
+                    timeLong = Long.parseLong((String) timeObj);
+                }
+
+                if (timeLong > 0) {
+                    displayTime = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(timeLong));
+                }
+            } catch (Exception e) {
+                displayTime = timeObj.toString();
             }
-        } else if (timeObj instanceof String) {
-            displayTime = (String) timeObj;
         }
+
+// Bind cleanly to both text indicators on your layout screen
         tvUserTimestamp.setText("Time: " + displayTime);
         tvDetailDate.setText("Timestamp: " + displayTime);
 

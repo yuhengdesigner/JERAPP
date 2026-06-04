@@ -16,4 +16,8 @@
     <color name="outline">#857370</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <color name="switch_off">#E0E0E0</color>
+    <color name="switch_on">#4CAF50</color>
+    <color name="thumb_color">#FFFFFF</color>
 </resources>

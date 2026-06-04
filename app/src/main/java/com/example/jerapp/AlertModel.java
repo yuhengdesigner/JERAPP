@@ -32,7 +32,7 @@ public class AlertModel {
     @PropertyName("video_url") public String getVideoUrl() { return videoUrl; }
     @PropertyName("dept_name") public String getDeptName() { return deptName != null ? deptName : "Unknown Department"; }
     @PropertyName("dept_phone") public String getDeptPhone() { return deptPhone != null ? deptPhone : "N/A"; }
-    @PropertyName("timestamp") long getTimestamp() { return timestamp; }
+    @PropertyName("timestamp") public long getTimestamp() { return timestamp; }
     @PropertyName("dept_lat") public double getDeptLat() { return deptLat; }
     @PropertyName("dept_lng") public double getDeptLng() { return deptLng; }
     @PropertyName("dept_id") public String getDept_id() { return dept_id != null ? dept_id : ""; }

@@ -43,6 +43,8 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     private ActivityResultLauncher<Intent> videoLauncher;
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng userLoc;
+    private TextView tvCountdownETA;
+    private android.os.CountDownTimer etaTimer;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
@@ -65,6 +67,14 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         TextView tvDetail = findViewById(R.id.deptDetail);
         if (tvDetail != null) tvDetail.setText("Responding: " + deptName);
+
+        tvCountdownETA = findViewById(R.id.tvCountdownETA);
+
+// Example: Assume your routing logic calculates that the responder is 12 minutes away.
+// Convert those minutes into total milliseconds: 12 minutes * 60 seconds * 1000 ms
+        long initialDurationMs = 12 * 60 * 1000;
+
+        startETACountdown(initialDurationMs);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) mapFragment.getMapAsync(this);
@@ -306,5 +316,38 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 Toast.makeText(this, "Failed to start alert.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void startETACountdown(long durationMs) {
+        // If a previous timer is already running, cancel it first
+        if (etaTimer != null) {
+            etaTimer.cancel();
+        }
+
+        etaTimer = new android.os.CountDownTimer(durationMs, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // Convert remaining milliseconds back into minutes and seconds
+                long minutes = (millisUntilFinished / 1000) / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+
+                // Update the layout text view in real-time
+                tvCountdownETA.setText(String.format(java.util.Locale.getDefault(),
+                        "Responder arriving in: %02d:%02d mins", minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                tvCountdownETA.setText("Responders have arrived on site!");
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (etaTimer != null) {
+            etaTimer.cancel();
+        }
     }
 }

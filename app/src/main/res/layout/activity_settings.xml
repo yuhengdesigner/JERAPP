@@ -9,7 +9,7 @@
     <!-- Header: centered and lowered text -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="65dp"
         android:paddingHorizontal="8dp"
         android:fitsSystemWindows="true"
         android:background="@color/primary">
@@ -19,7 +19,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="-10dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             app:tint="@color/white"
@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
             android:text="Settings"
             android:textColor="@color/white"
             android:textSize="20sp"

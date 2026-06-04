@@ -37,14 +37,31 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.histDept.setText("Responded by: " + (alert.getDeptName() != null ? alert.getDeptName() : "Unknown Department"));
         holder.histStatus.setText(alert.getStatus() != null ? alert.getStatus().toUpperCase() : "PENDING");
 
-        // Format historical timestamps cleanly
+        // REPLACE YOUR OLD TIMESTAMP HOLDER LOGIC IN HistoryAdapter.java WITH THIS:
         Object rawTime = alert.getTimestamp();
-        if (rawTime instanceof Long) {
-            String formatted = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
-                    .format(new java.util.Date((Long) rawTime));
-            holder.histDate.setText(formatted);
-        } else if (rawTime instanceof String) {
-            holder.histDate.setText((String) rawTime);
+        if (rawTime != null) {
+            try {
+                long timeLong = 0;
+
+                if (rawTime instanceof Long) {
+                    timeLong = (Long) rawTime;
+                } else if (rawTime instanceof Double) {
+                    timeLong = ((Double) rawTime).longValue();
+                } else if (rawTime instanceof String) {
+                    timeLong = Long.parseLong((String) rawTime);
+                }
+
+                if (timeLong > 0) {
+                    String formatted = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm", java.util.Locale.getDefault())
+                            .format(new java.util.Date(timeLong));
+                    holder.histDate.setText(formatted);
+                } else {
+                    holder.histDate.setText("Time unavailable");
+                }
+            } catch (Exception e) {
+                // If it's already written as a human-readable string in an old record, print it safely
+                holder.histDate.setText(rawTime.toString());
+            }
         } else {
             holder.histDate.setText("Time unavailable");
         }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:background="#F5F5F5">
 
     <ScrollView
@@ -25,7 +26,9 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="20dp"/>
 
             <!-- SOS FLASH LIGHT CARD -->
             <com.google.android.material.card.MaterialCardView
