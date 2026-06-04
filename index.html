@@ -3,33 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JER APP Download</title>
+    <title>JER APP - Official Download</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f9; }
-        .card { background: white; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        /* Corporate Memphis & Material Inspired Theme */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            text-align: center; 
+            padding: 60px 20px; 
+            background-color: #f7f9fc; 
+            color: #1e293b;
+            margin: 0;
+        }
+        
+        .card { 
+            background: #ffffff; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            display: inline-block; 
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); 
+            border: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
         
         .download-btn { 
-            background-color: #007bff; 
-            color: white; 
+            background-color: #2563eb; 
+            color: #ffffff; 
             text-decoration: none; 
-            padding: 15px 25px; 
-            border-radius: 5px; 
-            display: inline-block;
+            padding: 16px 32px; 
+            border-radius: 12px; 
+            display: block;
             font-size: 16px; 
-            font-weight: bold;
-            margin-top: 15px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease;
         }
-        .download-btn:hover { background-color: #0056b3; }
+        
+        .download-btn:hover { 
+            background-color: #1d4ed8; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .version-tag {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            background-color: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
     </style>
 </head>
 <body>
+
     <div class="card">
         <h1>Download JER APP</h1>
-        <p>Official Emergency Response App for Johor Citizens and Tourists.</p>
+        <p class="subtitle">Official Emergency Response App for Johor Citizens and Tourists.</p>
         
-        <a href="app-debug.apk" download="JER-APP.apk" class="download-btn">
-            Download APK (v1.0.0)
+        <!-- Updated to use the correct release file destination -->
+        <a href="app-release.apk" download="JER-APP-Release.apk" class="download-btn">
+            Download Official APK
         </a>
+
+        <div class="version-tag">Release Build v1.0.0</div>
     </div>
+
 </body>
 </html>
