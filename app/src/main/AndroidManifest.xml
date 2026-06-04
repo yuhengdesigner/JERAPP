@@ -37,10 +37,6 @@
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
 
-        <activity
-            android:name=".HistoryDetailActivity"
-            android:exported="false" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAnzpv-bhDp1o_Ca0iFONTu0IftTR_FW1g" />
