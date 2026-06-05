@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="65dp"
         android:fitsSystemWindows="true"
         android:background="@color/primary">
 
@@ -15,7 +15,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="-10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
             android:text="Emergency Tracking"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -40,7 +41,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header"/>
 
-    <!-- Status Overlay Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,100 +49,165 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="8dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
-                android:id="@+id/statusTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rescue is on the way!"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary"/>
-
-            <TextView
-                android:id="@+id/deptDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Responding: Balai Bomba Larkin"
-                android:layout_marginTop="4dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_marginVertical="12dp"/>
-
-            <TextView
-                android:id="@+id/tvCountdownETA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Estimated Arrival: Calculating..."
-                android:textColor="#D32F2F"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:layout_marginBottom="4dp"/>
-
             <LinearLayout
+                android:id="@+id/persistentHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/btnCall"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Call Dept"
-                    app:icon="@android:drawable/ic_menu_call" />
-
-                <Button
-                    android:id="@+id/btnRecord"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Record Evidence"
-                    android:backgroundTint="#D32F2F"
-                    app:icon="@android:drawable/presence_video_online" />
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/swipe_bg">
-
-                <SeekBar
-                    android:id="@+id/btnSwipe"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="6dp"
-                    android:paddingEnd="6dp"
-                    android:thumbOffset="1dp"
-                    android:splitTrack="false"
-                    android:progressDrawable="@drawable/progress_layer"
-                    android:thumb="@drawable/swipe_thumb" />
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/btnToggleExpand"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/statusTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="SWIPE IF THEY ARRVED >>"
-                    android:textColor="#FFFFFF"
+                    android:text="Rescue is on the way!"
+                    android:textColor="@color/primary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
-            </RelativeLayout>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/deptDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Responding: Balai Bomba Larkin" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnToggleExpand"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Toggle visibility"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/primary" />
+
+            <LinearLayout
+                android:id="@+id/collapsibleContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/persistentHeader"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="#DDDDDD" />
+
+                <Button
+                    android:id="@+id/btnViewGoogleMapsETA"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#D32F2F"
+                    android:text="Check Live ETA on Google Maps"
+                    android:textColor="@color/white"
+                    app:icon="@android:drawable/ic_dialog_map"
+                    app:iconTint="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etTimerInput"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Min"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textAlignment="center"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btnStartUserTimer"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="Set Alert Timer"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvCountdownETA"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="No Timer Set"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#D32F2F"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCall"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:text="Call Dept"
+                        app:icon="@android:drawable/ic_menu_call" />
+
+                    <Button
+                        android:id="@+id/btnRecord"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#D32F2F"
+                        android:text="Record Evidence"
+                        app:icon="@android:drawable/presence_video_online" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/swipe_bg">
+
+                    <SeekBar
+                        android:id="@+id/btnSwipe"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:progressDrawable="@drawable/progress_layer"
+                        android:splitTrack="false"
+                        android:thumb="@drawable/swipe_thumb"
+                        android:thumbOffset="1dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="SWIPE IF THEY ARRVED >>"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </RelativeLayout>

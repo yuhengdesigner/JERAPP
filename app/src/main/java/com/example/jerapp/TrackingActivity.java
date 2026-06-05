@@ -1,8 +1,13 @@
 package com.example.jerapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.maps.android.PolyUtil;
-import okhttp3.*;
-import org.json.JSONObject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,16 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng userLoc;
     private TextView tvCountdownETA;
+    private EditText etTimerInput;
     private android.os.CountDownTimer etaTimer;
+    private Button btnStartUserTimer, btnViewGoogleMapsETA;
+    private Ringtone alarmRingtone;
+    private DatabaseReference trackingDatabaseRef;
+    private ValueEventListener trackingListener;
     private static final int PERMISSION_REQUEST_CODE = 100;
+    private android.view.View collapsibleContent;
+    private android.widget.ImageButton btnToggleExpand;
+    private boolean isCardExpanded = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,27 +63,43 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         // Generate ID immediately so videos can be uploaded during transit
         alertKey = getIntent().getStringExtra("alert_key");
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        checkLocationPermissionAndFetch();
-
-        // Data from intent
         deptName = getIntent().getStringExtra("dept_name");
         deptPhone = getIntent().getStringExtra("dept_phone");
         deptId = getIntent().getStringExtra("dept_id");
         deptLat = getIntent().getDoubleExtra("dept_lat", 0);
         deptLng = getIntent().getDoubleExtra("dept_lng", 0);
 
+        saveActiveTrackingState();
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        checkLocationPermissionAndFetch();
+
         TextView tvDetail = findViewById(R.id.deptDetail);
         if (tvDetail != null) tvDetail.setText("Responding: " + deptName);
 
         tvCountdownETA = findViewById(R.id.tvCountdownETA);
+        etTimerInput = findViewById(R.id.etTimerInput);
+        btnStartUserTimer = findViewById(R.id.btnStartUserTimer);
+        btnViewGoogleMapsETA = findViewById(R.id.btnViewGoogleMapsETA);
 
-// Example: Assume your routing logic calculates that the responder is 12 minutes away.
-// Convert those minutes into total milliseconds: 12 minutes * 60 seconds * 1000 ms
-        long initialDurationMs = 12 * 60 * 1000;
+        // Bind new Expandable Container items
+        collapsibleContent = findViewById(R.id.collapsibleContent);
+        btnToggleExpand = findViewById(R.id.btnToggleExpand);
 
-        startETACountdown(initialDurationMs);
+        // Set up the Click Listener toggle action
+        btnToggleExpand.setOnClickListener(v -> {
+            if (isCardExpanded) {
+                // Collapse: Hide details and turn arrow UP
+                collapsibleContent.setVisibility(android.view.View.GONE);
+                btnToggleExpand.setImageResource(android.R.drawable.arrow_up_float);
+                isCardExpanded = false;
+            } else {
+                // Expand: Show details and turn arrow DOWN
+                collapsibleContent.setVisibility(android.view.View.VISIBLE);
+                btnToggleExpand.setImageResource(android.R.drawable.arrow_down_float);
+                isCardExpanded = true;
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) mapFragment.getMapAsync(this);
@@ -87,12 +112,21 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                 });
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> {
-            // Navigate back to the list (Update "DepartmentListActivity.class" to your actual list activity name)
-            Intent intent = new Intent(this, DepartmentListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+        // 1. Trigger Google Maps routing Intent FROM Department TO User
+        btnViewGoogleMapsETA.setOnClickListener(v -> launchGoogleMapsNavigation());
+
+        // 2. Set up local timer execution
+        btnStartUserTimer.setOnClickListener(v -> processUserManualTimerInput());
+
+        // FIX: Re-routed to navigate cleanly to MainActivity without executing finish()
+        findViewById(R.id.btnBack).setOnClickListener(v -> navigateToDashboardHome());
+
+        // Handle system back press via modern Callback handler API
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToDashboardHome();
+            }
         });
 
         findViewById(R.id.btnCall).setOnClickListener(v -> {
@@ -109,6 +143,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress >= 99) {
+                    stopActiveRingtone();
                     confirmArrivalWithFirebase();
                     seekBar.setEnabled(false);
 
@@ -120,6 +155,175 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) { if (seekBar.getProgress() < 99) seekBar.setProgress(0); }
         });
+
+        setupLiveETATracking();
+    }
+
+    private void navigateToDashboardHome() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish(); // Finish current activity instance safely, state is backed up in SharedPrefs
+    }
+
+    private void saveActiveTrackingState() {
+        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("has_active_emergency", true);
+        editor.putString("alert_key", alertKey);
+        editor.putString("dept_name", deptName);
+        editor.putString("dept_phone", deptPhone);
+        editor.putString("dept_id", deptId);
+        editor.putLong("dept_lat_bits", Double.doubleToRawLongBits(deptLat));
+        editor.putLong("dept_lng_bits", Double.doubleToRawLongBits(deptLng));
+        editor.apply();
+    }
+
+    private void clearTrackingState() {
+        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        prefs.edit().clear().apply();
+    }
+
+    private void restoreExistingCountdown() {
+        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        long endTimeMs = prefs.getLong("timer_end_time_ms", 0);
+        if (endTimeMs > System.currentTimeMillis()) {
+            startUserETACountdown(endTimeMs - System.currentTimeMillis());
+        }
+    }
+
+    private void launchGoogleMapsNavigation() {
+        if (deptLat == 0 || userLoc == null) {
+            Toast.makeText(this, "Awaiting current location mapping coordinates...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Construct explicit query directing: Origin = Department -> Destination = User Location
+        String mapUriString = String.format(java.util.Locale.US,
+                "https://www.google.com/maps/dir/?api=1&origin=%f,%f&destination=%f,%f&travelmode=driving",
+                deptLat, deptLng, userLoc.latitude, userLoc.longitude);
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString));
+        mapIntent.setPackage("com.google.android.apps.maps"); // Pin targeted action explicitly to Google Maps App
+
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            // Fallback parsing case if testing inside an open emulator without consumer Google Framework installed
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString)));
+        }
+    }
+
+    private void processUserManualTimerInput() {
+        String inputText = etTimerInput.getText().toString().trim();
+        if (inputText.isEmpty()) {
+            Toast.makeText(this, "Please enter an arrival estimate value.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            long inputMinutes = Long.parseLong(inputText);
+            if (inputMinutes <= 0) {
+                Toast.makeText(this, "Please input a baseline duration over 0.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            stopActiveRingtone(); // Clear sound if a previous loop is running
+            long totalDurationMs = inputMinutes * 60 * 1000;
+            startUserETACountdown(totalDurationMs);
+            Toast.makeText(this, "Timer configured for " + inputMinutes + " mins.", Toast.LENGTH_SHORT).show();
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Invalid number metric formatted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startUserETACountdown(long durationMs) {
+        if (etaTimer != null) {
+            etaTimer.cancel();
+        }
+
+        etaTimer = new android.os.CountDownTimer(durationMs, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long minutes = (millisUntilFinished / 1000) / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+                tvCountdownETA.setText(String.format(java.util.Locale.getDefault(),
+                        "Ringing in: %02d:%02d", minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                tvCountdownETA.setText("Time's Up! Responders Due.");
+                playDeviceAlarmSound();
+            }
+        }.start();
+    }
+
+    private void playDeviceAlarmSound() {
+        try {
+            // Pull the phone's native default ALARM notification configuration stream route
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (alarmUri == null) {
+                // Fallback option in case device profile defaults are locked out
+                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+            }
+
+            alarmRingtone = RingtoneManager.getRingtone(getApplicationContext(), alarmUri);
+            if (alarmRingtone != null) {
+                alarmRingtone.play();
+                Toast.makeText(this, "Timer Finished! Checking arrival status.", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Log.e("ALARM_SOUND_ERROR", "Could not trigger alarm: " + e.getMessage());
+        }
+    }
+
+    private void stopActiveRingtone() {
+        if (alarmRingtone != null && alarmRingtone.isPlaying()) {
+            alarmRingtone.stop();
+        }
+    }
+
+    private void setupLiveETATracking() {
+        if (deptId == null || alertKey == null) return;
+
+        trackingDatabaseRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey);
+
+        trackingListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double dLat = snapshot.child("deptLat").getValue(Double.class);
+                    Double dLng = snapshot.child("deptLng").getValue(Double.class);
+                    Double uLat = snapshot.child("userLat").getValue(Double.class);
+                    Double uLng = snapshot.child("userLng").getValue(Double.class);
+
+                    if (uLat == null || uLng == null) {
+                        if (userLoc != null) {
+                            uLat = userLoc.latitude;
+                            uLng = userLoc.longitude;
+                        }
+                    }
+
+                    if (dLat != null && dLng != null && uLat != null && uLng != null) {
+                        deptLat = dLat;
+                        deptLng = dLng;
+                        userLoc = new LatLng(uLat, uLng);
+
+                        updateMapWithRoute();
+                        fitMapBounds();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FIREBASE_TRACK", error.getMessage());
+            }
+        };
+
+        trackingDatabaseRef.addValueEventListener(trackingListener);
     }
 
     private void confirmArrivalWithFirebase() {
@@ -242,7 +446,6 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 100);
         } else {
-            // Permission already granted, proceed
             launchCamera();
         }
     }
@@ -277,77 +480,15 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
     }
 
-    private void initiateAlertInFirebase() {
-        // Ensure you have valid data before writing
-        if (deptId == null || alertKey == null) return;
-
-        DatabaseReference alertRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey);
-
-        // Get the current User ID
-        String uid = FirebaseAuth.getInstance().getCurrentUser() != null ?
-                FirebaseAuth.getInstance().getCurrentUser().getUid() : "guest_user";
-
-        HashMap<String, Object> alertMap = new HashMap<>();
-
-        // 1. Status and Timing
-        alertMap.put("status", "Pending");
-        alertMap.put("startTime", ServerValue.TIMESTAMP);
-        alertMap.put("timestamp", System.currentTimeMillis()); // For history sorting
-
-        // 2. Reporter/User Details (You should ideally fetch these from your 'Users' node)
-        alertMap.put("userId", uid);
-        // Add your user name/contact here if you store them in the user profile
-
-        // 3. Emergency Details
-        alertMap.put("emergencyType", "General Emergency"); // You can pass this via Intent
-        alertMap.put("assignedDept", deptName);
-        alertMap.put("deptPhone", deptPhone);
-        alertMap.put("deptLat", deptLat);
-        alertMap.put("deptLng", deptLng);
-
-        // 4. Evidence structure
-        alertMap.put("videoUrls", new ArrayList<String>());
-
-        // Write to Firebase
-        alertRef.setValue(alertMap).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Emergency alert initiated.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Failed to start alert.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void startETACountdown(long durationMs) {
-        // If a previous timer is already running, cancel it first
-        if (etaTimer != null) {
-            etaTimer.cancel();
-        }
-
-        etaTimer = new android.os.CountDownTimer(durationMs, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                // Convert remaining milliseconds back into minutes and seconds
-                long minutes = (millisUntilFinished / 1000) / 60;
-                long seconds = (millisUntilFinished / 1000) % 60;
-
-                // Update the layout text view in real-time
-                tvCountdownETA.setText(String.format(java.util.Locale.getDefault(),
-                        "Responder arriving in: %02d:%02d mins", minutes, seconds));
-            }
-
-            @Override
-            public void onFinish() {
-                tvCountdownETA.setText("Responders have arrived on site!");
-            }
-        }.start();
-    }
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        // FIX: Detach the Firebase database listener to resolve background background execution leaks
+        if (trackingDatabaseRef != null && trackingListener != null) {
+            trackingDatabaseRef.removeEventListener(trackingListener);
+        }
         if (etaTimer != null) {
             etaTimer.cancel();
         }
+        super.onDestroy();
     }
 }

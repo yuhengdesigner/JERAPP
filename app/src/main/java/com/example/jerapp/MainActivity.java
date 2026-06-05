@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.maps.MapsInitializer; // REQUIRED for 3D
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback; // REQUIRED for 3D
+import java.util.Locale;
 
 public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCallback {
 
@@ -37,7 +38,9 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
     private ImageView userProfileImage;
     private boolean isGuest = false;
     private int currentNavId = -1;
-
+    private com.google.android.material.card.MaterialCardView cardOngoingEmergency;
+    private TextView tvOngoingDeptName, tvDashboardCountdown;
+    private android.os.CountDownTimer dashboardTimer;
     private static boolean guestPermissionsCheckedThisSession = false;
 
     private final ActivityResultLauncher<String[]> permissionPicker =
@@ -50,10 +53,10 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
 
         isGuest = getIntent().getBooleanExtra("isGuest", false);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -121,6 +124,80 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
                 bottomNav.setSelectedItemId(R.id.nav_history);
             }
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh the visibility and state of the card every time user returns to MainActivity
+        checkAndRenderOngoingSession();
+    }
+
+    private void checkAndRenderOngoingSession() {
+        cardOngoingEmergency = findViewById(R.id.cardOngoingEmergency);
+        tvOngoingDeptName = findViewById(R.id.tvOngoingDeptName);
+        tvDashboardCountdown = findViewById(R.id.tvDashboardCountdown);
+
+        if (cardOngoingEmergency == null || tvOngoingDeptName == null || tvDashboardCountdown == null) {
+            return;
+        }
+
+        android.content.SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        boolean hasActive = prefs.getBoolean("has_active_emergency", false);
+
+        if (!hasActive) {
+            cardOngoingEmergency.setVisibility(View.GONE);
+            if (dashboardTimer != null) {
+                dashboardTimer.cancel();
+            }
+            return;
+        }
+
+        // Populate details
+        String name = prefs.getString("dept_name", "Emergency Department");
+        tvOngoingDeptName.setText("Responding: " + name);
+        cardOngoingEmergency.setVisibility(View.VISIBLE);
+
+        if (dashboardTimer != null) {
+            dashboardTimer.cancel();
+        }
+
+        long endTimeMs = prefs.getLong("timer_end_time_ms", 0);
+        if (endTimeMs > System.currentTimeMillis()) {
+            long remainingMs = endTimeMs - System.currentTimeMillis();
+            dashboardTimer = new android.os.CountDownTimer(remainingMs, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    long mins = (millisUntilFinished / 1000) / 60;
+                    long secs = (millisUntilFinished / 1000) % 60;
+                    tvDashboardCountdown.setText(String.format(Locale.getDefault(), "%02d:%02d Left", mins, secs));
+                }
+
+                @Override
+                public void onFinish() {
+                    tvDashboardCountdown.setText("Responders Due!");
+                }
+            }.start();
+        } else {
+            tvDashboardCountdown.setText("Tracking Active");
+        }
+
+        // Return straight to active TrackingActivity instance
+        cardOngoingEmergency.setOnClickListener(v -> {
+            Intent resumeIntent = new Intent(MainActivity.this, TrackingActivity.class);
+            resumeIntent.putExtra("alert_key", prefs.getString("alert_key", ""));
+            resumeIntent.putExtra("dept_name", prefs.getString("dept_name", ""));
+            resumeIntent.putExtra("dept_phone", prefs.getString("dept_phone", ""));
+            resumeIntent.putExtra("dept_id", prefs.getString("dept_id", ""));
+
+            double lat = Double.longBitsToDouble(prefs.getLong("dept_lat_bits", 0));
+            double lng = Double.longBitsToDouble(prefs.getLong("dept_lng_bits", 0));
+            resumeIntent.putExtra("dept_lat", lat);
+            resumeIntent.putExtra("dept_lng", lng);
+
+            startActivity(resumeIntent);
+        });
     }
 
     // --- 2. MANDATORY: Callback for Map Initialization ---
@@ -222,6 +299,8 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+
+        findViewById(R.id.fragment_container).post(this::checkAndRenderOngoingSession);
     }
 
     private void setupNavigation(NavigationView navView, BottomNavigationView bottomNav) {
@@ -260,8 +339,13 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
 
     // Helper method for clean logout
     private void performLogout() {
+        if (dashboardTimer != null) {
+            dashboardTimer.cancel();
+        }
+
         FirebaseAuth.getInstance().signOut();
         getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
+        getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE).edit().clear().apply();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

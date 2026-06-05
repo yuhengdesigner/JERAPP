@@ -56,10 +56,20 @@ public class HistoryFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         historyList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            AlertModel alert = ds.getValue(AlertModel.class);
-                            if (alert != null) {
-                                alert.setKey(ds.getKey());
-                                historyList.add(alert);
+                            // ADD THIS CHECK: Only attempt to convert if it's an Object (Map)
+                            if (ds.getValue() instanceof java.util.Map) {
+                                AlertModel alert = ds.getValue(AlertModel.class);
+                                if (alert != null) {
+                                    String status = alert.getStatus();
+                                    // Only add if it is NOT completed
+                                    if (!"Completed".equalsIgnoreCase(status) && !"Resolved".equalsIgnoreCase(status)) {
+                                        alert.setKey(ds.getKey());
+                                        historyList.add(alert);
+                                    }
+                                }
+                            } else {
+                                // Log the error instead of crashing
+                                Log.e("HistoryFragment", "Skipping non-object data at: " + ds.getKey());
                             }
                         }
                         adapter.notifyDataSetChanged();
