@@ -1,92 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JER APP - Official Download</title>
-    <style>
-        /* Corporate Memphis & Material Inspired Theme */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            text-align: center; 
-            padding: 60px 20px; 
-            background-color: #f7f9fc; 
-            color: #1e293b;
-            margin: 0;
-        }
-        
-        .card { 
-            background: #ffffff; 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            display: inline-block; 
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); 
-            border: 1px solid #e2e8f0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johor Emergency Response (JER)</title>
 
-        h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #0f172a;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        .subtitle {
-            font-size: 15px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 30px;
-        }
-        
-        .download-btn { 
-            background-color: #2563eb; 
-            color: #ffffff; 
-            text-decoration: none; 
-            padding: 16px 32px; 
-            border-radius: 12px; 
-            display: block;
-            font-size: 16px; 
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-            transition: all 0.2s ease;
-        }
-        
-        .download-btn:hover { 
-            background-color: #1d4ed8; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-        }
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#f8fafc;
+    color:#1e293b;
+    line-height:1.6;
+}
 
-        .download-btn:active {
-            transform: translateY(0);
-        }
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
 
-        .version-tag {
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #94a3b8;
-            background-color: #f1f5f9;
-            padding: 4px 12px;
-            border-radius: 100px;
-        }
-    </style>
+.hero{
+    padding:70px 20px;
+    text-align:center;
+    background:linear-gradient(135deg,#0f172a,#1e40af);
+    color:white;
+}
+
+.hero img{
+    width:140px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.hero p{
+    max-width:700px;
+    margin:auto;
+    opacity:0.95;
+    font-size:1.1rem;
+}
+
+.download-btn{
+    display:inline-block;
+    margin-top:30px;
+    padding:16px 35px;
+    background:#2563eb;
+    color:white;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:700;
+    font-size:1rem;
+    transition:0.3s;
+}
+
+.download-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.section{
+    padding:70px 20px;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.section-title h2{
+    font-size:2rem;
+    color:#0f172a;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+
+.card h3{
+    margin-bottom:10px;
+    color:#1e40af;
+}
+
+.workflow{
+    background:white;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.step{
+    background:#f8fafc;
+    padding:25px;
+    border-radius:15px;
+    border-left:5px solid #2563eb;
+}
+
+.team-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.member{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+
+.member img{
+    width:100%;
+    max-width:220px;
+    height:220px;
+    object-fit:cover;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.member h4{
+    margin-bottom:5px;
+}
+
+.footer{
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+.version{
+    margin-top:15px;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.highlight{
+    color:#2563eb;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+    font-size:2.2rem;
+}
+
+.hero p{
+    font-size:1rem;
+}
+
+}
+</style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Download JER APP</h1>
-        <p class="subtitle">Official Emergency Response App for Johor Citizens and Tourists.</p>
-        
-<a href="https://docs.google.com/uc?export=download&id=1Un4i4XQs0NuKNFOdV3jkan5z2IT6JmL8" class="download-btn">
-            Download Official APK
-        </a>
+<!-- HERO -->
+<section class="hero">
 
-        <div class="version-tag">Release Build v1.0.0</div>
+    <!-- Replace with your logo image -->
+    <img src="images/logo.png" alt="JER Logo">
+
+    <h1>Johor Emergency Response</h1>
+
+    <p>
+        JER is an emergency response platform developed for
+        Johor citizens and tourists to quickly request assistance
+        from Police, Medical and Fire departments without
+        relying solely on traditional emergency calls.
+    </p>
+
+    <a
+        class="download-btn"
+        href="https://docs.google.com/uc?export=download&id=1ocg_0LmypFpJ9MCHTt71LVmWfopeO-Zx">
+        Download Android APK
+    </a>
+
+    <div class="version">
+        Current Release: v1.0.0
     </div>
+
+</section>
+
+<!-- ABOUT -->
+<section class="section">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>About JER</h2>
+        </div>
+
+        <p style="text-align:center;max-width:900px;margin:auto;">
+            <strong>JER (Johor Emergency Response)</strong> is a mobile application
+            designed to improve emergency communication between the public and
+            emergency service departments. Users can submit emergency requests,
+            share their location, upload evidence videos, track responder status,
+            and access emergency education resources such as CPR tutorials and
+            safety procedures.
+        </p>
+
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="background:white;">
+<div class="container">
+
+<div class="section-title">
+    <h2>Key Features</h2>
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Emergency Request</h3>
+        <p>
+            Quickly send emergency alerts to Police, Medical,
+            or Fire departments.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Live Location Tracking</h3>
+        <p>
+            Share your current coordinates and monitor responder
+            progress through map integration.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Video Evidence Upload</h3>
+        <p>
+            Record and submit incident videos directly to
+            department administrators.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Emergency History</h3>
+        <p>
+            Review previous emergency requests and their status.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Offline Tutorials</h3>
+        <p>
+            Access CPR guidance, emergency procedures and
+            safety information even without internet access.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>SOS Flashlight</h3>
+        <p>
+            Use built-in SOS signaling tools during critical situations.
+        </p>
+    </div>
+
+</div>
+
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section workflow">
+<div class="container">
+
+<div class="section-title">
+    <h2>How JER Works</h2>
+</div>
+
+<div class="steps">
+
+<div class="step">
+    <h3>1. Access the App</h3>
+    <p>
+        Register, log in, or continue as a guest user.
+    </p>
+</div>
+
+<div class="step">
+    <h3>2. Select Emergency Department</h3>
+    <p>
+        Choose Police, Medical or Fire services and filter
+        nearby departments.
+    </p>
+</div>
+
+<div class="step">
+    <h3>3. Confirm Emergency</h3>
+    <p>
+        Submit your emergency request and send your location
+        to the department.
+    </p>
+</div>
+
+<div class="step">
+    <h3>4. Track Assistance</h3>
+    <p>
+        Monitor emergency response progress and responder location.
+    </p>
+</div>
+
+<div class="step">
+    <h3>5. Upload Additional Evidence</h3>
+    <p>
+        Record videos and share information with responders.
+    </p>
+</div>
+
+<div class="step">
+    <h3>6. Emergency Completed</h3>
+    <p>
+        Close the case after responders arrive and review it later
+        in your emergency history.
+    </p>
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- TEAM -->
+<section class="section">
+<div class="container">
+
+<div class="section-title">
+    <h2>Development Team</h2>
+</div>
+
+<div class="team-grid">
+
+    <div class="member">
+        <img src="images/member1.jpg" alt="Team Member">
+        <h4>Team Member</h4>
+        <p>JER Development Team</p>
+    </div>
+
+    <div class="member">
+        <img src="images/member2.jpg" alt="Team Member">
+        <h4>Team Member</h4>
+        <p>JER Development Team</p>
+    </div>
+
+    <div class="member">
+        <img src="images/member3.png" alt="Team Member">
+        <h4>Team Member</h4>
+        <p>JER Development Team</p>
+    </div>
+
+    <div class="member">
+        <img src="images/member4.jpg" alt="Team Member">
+        <h4>Team Member</h4>
+        <p>JER Development Team</p>
+    </div>
+
+</div>
+
+</div>
+</section>
+
+<!-- DOWNLOAD AGAIN -->
+<section class="section" style="background:#eff6ff;">
+<div class="container" style="text-align:center;">
+
+<h2 style="margin-bottom:20px;">
+Ready to Install JER?
+</h2>
+
+<p style="margin-bottom:25px;">
+Download the latest Android APK and stay connected to emergency services.
+</p>
+
+<a
+class="download-btn"
+href="https://docs.google.com/uc?export=download&id=1ocg_0LmypFpJ9MCHTt71LVmWfopeO-Zx">
+Download APK
+</a>
+
+</div>
+</section>
+
+<footer class="footer">
+
+    <h3>Johor Emergency Response (JER)</h3>
+
+    <p>
+        Emergency Assistance • Safety Education • Community Protection
+    </p>
+
+    <p style="
+        margin-top:15px;
+        font-size:12px;
+        color:#94a3b8;
+    ">
+        © 2026 Johor Emergency Response (JER) | Developed by UTMSPACE CS Student | Led by Choy Yu Heng. All rights reserved.
+    </p>
+
+</footer>
 
 </body>
 </html>
