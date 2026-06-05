@@ -7,6 +7,15 @@ android {
     namespace 'com.example.jerapp'
     compileSdk 36
 
+    signingConfigs {
+        release {
+            storeFile file(project.rootDir.absolutePath + "/app/release-key.jks")
+            storePassword 'jerapp2026'
+            keyAlias 'release_key'
+            keyPassword 'jerapp2026'
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.jerapp"
         minSdk 30
@@ -18,11 +27,13 @@ android {
     }
 
     buildTypes {
+        debug{
+
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
