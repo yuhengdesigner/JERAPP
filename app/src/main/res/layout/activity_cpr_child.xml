@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F5F5">
 
-    <!-- Header: Matching your centered/lowered style -->
+    <!-- Top Action Bar Header -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -18,11 +19,12 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,4 +37,723 @@
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center_horizontal">
+
+            <!-- Top Background Decorative Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardPreventCornerOverlap="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_cpr_child_bg" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Overview of Resuscitation Framework"
+                android:gravity="center_horizontal"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Child CPR (Ages 1 to 8)"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Card 1: WHAT -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WHAT is Child CPR?"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Child Cardiopulmonary Resuscitation (CPR) is an emergency life-saving technique specifically tailored for a child's smaller, developing body. Like adult CPR, it combines chest compressions and rescue breaths to act as an external heart pump. However, because children have more flexible ribcages and smaller lung capacities, the physical force, hand placement, and sequence are adjusted to prevent injury while maximizing oxygen flow."
+                        android:justificationMode="inter_word"
+                        android:textColor="#424242"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 2: WHY -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WHY must you perform it?"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="A Oxygen-First Emergency: Unlike adults—whose hearts usually stop due to sudden cardiac issues—children almost always experience cardiac arrest because of a respiratory failure (choking, drowning, asthma, or poisoning causing them to stop breathing first)."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Rapid Deterioration: Because children consume oxygen much faster than adults, their organs fail rapidly without it. Delivering early rescue breaths is absolutely critical to their survival."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 3: WHO -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WHO needs it?"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Any child from 1 year old up to puberty (signs of puberty include chest hair/deep voice in boys, or breast development in girls) who meets both of these criteria:"
+                        android:justificationMode="inter_word"
+                        android:textColor="#424242"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 1. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Unresponsive: They do not wake up, move, or make a sound when you gently shake their shoulders and call their name or shout loudly, 'Are you okay?!'"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 2. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Not Breathing Normally: They are not breathing at all, or they are making weak, irregular gasping noises."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 4: WHEN -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WHEN should you start and stop?"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="When to Start: Start immediately upon confirming unresponsiveness and lack of normal breathing."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="The 'Lone Responder' Rule: If you are completely alone and do not have a phone, perform 1 minute of CPR (about 5 cycles) before leaving the child to find a phone or look for help. Children desperately need that immediate oxygen boost."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="When to Stop: Stop only when paramedics take over, an AED is turned on and ready to analyze, the child revives (moves, coughs, breathes normally), or you are physically unable to continue."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 5: WHERE -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WHERE should it be performed?"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="On a Firm, Flat Surface: Lay the child flat on their back on the floor, the ground, or a sturdy table. Never do CPR on a soft bed or couch."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="Safe and Clear: Ensure the immediate area is clear of toys, furniture, or hazards so you have full, unobstructed access to the child's side."
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cprSwitchContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="22.5dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
+
+                    <RelativeLayout
+                        android:id="@+id/cprSwitchBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/switch_off"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/tvCprStatusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="TAP TO START"
+                            android:textColor="#757575"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:id="@+id/cprSwitchThumb"
+                            android:layout_width="37dp"
+                            android:layout_height="37dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/circle_thumb"
+                            android:backgroundTint="@color/thumb_color"
+                            android:backgroundTintMode="src_over"
+                            android:elevation="4dp"
+                            android:stateListAnimator="@null" />
+
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 6: HOW (The Workflow and Chart) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Embedded cpr_for_children_chart Image Card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardPreventCornerOverlap="false">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="520dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/cpr_for_children_chart" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HOW to Perform Child CPR (Step-by-Step Beginner Guide)"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <!-- Step 1 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 1: D – Check for Danger"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ensure the scene is entirely safe for you and the child. Look for common childhood environmental hazards like pools/water, loose electrical cords, or dropped choking hazards nearby. Move any clutter away."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Step 2 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 2: R – Check for Response (Gently Shake &amp; Shout)"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kneel beside the child. Gently shake their shoulders and shout clearly: &quot;Open your eyes! Are you okay?!&quot; Do not shake them aggressively. If there is no stir, blink, or vocal sound, they are unresponsive."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Step 3 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 3: S – Send for Help (Note the Solitary Rule)"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="If someone is with you: Tell them to call emergency services immediately and find an AED.\n\nIf you are alone with a phone: Call emergency services, turn on the loudspeaker, place it next to the child's head, and start CPR immediately.\n\nIf you are completely alone with NO phone: Do not leave the child yet. Perform Step 4, 5, and 1 minute of CPR first, then run to get help."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Step 4 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 4: A – Open the Airway &amp; Check the Mouth"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="The Check: Gently tilt the child's head slightly to look inside the mouth. Look for swallowed small toys, hard candy, coins, or vomit. If you see an object, carefully sweep it out with one finger. Never sweep blindly if you can't see anything, as you might push the object deeper.\n\nThe Tilt: Place one hand on their forehead and two fingers under the tip of their chin. Gently tilt the head back into a neutral, slightly sniffing position."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Warning Highlight Component -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="•"
+                            android:paddingEnd="8dp"
+                            android:textColor="#DC3545"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#DC3545"
+                            android:text="Airway Warning: Do not over-tilt it backward like an adult. A child’s airway is highly flexible and over-tilting can actually kink it shut."
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <!-- Step 5 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 5: B – Give 5 Initial Rescue Breaths (Critical Child Adjustment)"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Because children usually collapse due to lack of oxygen, always start Child CPR with breaths, not compressions.\n\nKeep the head tilted slightly back. Pinch the child's nose completely shut using your thumb and index finger.\n\nTake a normal breath, seal your lips tightly around their mouth, and blow gently for 1 second.\n\nWatch the chest out of the corner of your eye—blow only until you see the chest rise gently. (Because their lungs are small, blowing too hard can cause lung damage).\n\nTake your mouth away, let the chest fall, and repeat until you have delivered 5 initial rescue breaths."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Step 6 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 6: C – Begin Chest Compressions (1-Hand or 2-Hand Technique)"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Immediately after the 5 breaths, check for breathing for no more than 10 seconds. If they are still not breathing, start compressions:\n\nHand Placement: Locate the lower half of the breastbone (center of the chest, right between the nipples).\n\nThe Technique: Depending on the size of the child, use one hand or two hands:\n- For smaller children: Place only the heel of one hand on the center of the chest. Keep your arm straight, locking your elbow directly above the chest.\n- For larger/older children: Interlock both hands exactly like an adult setup if you feel one hand isn't strong enough.\n\nDepth &amp; Speed: Compress straight down smoothly. Go down roughly one-third of the chest depth (about 5 cm / 2 inches). Release completely to allow full chest recoil. Compress at a fast rate of 100 to 120 compressions per minute."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- Protocol Monospace Frame -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#E9ECEF"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:layout_marginTop="12dp"
+                        android:text="[5 Initial Breaths] -> Then alternate [30 Compressions] -> [2 Rescue Breaths]"
+                        android:textColor="#495057"
+                        android:fontFamily="monospace"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="After the first 5 initial breaths, drop into a continuous cycle of 30 compressions followed by 2 breaths."
+                        android:textColor="#424242"
+                        android:textSize="15sp" />
+
+                    <!-- Step 7 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Step 7: D – Defibrillation (AED Application)"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="The moment an AED arrives, switch it on.\n\nPediatric Mode: If the AED includes child pads or a child/pediatric switch, use them immediately. Child pads deliver a lower, safer electrical shock level.\n\nPad Placement: Place one pad on the center of the child's bare chest and the other pad directly on the center of their upper back (Anterior-Posterior placement). This prevents the pads from touching each other on a small chest.\n\nNote: If no child pads are available, use standard adult pads, but ensure they do not overlap or touch each other. Follow the vocal instructions explicitly."
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Custom App Footer Credit Area (Perfectly Matching) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="© 2026 JER - Chia Jing Xian. All rights reserved."
+                android:textColor="#9E9E9E"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
