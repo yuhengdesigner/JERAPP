@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Overview of Resuscitation Framework"
+                android:text="Example picture of children"
                 android:gravity="center_horizontal"
                 android:textColor="#757575"
                 android:textSize="14sp"
