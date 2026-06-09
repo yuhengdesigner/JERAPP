@@ -13,11 +13,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ServerValue;
+import java.util.UUID;
 
 public class ConfirmationActivity extends AppCompatActivity {
+
+    private String deptId, deptName, deptPhone, emergencyType;
+    private double deptLat, deptLng, userLat, userLng;
+    private boolean isGuestFlow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,16 @@ public class ConfirmationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirmation);
 
         Intent incomingIntent = getIntent();
+        isGuestFlow = incomingIntent.getBooleanExtra("isGuestFlow", false);
+
+        deptId = incomingIntent.getStringExtra("dept_id");
+        deptName = incomingIntent.getStringExtra("dept_name");
+        deptPhone = incomingIntent.getStringExtra("dept_phone");
+        emergencyType = incomingIntent.getStringExtra("emergency_type");
+        deptLat = incomingIntent.getDoubleExtra("dept_lat", 0);
+        deptLng = incomingIntent.getDoubleExtra("dept_lng", 0);
+        userLat = incomingIntent.getDoubleExtra("user_lat", 0);
+        userLng = incomingIntent.getDoubleExtra("user_lng", 0);
 
         // 1. Handle Buttons
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
@@ -32,105 +45,133 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         // 2. Confirm Button
         findViewById(R.id.btnConfirm).setOnClickListener(v -> {
-            // LOCK BUTTON TO PREVENT MULTIPLE CLICKS
-            v.setEnabled(false);
+            v.setEnabled(false); // Lock click execution
 
-            String deptId = incomingIntent.getStringExtra("dept_id");
-            String deptName = incomingIntent.getStringExtra("dept_name");
-            String deptPhone = incomingIntent.getStringExtra("dept_phone");
+            DatabaseReference alertsDbRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId);
+            String generatedAlertKey = alertsDbRef.push().getKey();
 
-
-            double lat = incomingIntent.getDoubleExtra("user_lat", 0.0);
-            double lng = incomingIntent.getDoubleExtra("user_lng", 0.0);
-
-            double deptLat = incomingIntent.getDoubleExtra("dept_lat", 0.0);
-            double deptLng = incomingIntent.getDoubleExtra("dept_lng", 0.0);
-            String emergencyType = incomingIntent.getStringExtra("emergency_type");
-
-            final String addressText = getAddressFromLocation(lat, lng);
-
-            if (deptId == null || deptId.isEmpty()) {
-                Toast.makeText(this, "Error: Department ID missing!", Toast.LENGTH_LONG).show();
-                v.setEnabled(true); // Re-enable so they can try again
-                return;
-            }
-
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user == null) {
-                Toast.makeText(this, "Error: User not logged in", Toast.LENGTH_SHORT).show();
+            if (generatedAlertKey == null) {
                 v.setEnabled(true);
                 return;
             }
 
-            FirebaseDatabase.getInstance().getReference("Users").child(user.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String name = snapshot.child("name").getValue(String.class);
-                            String phone = snapshot.child("phone").getValue(String.class);
-                            String gender = snapshot.child("gender").getValue(String.class);
-                            String email = user.getEmail();
+            String computedAddress = getAddressFromLocation(userLat, userLng);
 
-                            AlertModel newAlert = new AlertModel();
-                            newAlert.setUserName(name != null ? name : "Unknown User");
-                            newAlert.setUserPhone(phone != null ? phone : "N/A");
-                            newAlert.setUserEmail(email != null ? email : "N/A");
-                            newAlert.setGender(gender != null ? gender : "N/A");
-                            newAlert.setTextAddress(addressText);
-                            newAlert.setEmergencyType(incomingIntent.getStringExtra("emergency_type"));
-                            newAlert.setAssignedDept(deptId);
-                            newAlert.setDeptName(incomingIntent.getStringExtra("dept_name"));
-                            newAlert.setDeptPhone(incomingIntent.getStringExtra("dept_phone")); // ADD THIS
-                            newAlert.setDeptLat(incomingIntent.getDoubleExtra("dept_lat", 0.0)); // ADD THIS
-                            newAlert.setDeptLng(incomingIntent.getDoubleExtra("dept_lng", 0.0)); // ADD THIS
-                            newAlert.setStatus("Pending");
-                            newAlert.setUserLat(lat);
-                            newAlert.setUserLng(lng);
-                            newAlert.setVideoUrl(incomingIntent.getStringExtra("video_url"));
-                            newAlert.setTimestamp(System.currentTimeMillis());
+            if (isGuestFlow) {
+                // Read directly from the intent variables populated by GuestInfoActivity
+                String guestName = incomingIntent.getStringExtra("guest_name");
+                String guestPhone = incomingIntent.getStringExtra("guest_phone");
+                String guestGender = incomingIntent.getStringExtra("guest_gender");
 
-                            // Correct way to get the reference and key
-                            DatabaseReference alertRef = FirebaseDatabase.getInstance()
-                                    .getReference("ActiveAlerts")
-                                    .child(deptId)
-                                    .push();
+                AlertModel guestAlert = new AlertModel();
+                guestAlert.setKey(generatedAlertKey);
+                guestAlert.setUserId("GUEST_" + UUID.randomUUID().toString().substring(0, 8));
+                guestAlert.setUserName(guestName + " (Guest)");
+                guestAlert.setUserPhone(guestPhone);
+                guestAlert.setGender(guestGender);
+                guestAlert.setUserEmail("No Account (Guest Mode)");
+                guestAlert.setEmergencyType(emergencyType);
+                guestAlert.setStatus("Pending");
+                guestAlert.setAssignedDept(deptId);
+                guestAlert.setDept_id(deptId);
+                guestAlert.setDeptName(deptName);
+                guestAlert.setDeptPhone(deptPhone);
+                guestAlert.setUserLat(userLat);
+                guestAlert.setUserLng(userLng);
+                guestAlert.setDeptLat(deptLat);
+                guestAlert.setDeptLng(deptLng);
+                guestAlert.setTextAddress(computedAddress);
+                guestAlert.setTimestamp(ServerValue.TIMESTAMP);
 
-                            String generatedKey = alertRef.getKey(); // Get the ID
+                // Push payload straight out to Firebase database alerts node
+                alertsDbRef.child(generatedAlertKey).setValue(guestAlert)
+                        .addOnSuccessListener(aVoid -> {
+                            Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
+                            intent.putExtra("alert_key", generatedAlertKey);
+                            intent.putExtra("dept_id", deptId);
+                            intent.putExtra("dept_name", deptName);
+                            intent.putExtra("dept_phone", deptPhone);
+                            intent.putExtra("dept_lat", deptLat);
+                            intent.putExtra("dept_lng", deptLng);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            v.setEnabled(true);
+                            Toast.makeText(ConfirmationActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        });
 
-                            alertRef.setValue(newAlert).addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(ConfirmationActivity.this, "Alert sent to " + deptName, Toast.LENGTH_SHORT).show();
+            } else {
+                // AUTHENTICATED ACCOUNT USER CODE PATHWAY
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser == null) {
+                    v.setEnabled(true);
+                    return;
+                }
+                String uid = currentUser.getUid();
 
-                                        //  FIXED: Save history node ONLY when the official active push succeeds
-                                        String uid = FirebaseAuth.getInstance().getUid();
-                                        if (uid != null) {
+                FirebaseDatabase.getInstance().getReference("Users").child(uid)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String uName = snapshot.child("name").getValue(String.class);
+                                String uPhone = snapshot.child("phone").getValue(String.class);
+                                String uGender = snapshot.child("gender").getValue(String.class);
+                                String uEmail = snapshot.child("email").getValue(String.class);
+
+                                AlertModel userAlert = new AlertModel();
+                                userAlert.setKey(generatedAlertKey);
+                                userAlert.setUserId(uid);
+                                userAlert.setUserName(uName);
+                                userAlert.setUserPhone(uPhone);
+                                userAlert.setGender(uGender);
+                                userAlert.setUserEmail(uEmail);
+                                userAlert.setEmergencyType(emergencyType);
+                                userAlert.setStatus("Pending");
+                                userAlert.setAssignedDept(deptId);
+                                userAlert.setDept_id(deptId);
+                                userAlert.setDeptName(deptName);
+                                userAlert.setDeptPhone(deptPhone);
+                                userAlert.setUserLat(userLat);
+                                userAlert.setUserLng(userLng);
+                                userAlert.setDeptLat(deptLat);
+                                userAlert.setDeptLng(deptLng);
+                                userAlert.setTextAddress(computedAddress);
+                                userAlert.setTimestamp(ServerValue.TIMESTAMP);
+
+                                alertsDbRef.child(generatedAlertKey).setValue(userAlert)
+                                        .addOnSuccessListener(aVoid -> {
+
+                                            // 2. CRITICAL FIX: Instantly copy the complete object payload over to UserHistory node
                                             FirebaseDatabase.getInstance().getReference("UserHistory")
                                                     .child(uid)
-                                                    .child(generatedKey)
-                                                    .setValue(newAlert);
-                                        }
+                                                    .child(generatedAlertKey)
+                                                    .setValue(userAlert)
+                                                    .addOnCompleteListener(task -> {
+                                                        // Even if tracking history logs fail momentarily, proceed to tracking because the active alert is live
+                                                        Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
+                                                        intent.putExtra("alert_key", generatedAlertKey);
+                                                        intent.putExtra("dept_id", deptId);
+                                                        intent.putExtra("dept_name", deptName);
+                                                        intent.putExtra("dept_phone", deptPhone);
+                                                        intent.putExtra("dept_lat", deptLat);
+                                                        intent.putExtra("dept_lng", deptLng);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            v.setEnabled(true);
+                                            Toast.makeText(ConfirmationActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        });
+                            }
 
-                                        // Pass the generatedKey to TrackingActivity
-                                        Intent intent = new Intent(ConfirmationActivity.this, DispatchActivity.class);
-                                        intent.putExtra("alert_key", generatedKey);
-                                        intent.putExtra("dept_id", deptId);
-                                        intent.putExtra("dept_name", deptName);
-                                        intent.putExtra("dept_phone", deptPhone);
-                                        intent.putExtra("dept_lat", deptLat);
-                                        intent.putExtra("dept_lng", deptLng);
-
-                                        startActivity(intent);
-                                        finish();
-                                    }).addOnFailureListener(e -> {
-                                        v.setEnabled(true);
-                                        Toast.makeText(ConfirmationActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    });
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            v.setEnabled(true);
-                            Toast.makeText(ConfirmationActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                v.setEnabled(true);
+                            }
+                        });
+            }
         });
     }
 

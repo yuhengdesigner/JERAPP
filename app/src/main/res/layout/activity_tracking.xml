@@ -110,49 +110,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:backgroundTint="#D32F2F"
-                    android:text="Check Live ETA on Google Maps"
+                    android:text="View ETA on Google Maps"
                     android:textColor="@color/white"
                     app:icon="@android:drawable/ic_dialog_map"
                     app:iconTint="@color/white" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/etTimerInput"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:hint="Min"
-                        android:inputType="number"
-                        android:maxLength="3"
-                        android:textAlignment="center"
-                        android:textSize="14sp" />
-
-                    <Button
-                        android:id="@+id/btnStartUserTimer"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:text="Set Alert Timer"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tvCountdownETA"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="No Timer Set"
-                        android:textAlignment="viewEnd"
-                        android:textColor="#D32F2F"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -83,7 +83,40 @@ public class DepartmentListActivity extends AppCompatActivity {
         adapter = new DeptAdapter(nearestList, new DeptAdapter.OnDeptClickListener() {
             @Override
             public void onSelect(DepartmentModel dept) {
-                moveToEmergencyPage(dept);
+                // --- START OF INTEGRATED GUEST INTERCEPTION ---
+                boolean isGuestSession = (com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() == null);
+
+                if (isGuestSession) {
+                    // Reroute into information compilation form
+                    Intent intent = new Intent(DepartmentListActivity.this, GuestInfoActivity.class);
+                    intent.putExtra("dept_id", dept.id); // Note: using dept.id instead of getId()
+                    intent.putExtra("dept_name", dept.place_name); // Match your model fields
+                    intent.putExtra("dept_phone", dept.contact);
+                    intent.putExtra("emergency_type", selectedType);
+                    intent.putExtra("dept_lat", dept.latitude);
+                    intent.putExtra("dept_lng", dept.longitude);
+                    intent.putExtra("user_lat", userLat);
+                    intent.putExtra("user_lng", userLng);
+                    startActivity(intent);
+                } else {
+                    // Normal account holder pathway goes straight to Confirmation
+                    Intent intent = new Intent(DepartmentListActivity.this, ConfirmationActivity.class);
+                    intent.putExtra("isGuestFlow", false); // Explicitly state not a guest
+
+                    intent.putExtra("dept_id", dept.id);
+
+                    intent.putExtra("dept_name", dept.place_name);
+                    intent.putExtra("dept_phone", dept.contact);
+                    intent.putExtra("dept_lat", dept.latitude);
+                    intent.putExtra("dept_lng", dept.longitude);
+                    intent.putExtra("dept_address", dept.full_address);
+                    intent.putExtra("emergency_type", selectedType);
+
+                    intent.putExtra("user_lat", userLat);
+                    intent.putExtra("user_lng", userLng);
+
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -301,8 +334,6 @@ public class DepartmentListActivity extends AppCompatActivity {
     private void moveToEmergencyPage(DepartmentModel dept) {
         Intent intent = new Intent(this, ConfirmationActivity.class);
 
-        // CRITICAL: You must extract the ID from the 'dept' object and put it in the intent
-        // Ensure "dept.id" matches the key in your JSON file (e.g., "id_1")
         intent.putExtra("dept_id", dept.id);
 
         intent.putExtra("dept_name", dept.place_name);

@@ -9,7 +9,7 @@ public class AlertModel {
 
     private String userId, userName, gender, userPhone, userEmail, emergencyType, status, textAddress, assignedDept, dept_id, deptName, deptPhone, videoUrl, key;
     private double userLat, userLng, deptLat, deptLng;
-    private long timestamp;
+    private Object timestamp;
     private List<String> videoUrls = new ArrayList<>();
 
     public AlertModel() {}
@@ -32,7 +32,7 @@ public class AlertModel {
     @PropertyName("video_url") public String getVideoUrl() { return videoUrl; }
     @PropertyName("dept_name") public String getDeptName() { return deptName != null ? deptName : "Unknown Department"; }
     @PropertyName("dept_phone") public String getDeptPhone() { return deptPhone != null ? deptPhone : "N/A"; }
-    @PropertyName("timestamp") public long getTimestamp() { return timestamp; }
+    @PropertyName("timestamp") public Object getTimestamp() { return timestamp; }
     @PropertyName("dept_lat") public double getDeptLat() { return deptLat; }
     @PropertyName("dept_lng") public double getDeptLng() { return deptLng; }
     @PropertyName("dept_id") public String getDept_id() { return dept_id != null ? dept_id : ""; }
@@ -66,5 +66,5 @@ public class AlertModel {
     @PropertyName("user_lng")public void setUserLng(double userLng) { this.userLng = userLng; }
     @PropertyName("dept_lat")public void setDeptLat(double deptLat) { this.deptLat = deptLat; }
     @PropertyName("dept_lng")public void setDeptLng(double deptLng) { this.deptLng = deptLng; }
-    @PropertyName("timestamp")public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    @PropertyName("timestamp")public void setTimestamp(Object timestamp) { this.timestamp = timestamp; }
 }

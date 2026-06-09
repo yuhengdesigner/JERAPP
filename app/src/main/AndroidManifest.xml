@@ -139,6 +139,10 @@
             android:exported="false"
             android:theme="@style/Theme.JERAPP" />
 
+        <activity
+            android:name=".GuestInfoActivity"
+            android:exported="false" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">

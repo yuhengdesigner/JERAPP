@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.util.Log;
+import com.google.android.gms.tasks.OnFailureListener;
 
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -77,9 +78,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         TextView tvDetail = findViewById(R.id.deptDetail);
         if (tvDetail != null) tvDetail.setText("Responding: " + deptName);
 
-        tvCountdownETA = findViewById(R.id.tvCountdownETA);
-        etTimerInput = findViewById(R.id.etTimerInput);
-        btnStartUserTimer = findViewById(R.id.btnStartUserTimer);
+
         btnViewGoogleMapsETA = findViewById(R.id.btnViewGoogleMapsETA);
 
         // Bind new Expandable Container items
@@ -115,9 +114,6 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         // 1. Trigger Google Maps routing Intent FROM Department TO User
         btnViewGoogleMapsETA.setOnClickListener(v -> launchGoogleMapsNavigation());
 
-        // 2. Set up local timer execution
-        btnStartUserTimer.setOnClickListener(v -> processUserManualTimerInput());
-
         // FIX: Re-routed to navigate cleanly to MainActivity without executing finish()
         findViewById(R.id.btnBack).setOnClickListener(v -> navigateToDashboardHome());
 
@@ -146,6 +142,8 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     stopActiveRingtone();
                     confirmArrivalWithFirebase();
                     seekBar.setEnabled(false);
+
+                    clearTrackingState();
 
                     // Navigate to UserHistoryActivity
                     startActivity(new Intent(TrackingActivity.this, UserHistoryActivity.class));
@@ -181,7 +179,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void clearTrackingState() {
         SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
-        prefs.edit().clear().apply();
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear(); // This removes "has_active_emergency" and all related details
+        editor.apply();
     }
 
     private void restoreExistingCountdown() {
@@ -198,18 +198,17 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             return;
         }
 
-        // Construct explicit query directing: Origin = Department -> Destination = User Location
+        // Correctly formatted string with %f placeholders for coordinates
         String mapUriString = String.format(java.util.Locale.US,
                 "https://www.google.com/maps/dir/?api=1&origin=%f,%f&destination=%f,%f&travelmode=driving",
                 deptLat, deptLng, userLoc.latitude, userLoc.longitude);
 
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString));
-        mapIntent.setPackage("com.google.android.apps.maps"); // Pin targeted action explicitly to Google Maps App
+        mapIntent.setPackage("com.google.android.apps.maps");
 
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            // Fallback parsing case if testing inside an open emulator without consumer Google Framework installed
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString)));
         }
     }
@@ -358,48 +357,100 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void uploadVideoToFirebase(Uri videoUri) {
-        // Safety check: ensure alertKey isn't empty or null before handling database calls
-        if (alertKey == null || alertKey.trim().isEmpty()) {
-            Toast.makeText(this, "Error: Lost transaction key context. Cannot sync video.", Toast.LENGTH_SHORT).show();
+        if (alertKey == null || alertKey.trim().isEmpty() || deptId == null) {
+            Toast.makeText(this, "Error: Missing transaction context.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        StorageReference ref = FirebaseStorage.getInstance().getReference("Evidence/" + alertKey + "/" + System.currentTimeMillis() + ".mp4");
-        ref.putFile(videoUri).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-            DatabaseReference alertRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey).child("videoUrls");
+        try {
+            getApplicationContext().getContentResolver().takePersistableUriPermission(
+                    videoUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } catch (SecurityException e) {
+            Log.w("FirebaseUpload", "Permission persistence skipped: " + e.getMessage());
+        }
 
-            // Inside TrackingActivity.java
-            alertRef.runTransaction(new Transaction.Handler() {
-                @NonNull
+        // 1. Explicitly point to your correct .firebasestorage.app bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://jerapp-2026.firebasestorage.app");
+        StorageReference ref = storage.getReference("Evidence/" + alertKey + "/" + System.currentTimeMillis() + ".mp4");
+
+        // 2. Explicitly force the Content Type to 'video/mp4' so your rule matches video/.*
+        com.google.firebase.storage.StorageMetadata metadata = new com.google.firebase.storage.StorageMetadata.Builder()
+                .setContentType("video/mp4")
+                .build();
+
+        ref.putFile(videoUri, metadata).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+
+            String videoUrlString = uri.toString();
+
+            // 2. Determine which node the alert currently lives in by checking both nodes
+            DatabaseReference activeRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey);
+            DatabaseReference processingRef = FirebaseDatabase.getInstance().getReference("ProcessingAlerts").child(deptId).child(alertKey);
+
+            activeRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                    // 1. Get the current value as a list
-                    List<String> list = mutableData.getValue(new GenericTypeIndicator<List<String>>() {});
-
-                    // 2. If it's null (first time), initialize a new ArrayList
-                    if (list == null) {
-                        list = new ArrayList<>();
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    DatabaseReference targetRef;
+                    // If it exists in ActiveAlerts, write there. Otherwise, it has moved to ProcessingAlerts
+                    if (snapshot.exists()) {
+                        targetRef = activeRef.child("video_urls");
+                    } else {
+                        targetRef = processingRef.child("video_urls");
                     }
 
-                    // 3. Add the new video
-                    list.add(uri.toString());
+                    // 3. Execute the array list synchronization transaction
+                    targetRef.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                            List<String> list = mutableData.getValue(new GenericTypeIndicator<List<String>>() {});
+                            if (list == null) {
+                                list = new ArrayList<>();
+                            }
+                            list.add(videoUrlString);
+                            mutableData.setValue(list);
+                            return Transaction.success(mutableData);
+                        }
 
-                    // 4. Set the list back to the database
-                    mutableData.setValue(list);
-                    return Transaction.success(mutableData);
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                            if (committed) {
+                                Toast.makeText(TrackingActivity.this, "Evidence video synced successfully!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("UPLOAD_FAIL", "Transaction failed: " + (error != null ? error.getMessage() : "unknown"));
+                            }
+                        }
+                    });
                 }
 
                 @Override
-                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                    if (committed) {
-                        Toast.makeText(TrackingActivity.this, "Evidence video synced successfully!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.e("DATABASE_WRITE_ERROR", "Transaction failure: " + (error != null ? error.getMessage() : "unknown"));
-                    }
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("UPLOAD_FAIL", error.getMessage());
                 }
             });
-        })).addOnFailureListener(e -> {
-            Toast.makeText(TrackingActivity.this, "Failed uploading evidence file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        })).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                if (exception instanceof com.google.firebase.storage.StorageException) {
+                    com.google.firebase.storage.StorageException storageException =
+                            (com.google.firebase.storage.StorageException) exception;
+
+                    int errorCode = storageException.getErrorCode();
+                    Log.e("FirebaseUpload", "Firebase Error Code: " + errorCode);
+
+                    // Check for standard server rejection issues
+                    if (errorCode == com.google.firebase.storage.StorageException.ERROR_NOT_AUTHORIZED) {
+                        Log.e("FirebaseUpload", "CRITICAL: Security Rules blocked the upload (HTTP 403). Make sure the user is explicitly logged in!");
+                    } else if (errorCode == com.google.firebase.storage.StorageException.ERROR_RETRY_LIMIT_EXCEEDED) {
+                        Log.e("FirebaseUpload", "CRITICAL: Network timeout/connection lost during upload.");
+                    } else if (errorCode == com.google.firebase.storage.StorageException.ERROR_PROJECT_NOT_FOUND) {
+                        Log.e("FirebaseUpload", "CRITICAL: Check your google-services.json configuration file.");
+                    }
+                } else {
+                    Log.e("FirebaseUpload", "Non-Storage Exception encountered: ", exception);
+                }
+                Toast.makeText(TrackingActivity.this, "Storage Upload Failed", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -476,8 +527,31 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         // Set padding in pixels (e.g., 100px) so markers aren't right at the edge of the screen
         int padding = 100;
 
-        // Animate the camera to fit the bounds
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        try {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        } catch (IllegalStateException e) {
+            // Fallback if layout hasn't completed dimensions calculation yet
+            mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding)));
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Tells the map fragment to stop active UI render loops while camera runs
+        if (mMap != null) {
+            mMap.clear();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Re-draw the map markers safely when returning to the activity
+        if (mMap != null) {
+            updateMapWithRoute();
+            fitMapBounds();
+        }
     }
 
     @Override

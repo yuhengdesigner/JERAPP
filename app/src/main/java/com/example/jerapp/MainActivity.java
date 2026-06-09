@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import android.view.View;
+import android.content.SharedPreferences;
+import com.google.android.material.card.MaterialCardView;
 import android.widget.Toast;
 import com.google.android.gms.maps.MapsInitializer; // REQUIRED for 3D
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback; // REQUIRED for 3D
@@ -143,10 +145,12 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
             return;
         }
 
-        android.content.SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
         boolean hasActive = prefs.getBoolean("has_active_emergency", false);
+        String activeAlertKey = prefs.getString("active_alert_key", null);
 
-        if (!hasActive) {
+        // If explicitly no emergency is found locally, fallback and check the alternate string flag safely
+        if (!hasActive && activeAlertKey == null) {
             cardOngoingEmergency.setVisibility(View.GONE);
             if (dashboardTimer != null) {
                 dashboardTimer.cancel();
@@ -154,7 +158,6 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
             return;
         }
 
-        // Populate details
         String name = prefs.getString("dept_name", "Emergency Department");
         tvOngoingDeptName.setText("Responding: " + name);
         cardOngoingEmergency.setVisibility(View.VISIBLE);
@@ -183,10 +186,9 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
             tvDashboardCountdown.setText("Tracking Active");
         }
 
-        // Return straight to active TrackingActivity instance
         cardOngoingEmergency.setOnClickListener(v -> {
             Intent resumeIntent = new Intent(MainActivity.this, TrackingActivity.class);
-            resumeIntent.putExtra("alert_key", prefs.getString("alert_key", ""));
+            resumeIntent.putExtra("alert_key", prefs.getString("active_alert_key", prefs.getString("alert_key", "")));
             resumeIntent.putExtra("dept_name", prefs.getString("dept_name", ""));
             resumeIntent.putExtra("dept_phone", prefs.getString("dept_phone", ""));
             resumeIntent.putExtra("dept_id", prefs.getString("dept_id", ""));
