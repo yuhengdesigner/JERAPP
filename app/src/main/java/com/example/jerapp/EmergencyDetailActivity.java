@@ -41,15 +41,18 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
 
     private String alertKey;
     private GoogleMap mMap;
-    private double userLat, userLng;
+    private double userLat = 0, userLng = 0;
     private TextView tvName, tvPhone, tvEmail, tvAddress, tvType, tvCoords, tvGender, tvTimestamp;
     private VideoView videoView;
     private String deptId;
-    private ExoPlayer exoPlayer;
+    private ExoPlayer player;
     private PlayerView playerView;
     private VideoGalleryAdapter adapter;
     private List<String> currentVideoUrls;
     private ValueEventListener currentListener;
+    private RecyclerView rvVideoGallery;
+    private VideoGalleryAdapter videoGalleryAdapter;
+    private List<String> videoUrlList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,17 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
         alertKey = getIntent().getStringExtra("alert_key");
         playerView = findViewById(R.id.playerView);
 
+        rvVideoGallery = findViewById(R.id.rvVideoGallery);
+        rvVideoGallery.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        videoGalleryAdapter = new VideoGalleryAdapter(this, videoUrlList, new VideoGalleryAdapter.OnVideoClickListener() {
+            @Override
+            public void onVideoClick(String url) {
+                playVideo(url);
+            }
+        });
+        rvVideoGallery.setAdapter(videoGalleryAdapter);
+
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -86,6 +100,106 @@ public class EmergencyDetailActivity extends AppCompatActivity implements OnMapR
             if (userLat != 0) {
                 String uri = "google.navigation:q=" + userLat + "," + userLng;
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+            }
+        });
+    }
+
+    private void playVideo(String url) {
+        if (player == null) {
+            player = new ExoPlayer.Builder(this).build();
+            playerView.setPlayer(player);
+        }
+        // Make the video player box visible instantly when a item link is pressed
+        playerView.setVisibility(View.VISIBLE);
+
+        MediaItem mediaItem = MediaItem.fromUri(Uri.parse(url));
+        player.setMediaItem(mediaItem);
+        player.prepare();
+        player.play();
+    }
+
+    private void parseAlertData(DataSnapshot snapshot) {
+        if (!snapshot.exists()) return;
+
+        tvName.setText("Victim: " + snapshot.child("name").getValue(String.class));
+        tvPhone.setText("Phone: " + snapshot.child("phone").getValue(String.class));
+        tvEmergencyType.setText("Type: " + snapshot.child("emergencyType").getValue(String.class));
+
+        try {
+            userLat = snapshot.child("latitude").getValue(Double.class);
+            userLng = snapshot.child("longitude").getValue(Double.class);
+            tvLocation.setText("Coordinates: " + userLat + ", " + userLng);
+        } catch (Exception e) {
+            Log.e("DataError", "Error parsing coordinates");
+        }
+
+        // CLEAR AND POPULATE VIDEO URLS
+        videoUrlList.clear();
+        DataSnapshot videoUrlsNode = snapshot.child("video_urls");
+        if (videoUrlsNode.exists()) {
+            for (DataSnapshot childUrl : videoUrlsNode.getChildren()) {
+                String videoUrl = childUrl.getValue(String.class);
+                if (videoUrl != null) {
+                    videoUrlList.add(videoUrl);
+                }
+            }
+        }
+        // Force the layout gallery list matching your XML to redraw buttons instantly
+        videoGalleryAdapter.updateData(videoUrlList);
+
+        // Handle timestamps cleanly
+        Object rawTimestamp = snapshot.child("timestamp").getValue();
+        if (rawTimestamp != null) {
+            if (rawTimestamp instanceof String) {
+                String timeString = (String) rawTimestamp;
+                if (timeString.length() > 16) {
+                    try {
+                        timeString = timeString.substring(0, 16);
+                    } catch (Exception e) {}
+                }
+                tvTimestamp.setText("Time: " + timeString);
+            } else {
+                tvTimestamp.setText("Time: " + rawTimestamp.toString());
+            }
+        } else {
+            tvTimestamp.setText("Time: Unavailable");
+        }
+
+        updateMapLocation();
+    }
+
+    private void loadEmergencyDetails() {
+        if (alertKey == null || deptId == null) return;
+
+        // FIX: Look inside ActiveAlerts matching TrackingActivity's save location
+        DatabaseReference activeAlertRef = FirebaseDatabase.getInstance()
+                .getReference("ActiveAlerts")
+                .child(deptId)
+                .child(alertKey);
+
+        activeAlertRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    // Fallback: Check if it moved to ProcessingAlerts
+                    FirebaseDatabase.getInstance().getReference("ProcessingAlerts")
+                            .child(deptId).child(alertKey)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot procSnapshot) {
+                                    parseAlertData(procSnapshot);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {}
+                            });
+                    return;
+                }
+                parseAlertData(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(EmergencyDetailActivity.this, "Failed to load details.", Toast.LENGTH_SHORT).show();
             }
         });
     }

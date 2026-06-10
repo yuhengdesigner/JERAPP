@@ -332,6 +332,13 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             return;
         }
 
+        try {
+            getApplicationContext().getContentResolver().takePersistableUriPermission(
+                    videoUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } catch (SecurityException e) {
+            Log.w("FirebaseUpload", "Permission persistence skipped: " + e.getMessage());
+        }
+
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         // Simply update the status of the EXISTING alert
         root.child("ActiveAlerts").child(deptId).child(alertKey).child("status").setValue("Confirmed");
@@ -356,7 +363,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         finish(); // Close tracking page
     }
 
-    private void uploadVideoToFirebase(Uri videoUri) {
+    private void uploadVideoToFirebase(Uri uri) {
         if (alertKey == null || alertKey.trim().isEmpty() || deptId == null) {
             Toast.makeText(this, "Error: Missing transaction context.", Toast.LENGTH_SHORT).show();
             return;
@@ -364,7 +371,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         try {
             getApplicationContext().getContentResolver().takePersistableUriPermission(
-                    videoUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } catch (SecurityException e) {
             Log.w("FirebaseUpload", "Permission persistence skipped: " + e.getMessage());
         }
@@ -378,7 +385,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 .setContentType("video/mp4")
                 .build();
 
-        ref.putFile(videoUri, metadata).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+        ref.putFile(uri, metadata).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
 
             String videoUrlString = uri.toString();
 
