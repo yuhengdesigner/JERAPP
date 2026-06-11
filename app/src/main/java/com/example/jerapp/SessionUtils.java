@@ -35,10 +35,17 @@ public final class SessionUtils {
     }
 
     public static void clearGuestSession(Context context) {
+        // Clear User Identity Prefs
         context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE)
                 .edit()
                 .remove(KEY_GUEST_MODE)
                 .remove(KEY_GUEST_UID)
+                .apply();
+
+        // REQUIREMENT: Clear any stale emergency tracking state
+        context.getSharedPreferences("OngoingEmergencyPrefs", Context.MODE_PRIVATE)
+                .edit()
+                .clear()
                 .apply();
     }
 }

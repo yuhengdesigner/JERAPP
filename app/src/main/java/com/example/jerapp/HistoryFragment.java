@@ -113,7 +113,7 @@ public class HistoryFragment extends Fragment {
 
     private void setupCalendar() {
         if (calendarView != null) {
-            // REQUIREMENT 5: Prevent Picking Future Dates
+            // Restriction: User shouldn't be able to select future date
             calendarView.setMaxDate(System.currentTimeMillis());
 
             calendarView.setOnDateChangeListener((calendar, year, month, dayOfMonth) -> {
@@ -159,7 +159,7 @@ public class HistoryFragment extends Fragment {
                             }
                         }
                         applyFilterAndSort(spinnerSort != null ? spinnerSort.getSelectedItemPosition() : 0);
-                        updateCalendarBounds(); // REQUIREMENT 3: Focus range to highlight data dates
+                        updateCalendarBounds();
                         if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                     }
 
@@ -177,12 +177,12 @@ public class HistoryFragment extends Fragment {
             boolean match = true;
             
             if (selectedDayStartMs != null) {
-                // REQUIREMENT: If a date is picked, ONLY show matches for that date. 
+                // Logic Fix: If a date is picked, ONLY show matches for that date. 
                 // Ignore "unknown" emergencies (timestamp 0) during date filtering.
                 if (timeLong > 0) {
                     match = timeLong >= selectedDayStartMs && timeLong < selectedDayStartMs + 24L * 60L * 60L * 1000L;
                 } else {
-                    match = false;
+                    match = false; // Hide unknown emergencies when filtering by date
                 }
             }
 
@@ -192,12 +192,16 @@ public class HistoryFragment extends Fragment {
         java.util.Collections.sort(historyList, (a, b) -> {
             long tA = getAlertTimestamp(a);
             long tB = getAlertTimestamp(b);
-            return (filterType == 1) ? Long.compare(tA, tB) : Long.compare(tB, tA);
+            if (filterType == 1) { // Oldest First
+                return Long.compare(tA, tB);
+            } else { // Latest First
+                return Long.compare(tB, tA);
+            }
         });
 
         adapter.notifyDataSetChanged();
         if (emptyTextView != null) {
-            emptyTextView.setText("No Emergency History Found"); // REQUIREMENT 4
+            emptyTextView.setText("No Emergency History Found");
             emptyTextView.setVisibility(historyList.isEmpty() ? View.VISIBLE : View.GONE);
         }
     }
@@ -211,12 +215,12 @@ public class HistoryFragment extends Fragment {
         if (fullHistoryList.isEmpty()) return;
         
         long min = Long.MAX_VALUE;
-        long max = 0;
+        long dataMax = 0;
         for (AlertModel alert : fullHistoryList) {
             long time = getAlertTimestamp(alert);
             if (time > 0) {
                 min = Math.min(min, time);
-                max = Math.max(max, time);
+                dataMax = Math.max(dataMax, time);
             }
         }
         
@@ -224,9 +228,9 @@ public class HistoryFragment extends Fragment {
             calendarView.setMinDate(min);
         }
         
-        // Highlights valid data range by restricting the calendar view
-        if (max > 0) {
-            calendarView.setMaxDate(Math.min(max, now));
+        // Highlights the data range by restricting the calendar
+        if (dataMax > 0) {
+            calendarView.setMaxDate(Math.min(dataMax, now));
         }
     }
 
