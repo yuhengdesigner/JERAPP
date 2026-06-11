@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -25,27 +26,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="@color/secondary" />
+                android:textColor="@color/secondary"
+                tools:text="@string/current_day_default" />
 
             <TextView android:id="@+id/textCurrentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="36sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary" />
+                android:textColor="@color/primary"
+                tools:text="@string/current_time_default" />
 
             <TextView android:id="@+id/textCurrentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/secondary" />
+                android:textColor="@color/secondary"
+                tools:text="@string/current_date_default" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Emergency Type"
+        android:text="@string/select_emergency_type"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/primary"

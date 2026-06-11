@@ -49,28 +49,23 @@ public class AdminProcessingFragment extends Fragment {
             public void onDetailsClick(AlertModel alert) {
                 Intent intent = new Intent(requireContext(), EmergencyDetailActivity.class);
                 intent.putExtra("alert_key", alert.getKey());
+                intent.putExtra("dept_id", alert.getAssignedDept()); // Pass dept_id correctly
                 startActivity(intent);
             }
             @Override
             public void onResolve(AlertModel alert, String alertKey) {
                 DatabaseReference root = FirebaseDatabase.getInstance().getReference();
                 String deptId = alert.getAssignedDept();
-
                 alert.setStatus("Resolved");
-
-                // Move to Resolved node
                 root.child("ResolvedAlerts").child(deptId).child(alertKey).setValue(alert)
                         .addOnSuccessListener(aVoid -> {
-                            // Remove from Processing
                             root.child("ProcessingAlerts").child(deptId).child(alertKey).removeValue();
                         });
             }
             @Override
-            public void onReceive(AlertModel alert) { /* Already in Processing */ }
-
+            public void onReceive(AlertModel alert) {}
             @Override
             public void onDelete(AlertModel alert) {
-                // Logic to delete the card from the Processing node
                 String deptId = alert.getAssignedDept();
                 if (deptId != null && alert.getKey() != null) {
                     FirebaseDatabase.getInstance().getReference("ProcessingAlerts")
@@ -92,8 +87,7 @@ public class AdminProcessingFragment extends Fragment {
                 alertList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     AlertModel alert = ds.getValue(AlertModel.class);
-                    if (alert != null && "Processing".equals(alert.getStatus()) &&
-                            alert.getAssignedDept().equalsIgnoreCase(departmentFilter)) {
+                    if (alert != null) {
                         alert.setKey(ds.getKey());
                         alertList.add(alert);
                     }

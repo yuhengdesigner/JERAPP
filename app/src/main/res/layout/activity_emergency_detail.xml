@@ -135,13 +135,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    android:layout_marginBottom="16dp">
-                </com.google.android.material.card.MaterialCardView>
-
                 <TextView
                     android:id="@+id/tvCoordinates"
                     android:layout_width="match_parent"

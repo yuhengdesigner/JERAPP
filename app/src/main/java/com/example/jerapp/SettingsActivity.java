@@ -1,6 +1,7 @@
 package com.example.jerapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,10 +38,15 @@ public class SettingsActivity extends AppCompatActivity {
             btnDelete.setText("Create an account");
             btnDelete.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#4CAF50"))); // Green
             btnDelete.setOnClickListener(v -> {
-                startActivity(new Intent(SettingsActivity.this, RegisterActivity.class));
+                // REQUIREMENT 6: Disable guest registration if emergency is ongoing
+                if (hasOngoingEmergency()) {
+                    showOngoingEmergencyWarning(getString(R.string.ongoing_emergency_register_message));
+                } else {
+                    startActivity(new Intent(SettingsActivity.this, RegisterActivity.class));
+                }
             });
         } else {
-            // UI for Registered (or if user is null, default to Delete/Disabled)
+            // UI for Registered
             btnDelete.setText("Delete Account");
             btnDelete.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F44336"))); // Red
             btnDelete.setOnClickListener(v -> showDeleteAccountDialog());
@@ -53,13 +59,17 @@ public class SettingsActivity extends AppCompatActivity {
         View cardTerms = findViewById(R.id.cardTerms);
         View cardAbout = findViewById(R.id.cardAbout);
         View btnLogout = findViewById(R.id.btnProfileLogout);
-        View btnDelete = findViewById(R.id.btnDeleteAccount);
 
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
         if (cardProfile != null) {
-            cardProfile.setOnClickListener(v ->
-                    startActivity(new Intent(SettingsActivity.this, ProfileActivity.class)));
+            cardProfile.setOnClickListener(v -> {
+                if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isAnonymous()) {
+                    Toast.makeText(this, "Guest profile is not available.", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
+                }
+            });
         }
 
         if (cardTerms != null) {
@@ -73,8 +83,29 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> showLogoutDialog());
+            btnLogout.setOnClickListener(v -> {
+                // REQUIREMENT 5: Only block logout for GUESTS during emergency
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null && user.isAnonymous() && hasOngoingEmergency()) {
+                    showOngoingEmergencyWarning(getString(R.string.ongoing_emergency_warning_message));
+                } else {
+                    showLogoutDialog();
+                }
+            });
         }
+    }
+
+    private boolean hasOngoingEmergency() {
+        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        return prefs.getBoolean("has_active_emergency", false);
+    }
+
+    private void showOngoingEmergencyWarning(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.ongoing_emergency_warning_title))
+                .setMessage(message)
+                .setPositiveButton("I Understand", null)
+                .show();
     }
 
     private void showLogoutDialog() {
@@ -83,6 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to logout from JER APP?")
                 .setPositiveButton("Logout", (dialog, which) -> {
                     mAuth.signOut();
+                    SessionUtils.clearGuestSession(this);
                     Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

@@ -21,6 +21,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
             android:src="@drawable/ic_back"
             app:tint="@color/white" />
 
@@ -30,922 +31,924 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="Emergency Guide"
+            android:text="@string/emergency_guide"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center_horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardPreventCornerOverlap="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_cpr_general_bg"
+                    android:contentDescription="@string/cpr_general_bg_desc" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/overview_resuscitation_framework"
+                android:gravity="center_horizontal"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/general_cpr_master_overview"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardPreventCornerOverlap="false">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <ImageView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/what_is_cpr"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_cpr_general_bg" />
-                </androidx.cardview.widget.CardView>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/cpr_definition"
+                        android:justificationMode="inter_word"
+                        android:textColor="#424242"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Overview of Resuscitation Framework"
-                    android:gravity="center_horizontal"
-                    android:textColor="#757575"
-                    android:textSize="14sp"
-                    android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="General CPR Master Overview"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <com.google.android.material.card.MaterialCardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/why_understand_general_procedure"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WHAT is Cardiopulmonary Resuscitation (CPR)?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text='Cardiopulmonary Resuscitation (CPR) is a universal emergency procedure designed to manually keep a person alive when their heart stops beating and their breathing ceases. The term itself explains exactly what it does: "Cardio" (heart), "Pulmonary" (lungs), and "Resuscitation" (reviving). By physically pushing down on a casualty&apos;s chest, you act as their mechanical heart pump to circulate blood; by blowing air into their mouth, you act as their mechanical lungs to supply oxygen.'
-                            android:justificationMode="inter_word"
+                            android:layout_weight="1"
+                            android:text="@string/brain_countdown"
                             android:textColor="#424242"
+                            android:justificationMode="inter_word"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WHY must you understand the General Procedure?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="The Brain’s Countdown: The human brain cannot survive without oxygen. Within 4 to 6 minutes of a stopped heart, brain damage begins. By 10 minutes, the brain dies completely. CPR acts as a placeholder to delay this countdown."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Simplifying the Chaos: In a real emergency, panic sets in easily. Understanding this singular, overarching framework ensures that no matter what age the casualty is, your brain defaults to a clear, logical step-by-step checklist."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
+                            android:layout_weight="1"
+                            android:text="@string/simplifying_chaos"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.card.MaterialCardView
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/who_applies_to"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/who_applies_desc"
+                        android:justificationMode="inter_word"
+                        android:textColor="#424242"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WHO does this general framework apply to?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text=" 1. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="This master framework applies to every human being who is found unconscious, unresponsive, and either not breathing or gasping abnormally. While the physical strength and hand placements shift depending on the casualty's size, the underlying diagnostic steps and safety rules remain identical across all age groups:"
-                            android:justificationMode="inter_word"
+                            android:layout_weight="1"
+                            android:text="@string/adults_age"
                             android:textColor="#424242"
+                            android:justificationMode="inter_word"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 1. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Adults: Ages 8 and above. Requires two hands and deep, powerful compressions."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 2. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Children: Ages 1 to puberty. Requires one or two hands with moderate depth adjustments."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 3. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Infants: Under 1 year old. Requires delicate 2-finger compressions and specialized breathing seals."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 4. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Neonates: Newborns under 28 days old. Focuses heavily on highly synchronized 3:1 ratio cycles."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WHEN should you act, adapt, or stop?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text=" 2. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="When to Act: The moment you determine a person does not respond to touch/sound AND their chest is not rising normally."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="When to Adapt: You must instantly adapt your physical compression force based on who is in front of you (Adults: 5–6 cm; Children: 5 cm; Infants/Neonates: 3–4 cm)."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="WHEN to Stop: You only stop when professional medical aid takes over, an AED explicitly tells you to clear the body, the person revives, or you become completely physically exhausted."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
+                            android:layout_weight="1"
+                            android:text="@string/children_age"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WHERE is the ideal CPR environment?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text=" 3. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Safety First: The immediate structural location must be entirely hazard-free. Never attempt CPR in the middle of a busy road, inside a burning room, or on an unstable unstable cliff edge."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="The Hard Ground Rule: To make chest compressions work, the casualty’s back must be pressed against a rigid, unyielding surface. Performing CPR on soft mattresses or couches will fail because the springs will bounce and absorb your depth."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
+                            android:layout_weight="1"
+                            android:text="@string/infants_age"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="16dp">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="TAP here to start CPR with the beats"
-                            android:layout_gravity="center"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:text=" 4. "
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cprSwitchContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="16dp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            app:cardCornerRadius="22.5dp"
-                            app:cardElevation="2dp"
-                            app:strokeWidth="0dp">
-
-                            <RelativeLayout
-                                android:id="@+id/cprSwitchBg"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@color/switch_off"
-                                android:padding="4dp">
-
-                                <TextView
-                                    android:id="@+id/tvCprStatusText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:text="TAP TO START"
-                                    android:textColor="#757575"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
-
-                                <View
-                                    android:id="@+id/cprSwitchThumb"
-                                    android:layout_width="37dp"
-                                    android:layout_height="37dp"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_centerVertical="true"
-                                    android:background="@drawable/circle_thumb"
-                                    android:backgroundTint="@color/thumb_color"
-                                    android:backgroundTintMode="src_over"
-                                    android:elevation="4dp"
-                                    android:stateListAnimator="@null" />
-
-                            </RelativeLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/neonates_age"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.card.MaterialCardView
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/when_act_adapt_stop"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="4dp"
-                            app:cardPreventCornerOverlap="false">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="700dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_cpr_drsabcd" />
-                        </androidx.cardview.widget.CardView>
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="HOW to Navigate: Universal DRSABCD"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Follow this uniform sequence to safely systematically manage any casualty."
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
                             android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 1: D – Danger"
-                            android:textColor="@color/primary"
                             android:textSize="15sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Before rushing in, check for physical hazards or personal threats (live wires, fires, unstable glass). If the environment is safe, move trivial obstacles like chairs or bags completely away from the body to establish a clean, open 360-degree workspace."
+                            android:layout_weight="1"
+                            android:text="@string/when_to_act"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 2: R – Response"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text='Determine consciousness by shouting loudly into both ears and firmly tapping their shoulders (or flicking foot soles for infants). Shout: "Hello! Can you hear me?!" If there is zero response, eye flickers, or body shifts, proceed immediately.'
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 3: S – Send for Help"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Call your local emergency number. If alone, immediately switch your phone onto loudspeaker and place it right beside the casualty's head. Talk to the dispatcher hands-free while your arms remain clear to perform lifesaving actions."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 4: A – Airway"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="The Check: Inspect the inner mouth. If any fluid, blood, or food is visible, tilt their head to the side and clear it with a careful finger sweep."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="The Tilt: Perform the Head-Tilt, Chin-Lift maneuver by placing one hand flat on the forehead and two fingers under the chin bone, gently lifting to pull the tongue away from the windpipe throat. (Keep neutral for newborns/infants)."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 5: B – Check for Breathing"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Put your ear close to their mouth and nose while watching the chest area. Evaluate for no more than 10 seconds checking for three actions simultaneously:"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Look: Check if the chest rises up and falls back down smoothly."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Listen: Listen directly for normal, steady breathing sounds."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Feel: Feel for air streams against your cheek."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Critical Note: Infrequent, irregular snoring gasps are NOT normal breathing signs. Treat it as cardiac arrest and start compressions immediately."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 6: C – Cardiopulmonary Resuscitation"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Position your shoulders directly above your hands, lock your elbows completely straight, and push straight down using your body mass at a uniform speed of 100 to 120 actions per minute."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Ratios: Adults, children, and infants receive a loop of 30 compressions and 2 breaths. Neonates shift to a tight 3:1 ratio configuration."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Hands-Only Modification: If you are uncomfortable or lack a rescue barrier mask, skip breaths completely and deliver continuous chest compressions."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 7: D – Defibrillation"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Turn on an Automated External Defibrillator (AED) as soon as it arrives. The machine handles the processing steps automatically and speaks directions aloud. Follow the pads visual diagram or spoken audio guides flawlessly. Do not look for an AED if resuscitating a newborn under 28 days old."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/when_to_adapt"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/when_to_stop"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="© 2026 JER - Chia Jing Xian. All rights reserved."
-                    android:textColor="#9E9E9E"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            </LinearLayout>
-        </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/where_ideal_cpr_env"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/safety_first"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/hard_ground_rule"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tap_to_start_beats"
+                        android:layout_gravity="center"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cprSwitchContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardCornerRadius="22.5dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0dp">
+
+                        <RelativeLayout
+                            android:id="@+id/cprSwitchBg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/switch_off"
+                            android:padding="4dp">
+
+                            <TextView
+                                android:id="@+id/tvCprStatusText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="@string/tap_to_start"
+                                android:textColor="#757575"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:id="@+id/cprSwitchThumb"
+                                android:layout_width="37dp"
+                                android:layout_height="37dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/circle_thumb"
+                                android:backgroundTint="@color/thumb_color"
+                                android:backgroundTintMode="src_over"
+                                android:elevation="4dp"
+                                android:stateListAnimator="@null" />
+
+                        </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardPreventCornerOverlap="false">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="700dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_cpr_drsabcd"
+                            android:contentDescription="@string/cpr_drsabcd_desc" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/how_to_navigate_drsabcd"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/follow_sequence"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_1_danger"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/danger_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_2_response"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/response_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_3_send_help"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/send_help_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_4_airway"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/airway_check"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/airway_tilt"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_5_breathing"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/breathing_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/look_breathing"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/listen_breathing"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/feel_breathing"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/critical_note_breathing"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_6_cpr"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cpr_action_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/cpr_ratios"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="#424242"
+                            android:text="@string/hands_only_mod"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/step_7_defib"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/defib_desc"
+                        android:textColor="#424242"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/copyright_text"
+                android:textColor="#9E9E9E"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -47,16 +47,6 @@
                     android:src="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"/>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/btnEditPhoto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    app:fabSize="mini"
-                    app:srcCompat="@drawable/ic_camera"
-                    app:backgroundTint="@color/white"
-                    app:tint="@color/primary" />
             </RelativeLayout>
 
             <TextView

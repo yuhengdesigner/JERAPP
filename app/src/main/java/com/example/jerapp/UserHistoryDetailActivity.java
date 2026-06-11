@@ -28,26 +28,35 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
 
-public class UserHistoryDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class UserHistoryDetailActivity extends AppCompatActivity {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
     private String alertKey;
-    private GoogleMap mMap;
-    private double userLat, userLng;
+    private GoogleMap mMap, mDeptMap;
+    private double userLat = 0, userLng = 0;
+    private double deptLat = 0, deptLng = 0;
     private String deptPhoneNumber = "";
 
     private TextView tvStatus, tvUserName, tvUserGender, tvUserContact, tvUserEmail, tvUserAddress, tvUserTimestamp;
-    private TextView tvDetailType, tvDetailDept, tvDetailAddress, tvDetailDate;
+    private TextView tvDetailType, tvDetailDept, tvDetailAddress, tvDetailDate, tvNoVideo;
     private Button btnCall, btnNavigate, btnCallAgain;
     private PlayerView playerView;
     private ExoPlayer exoPlayer;
+    private RecyclerView rvUserVideoGallery;
+    private VideoGalleryAdapter videoGalleryAdapter;
+    private List<String> videoUrlList = new ArrayList<>();
 
-    // Cached model to assist button click redirections
     private AlertModel currentAlert;
 
     @Override
@@ -70,39 +79,60 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
         tvDetailDept = findViewById(R.id.tvDetailDept);
         tvDetailAddress = findViewById(R.id.tvDetailAddress);
         tvDetailDate = findViewById(R.id.tvDetailDate);
+        tvNoVideo = findViewById(R.id.tvNoVideo);
 
         playerView = findViewById(R.id.playerView);
+        rvUserVideoGallery = findViewById(R.id.rvUserVideoGallery);
         btnCall = findViewById(R.id.btnCall);
         btnNavigate = findViewById(R.id.btnNavigate);
         btnCallAgain = findViewById(R.id.btnCallAgain);
 
-        // Core Actions
+        rvUserVideoGallery.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        videoGalleryAdapter = new VideoGalleryAdapter(this, videoUrlList, clickedUrl -> {
+            setupVideoPlayback(clickedUrl);
+        });
+        rvUserVideoGallery.setAdapter(videoGalleryAdapter);
+
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        // Initialize Embedded Map
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().replace(R.id.mapContainer, mapFragment).commit();
-        mapFragment.getMapAsync(this);
+        // Initialize maps
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapFragment);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(googleMap -> {
+                mMap = googleMap;
+                updateMapLocation();
+            });
+        }
+
+        SupportMapFragment deptMapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.deptMapFragment);
+        if (deptMapFragment != null) {
+            deptMapFragment.getMapAsync(googleMap -> {
+                mDeptMap = googleMap;
+                updateDeptMapLocation();
+            });
+        }
 
         loadHistoryDetails();
     }
 
     private void loadHistoryDetails() {
         String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null || (FirebaseAuth.getInstance().getCurrentUser() != null && FirebaseAuth.getInstance().getCurrentUser().isAnonymous())) {
+            uid = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("guest_uid", null);
+        }
+        
         if (uid == null || alertKey == null) return;
 
-        // Point this path to where your main history items are saved
         FirebaseDatabase.getInstance().getReference("UserHistory")
                 .child(uid)
                 .child(alertKey)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         currentAlert = snapshot.getValue(AlertModel.class);
-                        if (currentAlert == null) {
-                            Toast.makeText(UserHistoryDetailActivity.this, "Data no longer exists.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                        if (currentAlert == null) return;
                         updateUI(currentAlert);
                     }
 
@@ -116,9 +146,10 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
     private void updateUI(AlertModel alert) {
         userLat = alert.getUserLat();
         userLng = alert.getUserLng();
+        deptLat = alert.getDeptLat();
+        deptLng = alert.getDeptLng();
         deptPhoneNumber = alert.getDeptPhone();
 
-        // Bind Text Fields safely
         tvStatus.setText(alert.getStatus() != null ? alert.getStatus().toUpperCase() : "PENDING");
         tvUserName.setText("Name: " + alert.getUserName());
         tvUserGender.setText("Gender: " + alert.getGender());
@@ -130,20 +161,15 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
         tvDetailDept.setText("Dept: " + alert.getDeptName());
         tvDetailAddress.setText("Address: " + alert.getTextAddress());
 
-        // REPLACE YOUR TIMESTAMP VIEW CONFIGURATION IN UserHistoryDetailActivity.java WITH THIS:
         String displayTime = "Unavailable";
-        Object timeObj = currentAlert.getTimestamp(); // Make sure this matches your local AlertModel object name
+        Object timeObj = alert.getTimestamp();
 
         if (timeObj != null) {
             try {
                 long timeLong = 0;
-                if (timeObj instanceof Long) {
-                    timeLong = (Long) timeObj;
-                } else if (timeObj instanceof Double) {
-                    timeLong = ((Double) timeObj).longValue();
-                } else if (timeObj instanceof String) {
-                    timeLong = Long.parseLong((String) timeObj);
-                }
+                if (timeObj instanceof Long) timeLong = (Long) timeObj;
+                else if (timeObj instanceof Double) timeLong = ((Double) timeObj).longValue();
+                else if (timeObj instanceof String) timeLong = Long.parseLong((String) timeObj);
 
                 if (timeLong > 0) {
                     displayTime = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(timeLong));
@@ -153,13 +179,11 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
             }
         }
 
-// Bind cleanly to both text indicators on your layout screen
         tvUserTimestamp.setText("Time: " + displayTime);
         tvDetailDate.setText("Timestamp: " + displayTime);
 
-        // Status Color Coding Logic
         String status = alert.getStatus();
-        if ("COMPLETED".equalsIgnoreCase(status) || "RESOLVED".equalsIgnoreCase(status)) {
+        if ("COMPLETED".equalsIgnoreCase(status) || "RESOLVED".equalsIgnoreCase(status) || "ARRIVED".equalsIgnoreCase(status) || "CONFIRMED".equalsIgnoreCase(status)) {
             tvStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark));
         } else if ("FAILED".equalsIgnoreCase(status)) {
             tvStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
@@ -167,69 +191,67 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
             tvStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark));
         }
 
-        // Action 1: Navigation to Department Location via external Google Maps App
+        // Actions
         btnNavigate.setOnClickListener(v -> {
-            if (alert.getDeptLat() != 0 && alert.getDeptLng() != 0) {
-                String navigationUrl = "google.navigation:q=" + alert.getDeptLat() + "," + alert.getDeptLng();
+            if (deptLat != 0 && deptLng != 0) {
+                String navigationUrl = "google.navigation:q=" + deptLat + "," + deptLng;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navigationUrl));
                 mapIntent.setPackage("com.google.android.apps.maps");
-
-                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                } else {
-                    String webFallbackUrl = "https://www.google.com/maps/dir/?api=1&destination=" + alert.getDeptLat() + "," + alert.getDeptLng();
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(webFallbackUrl)));
-                }
-            } else {
-                Toast.makeText(this, "Department coordinates unavailable.", Toast.LENGTH_SHORT).show();
+                startActivity(mapIntent);
             }
         });
 
-        // Call Department
         btnCall.setOnClickListener(v -> {
             if (deptPhoneNumber != null && !deptPhoneNumber.isEmpty()) {
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + deptPhoneNumber)));
-            } else {
-                Toast.makeText(this, "Department phone unavailable.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Action 2: Call Emergency Again (Guarded by Runtime Permission Routine)
         btnCallAgain.setOnClickListener(v -> checkLocationPermissionAndProceed());
 
-        // Action 3: Empty Video Container Box Placeholder Visibility Setup
-        if (alert.getVideoUrl() != null && !alert.getVideoUrl().isEmpty()) {
-            setupVideoPlayback(alert.getVideoUrl());
+        // REQUIREMENT 1: Video availability check
+        List<String> videoUrlsList = alert.getVideoUrls();
+        if (videoUrlsList != null && !videoUrlsList.isEmpty()) {
+            playerView.setVisibility(View.VISIBLE);
+            rvUserVideoGallery.setVisibility(View.VISIBLE);
+            tvNoVideo.setVisibility(View.GONE);
+            videoGalleryAdapter.updateData(videoUrlsList);
+            if (exoPlayer == null) setupVideoPlayback(videoUrlsList.get(0));
         } else {
-            playerView.setVisibility(View.VISIBLE); // Keeps container rendering as a dark box placeholder
-            if (exoPlayer != null) {
-                exoPlayer.stop();
-            }
-            playerView.setPlayer(null);
+            rvUserVideoGallery.setVisibility(View.GONE);
+            playerView.setVisibility(View.GONE);
+            tvNoVideo.setVisibility(View.VISIBLE);
         }
 
+        if (deptLat == 0 && alert.getDept_id() != null) {
+            fetchDeptLocationFromSource(alert.getDept_id());
+        } else {
+            updateDeptMapLocation();
+        }
+        
         updateMapLocation();
+    }
+
+    private void fetchDeptLocationFromSource(String id) {
+        FirebaseDatabase.getInstance().getReference("emergency_departments").child(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            deptLat = snapshot.child("latitude").getValue(Double.class);
+                            deptLng = snapshot.child("longitude").getValue(Double.class);
+                            updateDeptMapLocation();
+                        }
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void checkLocationPermissionAndProceed() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             navigateToConfirmationScreen();
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                navigateToConfirmationScreen();
-            } else {
-                Toast.makeText(this, "Location access denied. Cannot proceed with report re-submission.", Toast.LENGTH_LONG).show();
-            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -240,8 +262,8 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
         intent.putExtra("dept_id", currentAlert.getDept_id());
         intent.putExtra("dept_name", currentAlert.getDeptName());
         intent.putExtra("dept_phone", currentAlert.getDeptPhone());
-        intent.putExtra("dept_lat", currentAlert.getDeptLat());
-        intent.putExtra("dept_lng", currentAlert.getDeptLng());
+        intent.putExtra("dept_lat", deptLat);
+        intent.putExtra("dept_lng", deptLng);
         startActivity(intent);
     }
 
@@ -256,20 +278,24 @@ public class UserHistoryDetailActivity extends AppCompatActivity implements OnMa
         MediaItem item = MediaItem.fromUri(videoUrl);
         exoPlayer.setMediaItem(item);
         exoPlayer.prepare();
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        updateMapLocation();
+        exoPlayer.setPlayWhenReady(true);
     }
 
     private void updateMapLocation() {
         if (mMap != null && userLat != 0 && userLng != 0) {
             LatLng pos = new LatLng(userLat, userLng);
             mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(pos).title("Emergency Occurrence Location"));
+            mMap.addMarker(new MarkerOptions().position(pos).title("Victim Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
+        }
+    }
+
+    private void updateDeptMapLocation() {
+        if (mDeptMap != null && deptLat != 0 && deptLng != 0) {
+            LatLng location = new LatLng(deptLat, deptLng);
+            mDeptMap.clear();
+            mDeptMap.addMarker(new MarkerOptions().position(location).title("Department Location"));
+            mDeptMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
         }
     }
 

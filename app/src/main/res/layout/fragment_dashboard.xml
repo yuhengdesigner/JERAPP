@@ -31,7 +31,8 @@
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:src="@android:drawable/stat_sys_warning"
-                app:tint="#D32F2F" />
+                app:tint="#D32F2F"
+                android:contentDescription="@string/warning_icon_desc" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,7 +45,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ongoing Emergency Active"
+                    android:text="@string/ongoing_emergency_active"
                     android:textColor="#D32F2F"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -53,7 +54,7 @@
                     android:id="@+id/tvOngoingDeptName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Responding: Loading details..."
+                    android:text="@string/responding_loading_details"
                     android:textColor="#555555"
                     android:textSize="13sp"
                     android:layout_marginTop="2dp" />
@@ -65,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="Tracking Active"
+                android:text="@string/tracking_active"
                 android:textColor="#D32F2F"
                 android:textSize="13sp"
                 android:textStyle="bold" />

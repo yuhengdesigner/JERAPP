@@ -39,13 +39,11 @@ public class ConfirmationActivity extends AppCompatActivity {
         userLat = incomingIntent.getDoubleExtra("user_lat", 0);
         userLng = incomingIntent.getDoubleExtra("user_lng", 0);
 
-        // 1. Handle Buttons
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnCancel).setOnClickListener(v -> finish());
 
-        // 2. Confirm Button
         findViewById(R.id.btnConfirm).setOnClickListener(v -> {
-            v.setEnabled(false); // Lock click execution
+            v.setEnabled(false);
 
             DatabaseReference alertsDbRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId);
             String generatedAlertKey = alertsDbRef.push().getKey();
@@ -58,18 +56,34 @@ public class ConfirmationActivity extends AppCompatActivity {
             String computedAddress = getAddressFromLocation(userLat, userLng);
 
             if (isGuestFlow) {
-                // Read directly from the intent variables populated by GuestInfoActivity
                 String guestName = incomingIntent.getStringExtra("guest_name");
                 String guestPhone = incomingIntent.getStringExtra("guest_phone");
                 String guestGender = incomingIntent.getStringExtra("guest_gender");
+                String guestEmail = incomingIntent.getStringExtra("guest_email");
+                if (guestEmail == null) guestEmail = "No Account (Guest Mode)";
+
+                // REQUIREMENT 4: Ensure guest_uid is consistently used and stored for future account transfer
+                FirebaseUser current = FirebaseAuth.getInstance().getCurrentUser();
+                String tempGuestUid = (current != null) ? current.getUid() : null;
+                
+                android.content.SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                if (tempGuestUid == null) {
+                    tempGuestUid = prefs.getString("guest_uid", null);
+                    if (tempGuestUid == null) {
+                        tempGuestUid = "GUEST_" + java.util.UUID.randomUUID().toString().substring(0, 8);
+                    }
+                }
+                // Save it back to prefs so RegisterActivity can find it later
+                prefs.edit().putString("guest_uid", tempGuestUid).apply();
+                final String guestUid = tempGuestUid;
 
                 AlertModel guestAlert = new AlertModel();
                 guestAlert.setKey(generatedAlertKey);
-                guestAlert.setUserId("GUEST_" + UUID.randomUUID().toString().substring(0, 8));
+                guestAlert.setUserId(guestUid);
                 guestAlert.setUserName(guestName + " (Guest)");
                 guestAlert.setUserPhone(guestPhone);
                 guestAlert.setGender(guestGender);
-                guestAlert.setUserEmail("No Account (Guest Mode)");
+                guestAlert.setUserEmail(guestEmail);
                 guestAlert.setEmergencyType(emergencyType);
                 guestAlert.setStatus("Pending");
                 guestAlert.setAssignedDept(deptId);
@@ -83,18 +97,24 @@ public class ConfirmationActivity extends AppCompatActivity {
                 guestAlert.setTextAddress(computedAddress);
                 guestAlert.setTimestamp(ServerValue.TIMESTAMP);
 
-                // Push payload straight out to Firebase database alerts node
                 alertsDbRef.child(generatedAlertKey).setValue(guestAlert)
                         .addOnSuccessListener(aVoid -> {
-                            Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
-                            intent.putExtra("alert_key", generatedAlertKey);
-                            intent.putExtra("dept_id", deptId);
-                            intent.putExtra("dept_name", deptName);
-                            intent.putExtra("dept_phone", deptPhone);
-                            intent.putExtra("dept_lat", deptLat);
-                            intent.putExtra("dept_lng", deptLng);
-                            startActivity(intent);
-                            finish();
+                            FirebaseDatabase.getInstance().getReference("UserHistory")
+                                    .child(guestUid)
+                                    .child(generatedAlertKey)
+                                    .setValue(guestAlert)
+                                    .addOnCompleteListener(task -> {
+                                        Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
+                                        intent.putExtra("alert_key", generatedAlertKey);
+                                        intent.putExtra("dept_id", deptId);
+                                        intent.putExtra("dept_name", deptName);
+                                        intent.putExtra("dept_phone", deptPhone);
+                                        intent.putExtra("dept_lat", deptLat);
+                                        intent.putExtra("dept_lng", deptLng);
+                                        intent.putExtra("isGuestFlow", true);
+                                        startActivity(intent);
+                                        finish();
+                                    });
                         })
                         .addOnFailureListener(e -> {
                             v.setEnabled(true);
@@ -102,7 +122,6 @@ public class ConfirmationActivity extends AppCompatActivity {
                         });
 
             } else {
-                // AUTHENTICATED ACCOUNT USER CODE PATHWAY
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (currentUser == null) {
                     v.setEnabled(true);
@@ -141,14 +160,11 @@ public class ConfirmationActivity extends AppCompatActivity {
 
                                 alertsDbRef.child(generatedAlertKey).setValue(userAlert)
                                         .addOnSuccessListener(aVoid -> {
-
-                                            // 2. CRITICAL FIX: Instantly copy the complete object payload over to UserHistory node
                                             FirebaseDatabase.getInstance().getReference("UserHistory")
                                                     .child(uid)
                                                     .child(generatedAlertKey)
                                                     .setValue(userAlert)
                                                     .addOnCompleteListener(task -> {
-                                                        // Even if tracking history logs fail momentarily, proceed to tracking because the active alert is live
                                                         Intent intent = new Intent(ConfirmationActivity.this, TrackingActivity.class);
                                                         intent.putExtra("alert_key", generatedAlertKey);
                                                         intent.putExtra("dept_id", deptId);

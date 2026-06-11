@@ -57,6 +57,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static boolean guestDismissedTutorialThisSession = false;
     private final android.os.Handler tutorialHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable tutorialRunnable;
+    private Snackbar tutorialSnackbar;
     private Location lastKnownLocation;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -252,7 +253,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         tutorialRunnable = () -> {
             if (!isAdded() || getContext() == null) return;
 
-            Snackbar snackbar = Snackbar.make(rootView, "Tip: Swipe up with two fingers for 3D view", Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(rootView, "Tip: Swipe up or down with two fingers for 3D view", Snackbar.LENGTH_INDEFINITE);
+            tutorialSnackbar = snackbar;
             View anchor = rootView.findViewById(R.id.location_card_container);
             if (anchor != null) snackbar.setAnchorView(anchor);
 
@@ -271,6 +273,14 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                     sharedPref.edit().putBoolean("map_tutorial_done", true).apply();
                 }
                 snackbar.dismiss();
+            });
+
+            // Prevent swipe to dismiss
+            snackbar.setBehavior(new com.google.android.material.snackbar.BaseTransientBottomBar.Behavior() {
+                @Override
+                public boolean canSwipeDismissView(View child) {
+                    return false;
+                }
             });
 
             snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_blue_light));
@@ -341,6 +351,10 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroyView() {
         if (tutorialHandler != null && tutorialRunnable != null) {
             tutorialHandler.removeCallbacks(tutorialRunnable);
+        }
+        if (tutorialSnackbar != null) {
+            tutorialSnackbar.dismiss();
+            tutorialSnackbar = null;
         }
         mMap = null;
         super.onDestroyView();

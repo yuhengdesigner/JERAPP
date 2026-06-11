@@ -15,6 +15,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public interface OnItemClickListener {
         void onItemClick(AlertModel alert);
+        void onDeleteClick(AlertModel alert);
     }
 
     public HistoryAdapter(List<AlertModel> list, OnItemClickListener listener) {
@@ -77,6 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(alert));
+        holder.btnDeleteHistory.setOnClickListener(v -> listener.onDeleteClick(alert));
     }
 
     @Override
@@ -84,12 +86,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView histType, histDept, histDate, histStatus;
+        android.widget.ImageButton btnDeleteHistory;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             histType = itemView.findViewById(R.id.histType);
             histDept = itemView.findViewById(R.id.histDept);
             histDate = itemView.findViewById(R.id.histDate);
             histStatus = itemView.findViewById(R.id.histStatus);
+            btnDeleteHistory = itemView.findViewById(R.id.btnDeleteHistory);
         }
     }
 }

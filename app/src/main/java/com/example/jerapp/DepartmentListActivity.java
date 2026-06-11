@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -42,15 +43,14 @@ public class DepartmentListActivity extends AppCompatActivity {
     private DeptAdapter adapter;
     private List<DepartmentModel> fullListPool = new ArrayList<>();
     private List<DepartmentModel> nearestList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefresh;
 
     private String currentScope = "All";
     private String currentCategory = "All";
 
-    // Track current coordinates globally
     private double userLat;
     private double userLng;
 
-    // Fused Location Provider to retrieve live device coordinates
     private FusedLocationProviderClient fusedLocationClient;
 
     private Chip chipAllScope, chipNearestScope;
@@ -68,11 +68,11 @@ public class DepartmentListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_department_list);
 
-        // Initialize Fused Location Provider Client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         recyclerView = findViewById(R.id.deptRecyclerView);
         statusText = findViewById(R.id.statusText);
+        swipeRefresh = findViewById(R.id.swipeRefresh);
         View btnBack = findViewById(R.id.btnBack);
 
         if (btnBack != null) {
@@ -83,14 +83,12 @@ public class DepartmentListActivity extends AppCompatActivity {
         adapter = new DeptAdapter(nearestList, new DeptAdapter.OnDeptClickListener() {
             @Override
             public void onSelect(DepartmentModel dept) {
-                // --- START OF INTEGRATED GUEST INTERCEPTION ---
-                boolean isGuestSession = (com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() == null);
+                boolean isGuestSession = SessionUtils.isGuest(DepartmentListActivity.this);
 
                 if (isGuestSession) {
-                    // Reroute into information compilation form
                     Intent intent = new Intent(DepartmentListActivity.this, GuestInfoActivity.class);
-                    intent.putExtra("dept_id", dept.id); // Note: using dept.id instead of getId()
-                    intent.putExtra("dept_name", dept.place_name); // Match your model fields
+                    intent.putExtra("dept_id", dept.id);
+                    intent.putExtra("dept_name", dept.place_name);
                     intent.putExtra("dept_phone", dept.contact);
                     intent.putExtra("emergency_type", selectedType);
                     intent.putExtra("dept_lat", dept.latitude);
@@ -99,22 +97,17 @@ public class DepartmentListActivity extends AppCompatActivity {
                     intent.putExtra("user_lng", userLng);
                     startActivity(intent);
                 } else {
-                    // Normal account holder pathway goes straight to Confirmation
                     Intent intent = new Intent(DepartmentListActivity.this, ConfirmationActivity.class);
-                    intent.putExtra("isGuestFlow", false); // Explicitly state not a guest
-
+                    intent.putExtra("isGuestFlow", false);
                     intent.putExtra("dept_id", dept.id);
-
                     intent.putExtra("dept_name", dept.place_name);
                     intent.putExtra("dept_phone", dept.contact);
                     intent.putExtra("dept_lat", dept.latitude);
                     intent.putExtra("dept_lng", dept.longitude);
                     intent.putExtra("dept_address", dept.full_address);
                     intent.putExtra("emergency_type", selectedType);
-
                     intent.putExtra("user_lat", userLat);
                     intent.putExtra("user_lng", userLng);
-
                     startActivity(intent);
                 }
             }
@@ -130,12 +123,9 @@ public class DepartmentListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         selectedType = getIntent().getStringExtra("emergency_type");
-
-        // Use UTM Skudai as the backup baseline coordinate if GPS fails or is turned off
         userLat = getIntent().getDoubleExtra("user_lat", 1.5612);
         userLng = getIntent().getDoubleExtra("user_lng", 103.6378);
 
-        // Chips configuration
         chipAllScope = findViewById(R.id.chipAllScope);
         chipNearestScope = findViewById(R.id.chipNearestScope);
 
@@ -185,11 +175,21 @@ public class DepartmentListActivity extends AppCompatActivity {
             });
         }
 
+        if (swipeRefresh != null) {
+            swipeRefresh.setOnRefreshListener(() -> {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    getUserLiveLocation();
+                } else {
+                    findNearestDepartments(selectedType, userLat, userLng);
+                }
+            });
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             getUserLiveLocation();
         } else {
-            // Request permission if not granted
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
         }
@@ -201,13 +201,10 @@ public class DepartmentListActivity extends AppCompatActivity {
 
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted: Get live location
                 getUserLiveLocation();
             } else {
-                // Permission denied: Use default fallback location and warn user
-                Toast.makeText(this, "Location permission denied. Using default location for accuracy.",
+                Toast.makeText(this, "Location permission denied. Using default location.",
                         Toast.LENGTH_LONG).show();
-                // Proceed with existing default coordinates (already initialized in onCreate)
                 findNearestDepartments(selectedType, userLat, userLng);
             }
         }
@@ -215,29 +212,26 @@ public class DepartmentListActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getUserLiveLocation() {
-        // 1. Double-check permission before calling API
+        if (swipeRefresh != null) swipeRefresh.setRefreshing(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             findNearestDepartments(selectedType, userLat, userLng);
             return;
         }
 
-        // 2. Fetch the location
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 userLat = location.getLatitude();
                 userLng = location.getLongitude();
-            } else {
-                Toast.makeText(this, "Unable to get live location. Using default.", Toast.LENGTH_SHORT).show();
             }
             findNearestDepartments(selectedType, userLat, userLng);
         }).addOnFailureListener(e -> {
-            // Fallback on failure
             findNearestDepartments(selectedType, userLat, userLng);
         });
     }
 
     private void findNearestDepartments(String type, double lat, double lng) {
+        if (swipeRefresh != null) swipeRefresh.setRefreshing(true);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("emergency_departments");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -249,18 +243,14 @@ public class DepartmentListActivity extends AppCompatActivity {
                     DepartmentModel dept = ds.getValue(DepartmentModel.class);
 
                     if (dept != null) {
-                        // MANUALLY SET THE ID HERE
                         dept.id = ds.getKey();
-
                         String dbType = (dept.type != null) ? dept.type.trim().toLowerCase() : "";
                         String dbCategory = (dept.category != null) ? dept.category.trim().toLowerCase() : "";
                         String dbName = (dept.place_name != null) ? dept.place_name.trim().toLowerCase() : "";
 
                         boolean isMatch = false;
 
-                        // 1. Fire & Explosion Mapping (CRITICAL FIX: Explicitly exclude gas leaks)
                         if (targetType.contains("fire") || targetType.contains("bomba")) {
-                            // Make sure it matches fire or bomba, but IS NOT a dedicated gas leak type
                             isMatch = (dbType.contains("fire") || dbType.contains("bomba") || dbName.contains("bomba"))
                                     && !dbType.contains("gas") && !dbType.contains("leak");
                         }
@@ -284,7 +274,6 @@ public class DepartmentListActivity extends AppCompatActivity {
                         }
 
                         if (isMatch) {
-                            // Compute exact distance based on live coordinates
                             dept.distance = calculateDistance(lat, lng, dept.latitude, dept.longitude);
                             fullListPool.add(dept);
                         }
@@ -293,10 +282,13 @@ public class DepartmentListActivity extends AppCompatActivity {
 
                 Collections.sort(fullListPool, (d1, d2) -> Double.compare(d1.distance, d2.distance));
                 applyFilters();
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+            }
         });
     }
 
@@ -329,24 +321,6 @@ public class DepartmentListActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    private void moveToEmergencyPage(DepartmentModel dept) {
-        Intent intent = new Intent(this, ConfirmationActivity.class);
-
-        intent.putExtra("dept_id", dept.id);
-
-        intent.putExtra("dept_name", dept.place_name);
-        intent.putExtra("dept_phone", dept.contact);
-        intent.putExtra("dept_lat", dept.latitude);
-        intent.putExtra("dept_lng", dept.longitude);
-        intent.putExtra("dept_address", dept.full_address);
-        intent.putExtra("emergency_type", selectedType);
-
-        intent.putExtra("user_lat", userLat);
-        intent.putExtra("user_lng", userLng);
-
-        startActivity(intent);
     }
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {

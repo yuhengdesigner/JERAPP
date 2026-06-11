@@ -67,12 +67,13 @@ public class AdminAlertsFragment extends Fragment {
             public void onDetailsClick(AlertModel alert) {
                 Intent intent = new Intent(requireContext(), EmergencyDetailActivity.class);
                 intent.putExtra("alert_key", alert.getKey());
+                // REQUIREMENT FIX: Pass dept_id so detail page can load data
+                intent.putExtra("dept_id", alert.getAssignedDept()); 
                 startActivity(intent);
             }
 
             @Override
             public void onResolve(AlertModel alert, String alertKey) {
-                // Move to Resolved node
                 moveAlert(alert, "ResolvedAlerts");
             }
 
@@ -86,30 +87,19 @@ public class AdminAlertsFragment extends Fragment {
             public void onDelete(AlertModel alert) {
                 String deptId = alert.getAssignedDept();
                 String alertKey = alert.getKey();
-
-                // Debugging: Log the path before deleting
                 String path = (deptId == null || deptId.isEmpty()) ? "UnknownAlerts" : "ActiveAlerts/" + deptId;
-                Log.d("DELETE_DEBUG", "Attempting to delete at path: " + path + "/" + alertKey);
-
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(alertKey);
-
                 ref.removeValue().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(getContext(), "Deleted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // This will tell us if it's a permission error or a bad path
-                        String error = task.getException() != null ? task.getException().getMessage() : "Unknown error";
-                        Log.e("DELETE_DEBUG", "Error: " + error);
-                        Toast.makeText(getContext(), "Delete failed: " + error, Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
 
         swipeRefresh.setOnRefreshListener(() -> {
-            // Manual refresh: just reload the listener
             listenForAlerts();
-            swipeRefresh.setRefreshing(false); // Stop the animation
+            swipeRefresh.setRefreshing(false);
         });
 
         recyclerView.setAdapter(adapter);
@@ -117,106 +107,66 @@ public class AdminAlertsFragment extends Fragment {
     }
 
     private void moveAlert(AlertModel alert, String targetNode) {
-        if (alert == null || alert.getKey() == null) {
-            Log.e("ADMIN_ERROR", "Move failed: Alert or Key is null");
-            return;
-        }
+        if (alert == null || alert.getKey() == null) return;
 
         String deptId = alert.getAssignedDept();
-        if (deptId == null || deptId.isEmpty()) {
-            deptId = "default_dept"; // Fallback to avoid null path
-        }
+        if (deptId == null || deptId.isEmpty()) deptId = "default_dept";
 
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         String key = alert.getKey();
 
-        // Source path: ActiveAlerts/{deptId}/{key}
         final String sourcePath = "ActiveAlerts/" + deptId + "/" + key;
         final String targetPath = targetNode + "/" + deptId + "/" + key;
 
         alert.setStatus(targetNode.equals("ProcessingAlerts") ? "Processing" : "Resolved");
 
-        // Perform the move
         root.child(targetPath).setValue(alert).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                root.child(sourcePath).removeValue().addOnFailureListener(e ->
-                        Log.e("ADMIN_ERROR", "Removal failed: " + e.getMessage()));
-            } else {
-                Log.e("ADMIN_ERROR", "Move failed: " + task.getException().getMessage());
+                root.child(sourcePath).removeValue();
             }
         });
-    }
-
-    private void updateStatus(String key, String status) {
-        FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(key).child("status").setValue(status)
-                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Status: " + status, Toast.LENGTH_SHORT).show());
     }
 
     private void listenForAlerts() {
         String adminDeptId = requireContext().getSharedPreferences("AdminPrefs", Context.MODE_PRIVATE)
                 .getString("dept_id", "default_dept");
 
-        // Detach old listener if it exists to prevent cross-firing data calls when switching fragments
         if (listenerRef != null && valueEventListener != null) {
             listenerRef.removeEventListener(valueEventListener);
         }
 
         listenerRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
         valueEventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // ADD THIS LOG
-                        Log.d("DEBUG_ALERT", "Snapshot exists: " + snapshot.exists());
-                        Log.d("DEBUG_ALERT", "Children count: " + snapshot.getChildrenCount());
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<AlertModel> newList = new ArrayList<>();
+                boolean hasNewAlerts = false;
 
-                        List<AlertModel> newList = new ArrayList<>();
-                        boolean hasNewAlerts = false; // DECLARED HERE
-
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            AlertModel alert = ds.getValue(AlertModel.class);
-
-                            if (alert != null) {
-                                alert.setKey(ds.getKey());
-
-                                // 🔍 ADD THIS TEMPORARY PRINT TRACE HERE
-                                Log.d("TIMESTAMP_DEBUG", "Key: " + ds.getKey() + " | Raw DB Value: " + ds.child("timestamp").getValue());
-
-                                newList.add(alert);
-                                }
-
-                                // Check if this is a new arrival
-                                if (!isInitialLoad && getAlertFromList(alert.getKey()) == null) {
-                                    hasNewAlerts = true;
-                                }
-                            }
-
-
-                        // Update UI on UI Thread safely
-                        if (isAdded() && getActivity() != null) {
-                            final boolean flashAlarm = hasNewAlerts;
-                            getActivity().runOnUiThread(() -> {
-                                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
-                                alertList.clear();
-                                alertList.addAll(newList);
-                                adapter.notifyDataSetChanged();
-                                if (statusText != null) {
-                                    statusText.setText(alertList.isEmpty() ? "No pending alerts for " + departmentFilter : "Active Alerts");
-                                }
-
-                                if (!isInitialLoad && flashAlarm) {
-                                    playSound();
-                                }
-                                isInitialLoad = false;
-                            });
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    AlertModel alert = ds.getValue(AlertModel.class);
+                    if (alert != null) {
+                        alert.setKey(ds.getKey());
+                        newList.add(alert);
+                        if (!isInitialLoad && getAlertFromList(alert.getKey()) == null) {
+                            hasNewAlerts = true;
                         }
+                    }
+                }
 
-                        if (!isInitialLoad && hasNewAlerts) playSound();
-                        isInitialLoad = false;
+                if (isAdded() && getActivity() != null) {
+                    final boolean flashAlarm = hasNewAlerts;
+                    alertList.clear();
+                    alertList.addAll(newList);
+                    adapter.notifyDataSetChanged();
+                    if (statusText != null) {
+                        statusText.setText(alertList.isEmpty() ? "No pending alerts" : "Active Alerts");
                     }
-                    @Override public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("DEBUG_ALERT", "Error: " + error.getMessage());
-                    }
-                };
+                    if (!isInitialLoad && flashAlarm) playSound();
+                    isInitialLoad = false;
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        };
         listenerRef.addValueEventListener(valueEventListener);
     }
 
@@ -227,10 +177,9 @@ public class AdminAlertsFragment extends Fragment {
 
     private void playSound() {
         try {
-            stopAlarm(); // Clear old instance
-            mediaPlayer = new MediaPlayer(); // Initialize it here!
+            stopAlarm();
+            mediaPlayer = new MediaPlayer();
             Uri soundUri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.emergency_alert_sound);
-
             mediaPlayer.setDataSource(requireContext(), soundUri);
             mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
             mediaPlayer.prepare();
@@ -240,21 +189,16 @@ public class AdminAlertsFragment extends Fragment {
             Log.e("SOUND_ERROR", "Error: " + e.getMessage());
         }
     }
+    
     private void stopAlarm() {
         try {
             if (mediaPlayer != null) {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                }
+                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
                 mediaPlayer.release();
             }
-        } catch (Exception e) {
-            Log.e("SOUND_ERROR", "Could not stop alarm safely: " + e.getMessage());
-        } finally {
-            mediaPlayer = null;
-        }
+        } catch (Exception e) {} finally { mediaPlayer = null; }
     }
-    // Add this to ensure sound stops if the admin leaves the screen
+
     @Override
     public void onPause() {
         super.onPause();
@@ -265,7 +209,7 @@ public class AdminAlertsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (listenerRef != null && valueEventListener != null) {
-            listenerRef.removeEventListener(valueEventListener); // You would need to store the listener as a field
+            listenerRef.removeEventListener(valueEventListener);
         }
     }
 }

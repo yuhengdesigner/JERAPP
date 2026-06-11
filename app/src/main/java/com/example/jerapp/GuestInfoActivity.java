@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GuestInfoActivity extends AppCompatActivity {
 
-    private EditText etGuestName, etGuestPhone;
+    private EditText etGuestName, etGuestPhone, etGuestEmail;
     private RadioGroup rgGuestGender;
 
     // Hold incoming department parameters from DepartmentListActivity routing
@@ -37,6 +37,7 @@ public class GuestInfoActivity extends AppCompatActivity {
         // Bind layout controls
         etGuestName = findViewById(R.id.etGuestName);
         etGuestPhone = findViewById(R.id.etGuestPhone);
+        etGuestEmail = findViewById(R.id.etGuestEmail);
         rgGuestGender = findViewById(R.id.rgGuestGender);
         Button btnProceed = findViewById(R.id.btnProceedToConfirm);
 
@@ -45,6 +46,7 @@ public class GuestInfoActivity extends AppCompatActivity {
         btnProceed.setOnClickListener(v -> {
             String name = etGuestName.getText().toString().trim();
             String phone = etGuestPhone.getText().toString().trim();
+            String email = etGuestEmail != null ? etGuestEmail.getText().toString().trim() : "No Email";
             String gender = "Male";
 
             if (rgGuestGender.getCheckedRadioButtonId() == R.id.rbFemale) {
@@ -60,12 +62,17 @@ public class GuestInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // Forward everything safely to ConfirmationActivity
             Intent intent = new Intent(GuestInfoActivity.this, ConfirmationActivity.class);
             intent.putExtra("isGuestFlow", true);
             intent.putExtra("guest_name", name);
             intent.putExtra("guest_phone", phone);
+            intent.putExtra("guest_email", email);
             intent.putExtra("guest_gender", gender);
 
             // Re-bundle original department metadata properties

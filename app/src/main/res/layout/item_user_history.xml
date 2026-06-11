@@ -7,43 +7,60 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/histType"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="FIRE EMERGENCY"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
-            android:textSize="16sp"/>
+            android:orientation="vertical"
+            android:layout_toStartOf="@id/btnDeleteHistory">
 
-        <TextView
-            android:id="@+id/histDept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Responded by: Johor Bahru Fire Dept"
-            android:layout_marginTop="4dp"/>
+            <TextView
+                android:id="@+id/histType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FIRE EMERGENCY"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/histDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="20 May 2024, 14:30"
-            android:textColor="#757575"
-            android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/histDept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Responded by: Johor Bahru Fire Dept"
+                android:layout_marginTop="4dp"/>
 
-        <TextView
-            android:id="@+id/histStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="RESOLVED"
-            android:textStyle="bold"
-            android:textColor="#4CAF50"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/histDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20 May 2024, 14:30"
+                android:textColor="#757575"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/histStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="RESOLVED"
+                android:textStyle="bold"
+                android:textColor="#4CAF50"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnDeleteHistory"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="#D32F2F" />
+
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

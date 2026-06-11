@@ -10,5 +10,5 @@
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:src="@android:drawable/ic_media_play"
-        android:contentDescription="Play Video" />
+        android:contentDescription="@string/play_video" />
 </FrameLayout>

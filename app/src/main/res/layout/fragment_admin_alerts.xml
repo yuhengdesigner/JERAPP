@@ -10,7 +10,7 @@
         android:id="@+id/adminStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Listening for alerts..."
+        android:text="@string/listening_for_alerts"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="italic"

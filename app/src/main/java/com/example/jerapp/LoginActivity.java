@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
@@ -21,6 +22,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,9 +56,17 @@ public class LoginActivity extends AppCompatActivity {
         btnGuest = findViewById(R.id.btnGuestMode);
         MaterialButtonToggleGroup toggleGroup = findViewById(R.id.loginToggleGroup);
 
-        // Auto-Login check
-        if (mAuth.getCurrentUser() != null) {
-            checkUserRole();
+        // REQUIREMENT: Allow user to auto login
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            if (currentUser.isAnonymous()) {
+                mAuth.signOut();
+                SessionUtils.clearGuestSession(this);
+            } else {
+                // If a registered user is already authenticated, attempt auto-login
+                checkUserRole();
+                // We don't finish() here yet because checkUserRole is asynchronous
+            }
         }
 
         // 2. Mode Toggle Logic
@@ -89,7 +99,11 @@ public class LoginActivity extends AppCompatActivity {
         btnGuest.setOnClickListener(v -> {
             mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
-                    startActivity(new Intent(this, MainActivity.class));
+                    String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+                    SessionUtils.markGuest(this, uid);
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("isGuest", true);
+                    startActivity(intent);
                     finish();
                 }
             });
@@ -153,13 +167,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performFirebaseAuth(String email, String password) {
-        // DEBUG TOAST
-        Toast.makeText(this, "Attempting login for: " + email, Toast.LENGTH_SHORT).show();
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Auth Success! Checking Role...", Toast.LENGTH_SHORT).show();
+                        if (!isAdminMode && mAuth.getCurrentUser() != null && !mAuth.getCurrentUser().isEmailVerified()) {
+                            mAuth.signOut();
+                            showErrorDialog("Email Not Verified", "Please verify your email before logging in.");
+                            return;
+                        }
                         checkUserRole();
                     } else {
                         String error = task.getException() != null ? task.getException().getMessage() : "Auth failed";
@@ -169,64 +184,88 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUserRole() {
-        if (mAuth.getCurrentUser() == null) return;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
 
-        String uid = mAuth.getCurrentUser().getUid();
+        String uid = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Get the data from Firebase
                     String role = snapshot.child("role").getValue(String.class);
                     String deptId = snapshot.child("dept_id").getValue(String.class);
 
-                    // DEBUG: If you aren't sure what's happening, this Toast is your best friend:
-                    // Toast.makeText(LoginActivity.this, "DB Role: " + role + " | Mode: " + isAdminMode, Toast.LENGTH_LONG).show();
+                    // Robust Check: Handle navigation based on role from database
+                    if ("admin".equalsIgnoreCase(role)) {
+                        getSharedPreferences("AdminPrefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("dept_id", deptId)
+                                .apply();
 
-                    if (isAdminMode) {
-                        // Check for admin role (Case-Insensitive)
-                        if ("admin".equalsIgnoreCase(role)) {
-                            // 1. SAVE THE DEPT_ID TO SHARED PREFERENCES (This is the missing link!)
-                            getSharedPreferences("AdminPrefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("dept_id", deptId) // Save the ID retrieved from snapshot
-                                    .apply();
+                        Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                        intent.putExtra("DEPT_ID", deptId);
+                        startActivity(intent);
+                        finish();
+                    } else if ("customer".equalsIgnoreCase(role) || role == null) {
+                        SessionUtils.markRegistered(LoginActivity.this);
+                        android.content.SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                        String guestUid = prefs.getString("guest_uid", null);
+                        
+                        // Transfer history if user was a guest on this device
+                        if (guestUid != null && !uid.equals(guestUid)) {
+                            DatabaseReference oldRef = FirebaseDatabase.getInstance().getReference("UserHistory").child(guestUid);
+                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("UserHistory").child(uid);
+                            
+                            oldRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snap) {
+                                    if (snap.exists()) {
+                                        for (DataSnapshot ds : snap.getChildren()) {
+                                            newRef.child(ds.getKey()).setValue(ds.getValue());
+                                        }
+                                        oldRef.removeValue();
+                                    }
+                                    prefs.edit().remove("guest_uid").apply();
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
+                                }
 
-                            // 2. Proceed with navigation
-                            Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
-                            intent.putExtra("DEPT_ID", deptId);
-                            startActivity(intent);
-                            finish();
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
+                                }
+                            });
                         } else {
-                            showErrorDialog("Access Denied", "You are trying to login as Admin, but your database role is: " + role);
-                            mAuth.signOut();
-                        }
-                    } else {
-                        // Check for customer/user role
-                        if ("customer".equalsIgnoreCase(role) || role == null) {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
-                        } else {
-                            mAuth.signOut();
-                            showErrorDialog("Access Denied", "Admins must use Admin Mode to login.");
                         }
+                    } else {
+                        // Unknown role
+                        mAuth.signOut();
+                        showErrorDialog("Access Denied", "Invalid account role.");
                     }
                 } else {
-                    showErrorDialog("Database Error", "Auth succeeded, but no user data found at: Users/" + uid);
+                    // This is for users who have no database record (e.g. deleted but still have auth session)
                     mAuth.signOut();
+                    // Don't show error dialog during auto-login to avoid popping it up on start if session is invalid
+                    if (findViewById(android.R.id.content).isShown()) {
+                         showErrorDialog("Database Error", "User data not found.");
+                    }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                showErrorDialog("Firebase Error", error.getMessage());
+                if (findViewById(android.R.id.content).isShown()) {
+                    showErrorDialog("Firebase Error", error.getMessage());
+                }
             }
         });
     }
 
-    // Helper method to keep your screen from "jamming" silently
     private void showErrorDialog(String title, String message) {
         new AlertDialog.Builder(this)
                 .setTitle(title)

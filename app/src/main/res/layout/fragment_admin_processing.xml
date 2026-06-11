@@ -20,6 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No emergencies currently being processed."
+        android:text="@string/no_emergencies_processed"
         android:visibility="gone" />
 </RelativeLayout>

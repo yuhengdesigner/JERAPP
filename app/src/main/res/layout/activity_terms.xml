@@ -21,6 +21,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_icon_desc"
             android:src="@drawable/ic_back"
             app:tint="@color/white" />
 
@@ -30,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="Terms &amp; Conditions"
+            android:text="@string/terms_and_conditions"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -53,13 +54,14 @@
                 android:layout_width="180dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="0dp"
+                android:contentDescription="@string/app_logo_desc"
                 android:src="@drawable/ic_jerlogo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Johor Emergency Response"
+                android:text="@string/johor_emergency_response"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -68,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Last Updated: Mat 2026\nDeveloped By: CS Student, UTMSPACE, UTM"
+                android:text="@string/terms_last_updated"
                 android:gravity="center_horizontal"
                 android:textColor="#757575"
                 android:textSize="14sp"
@@ -91,7 +93,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Acceptance of Terms"
+                        android:text="@string/acceptance_of_terms"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -100,7 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="By using JER: Johor Emergency Response App, you agree to be bound by these Terms and Conditions. If you do not agree, you must immediately cease using the application and uninstall it from your device."
+                        android:text="@string/acceptance_of_terms_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -126,7 +128,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nature of Service"
+                        android:text="@string/nature_of_service"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -135,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="JER App is a tool designed to facilitate emergency communication with Malaysian authorities including the Royal Malaysia Police (PDRM), Ministry of Health (KKM) and Fire and Rescue Department (JBPM)."
+                        android:text="@string/nature_of_service_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -150,7 +152,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -159,7 +161,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="While the app aims to streamline emergency requests, the developers do not guarantee immediate response times from third-part emergency services."
+                            android:text="@string/nature_of_service_bullet1"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -175,7 +177,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -184,7 +186,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tutorials and safety procedures provided offline are for informational purpose only and do not replace any professional medical or safety training."
+                            android:text="@string/nature_of_service_bullet2"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -211,7 +213,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Misuse and False Alarms (Critical)"
+                        android:text="@string/misuse_and_false_alarms"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -220,7 +222,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="The integrity of the JER App depends on its legitimate use. Misuse of the emergency reporting features is a criminal offense under Malaysian Law."
+                        android:text="@string/misuse_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -230,7 +232,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="3.1 Definition of Misuse"
+                        android:text="@string/definition_of_misuse_title"
                         android:textColor="@color/primary"
                         android:textSize="15sp" />
 
@@ -238,7 +240,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text='A "False Alarm" or "Misuse" of the JER App includes:'
+                        android:text="@string/definition_of_misuse_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -253,7 +255,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -262,7 +264,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Activating an emergency button when no real theat to life, porperty or public safety exists."
+                            android:text="@string/misuse_bullet1"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -278,7 +280,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -287,7 +289,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text='Triggering the emergency transmission "just to see if it works" or for any non-emergency demonstration.'
+                            android:text="@string/misuse_bullet2"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -303,7 +305,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -312,7 +314,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Knowingly provide false location data, incorrect incident descriptions or spoofing identity."
+                            android:text="@string/misuse_bullet3"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -328,7 +330,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -337,7 +339,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Any communication intended to annoy, abuse, threaten or harass emergency dispatchers or responders."
+                            android:text="@string/misuse_bullet4"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -348,7 +350,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="3.2 Statutory Penalties"
+                        android:text="@string/statutory_penalties_title"
                         android:textColor="@color/primary"
                         android:textSize="15sp" />
 
@@ -356,7 +358,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Users are hereby notified that the JER App logs user data, device identifiers and GPS coordinates for every emergency transmission. Any person found making a false report will be referred to the authorities for prosecution under the following statues:"
+                        android:text="@string/statutory_penalties_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -371,7 +373,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -380,7 +382,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Communications and Multimedia Act 1998 (Section 233): For improper use of network facilities to initiate false communication."
+                            android:text="@string/statutory_bullet1"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -405,7 +407,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Penalty: A fine not exceeding RM50,000 or imprisonment for a term up to one (1) year or both."
+                            android:text="@string/statutory_bullet1_sub"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -421,7 +423,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -430,57 +432,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Penal Code (Section 182): For providing false information to a public servant."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="    -"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Penalty: Imprisonment for a term up to six (6) months or a fine of up to RM2,000 or both."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Fire Services Act 1988 (Section 52): Specifically for false reports involving fire or calamities."
+                            android:text="@string/statutory_bullet2"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -505,7 +457,57 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Penalty: A fine not exceeding RM5,000 or imprisonment for a term up to three (3) years or both."
+                            android:text="@string/statutory_bullet2_sub"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bullet"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/statutory_bullet3"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="    -"
+                            android:paddingEnd="8dp"
+                            android:textColor="#424242"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/statutory_bullet3_sub"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -532,7 +534,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="User Accountability &amp; Data Logging"
+                        android:text="@string/user_accountability_title"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -546,7 +548,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -555,7 +557,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="To ensure public safety, JER App records the users' registered phone number and real-time GPS location during emergency requests."
+                            android:text="@string/user_accountability_bullet1"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -571,7 +573,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -580,7 +582,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="In the event of a false alarm, this data will be handed over to PDRM and relevant authorities as forensic evidence."
+                            android:text="@string/user_accountability_bullet2"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -596,7 +598,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
+                            android:text="@string/bullet"
                             android:paddingEnd="8dp"
                             android:textColor="#424242"
                             android:textSize="15sp" />
@@ -605,7 +607,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="You agree to indemnify and hold harmless UTMSPACE Student from any legal action, costs or damages resulting from your misuse of the application."
+                            android:text="@string/user_accountability_bullet3"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -633,7 +635,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Limitation of Liability"
+                        android:text="@string/limitation_of_liability_title"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -642,7 +644,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="UTMSPACE Student shall not be liable for any loss, injury or damage resulting from:"
+                        android:text="@string/limitation_of_liability_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -666,7 +668,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Technical failures, network outage or GPS inaccuracies."
+                            android:text="@string/limitation_bullet1"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -691,7 +693,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="The actions or inactions of emergency service providers (PDRM, KKM, JBPM)."
+                            android:text="@string/limitation_bullet2"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -716,7 +718,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Reliance on the information provided in the offline safety tutorials."
+                            android:text="@string/limitation_bullet3"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
@@ -744,7 +746,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Governing Law"
+                        android:text="@string/governing_law_title"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:textSize="18sp" />
@@ -753,7 +755,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="These Term and Conditions are governed by and constructed in accordance with the laws of Malaysia. Any disputes arising from the use of this app shall be subject to the exclusive jurisdiction of the courts in Johor Bahru, Johor."
+                        android:text="@string/governing_law_desc"
                         android:justificationMode="inter_word"
                         android:textColor="#424242"
                         android:textSize="15sp"
@@ -767,7 +769,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="20dp"
-                android:text="© 2026 JER - Choy Yu Heng. All rights reserved."
+                android:text="@string/copyright_terms"
                 android:textColor="#9E9E9E"
                 android:textSize="12sp" />
 
