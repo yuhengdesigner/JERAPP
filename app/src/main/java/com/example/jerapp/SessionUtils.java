@@ -15,9 +15,9 @@ public final class SessionUtils {
 
     public static boolean isGuest(Context context) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && user.isAnonymous()) return true;
-        return context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE)
-                .getBoolean(KEY_GUEST_MODE, false);
+        // REQUIREMENT: A user is ONLY a guest if there is an active anonymous Firebase session.
+        // We do NOT trust SharedPreferences alone because it can be restored from old backups.
+        return user != null && user.isAnonymous();
     }
 
     public static void markGuest(Context context, String uid) {
@@ -27,11 +27,14 @@ public final class SessionUtils {
         editor.apply();
     }
 
+    public static String getStoredGuestUid(Context context) {
+        return context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE).getString(KEY_GUEST_UID, null);
+    }
+
     public static void markRegistered(Context context) {
-        context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE)
-                .edit()
-                .putBoolean(KEY_GUEST_MODE, false)
-                .apply();
+        SharedPreferences.Editor editor = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(KEY_GUEST_MODE, false);
+        editor.apply();
     }
 
     public static void clearGuestSession(Context context) {
@@ -42,7 +45,7 @@ public final class SessionUtils {
                 .remove(KEY_GUEST_UID)
                 .apply();
 
-        // REQUIREMENT: Clear any stale emergency tracking state
+        // Clear any stale emergency tracking state
         context.getSharedPreferences("OngoingEmergencyPrefs", Context.MODE_PRIVATE)
                 .edit()
                 .clear()

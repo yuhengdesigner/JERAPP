@@ -113,7 +113,6 @@ public class HistoryFragment extends Fragment {
 
     private void setupCalendar() {
         if (calendarView != null) {
-            // Restriction: User shouldn't be able to select future date
             calendarView.setMaxDate(System.currentTimeMillis());
 
             calendarView.setOnDateChangeListener((calendar, year, month, dayOfMonth) -> {
@@ -177,12 +176,10 @@ public class HistoryFragment extends Fragment {
             boolean match = true;
             
             if (selectedDayStartMs != null) {
-                // Logic Fix: If a date is picked, ONLY show matches for that date. 
-                // Ignore "unknown" emergencies (timestamp 0) during date filtering.
                 if (timeLong > 0) {
                     match = timeLong >= selectedDayStartMs && timeLong < selectedDayStartMs + 24L * 60L * 60L * 1000L;
                 } else {
-                    match = false; // Hide unknown emergencies when filtering by date
+                    match = false;
                 }
             }
 
@@ -192,11 +189,7 @@ public class HistoryFragment extends Fragment {
         java.util.Collections.sort(historyList, (a, b) -> {
             long tA = getAlertTimestamp(a);
             long tB = getAlertTimestamp(b);
-            if (filterType == 1) { // Oldest First
-                return Long.compare(tA, tB);
-            } else { // Latest First
-                return Long.compare(tB, tA);
-            }
+            return (filterType == 1) ? Long.compare(tA, tB) : Long.compare(tB, tA);
         });
 
         adapter.notifyDataSetChanged();
@@ -215,12 +208,10 @@ public class HistoryFragment extends Fragment {
         if (fullHistoryList.isEmpty()) return;
         
         long min = Long.MAX_VALUE;
-        long dataMax = 0;
         for (AlertModel alert : fullHistoryList) {
             long time = getAlertTimestamp(alert);
             if (time > 0) {
                 min = Math.min(min, time);
-                dataMax = Math.max(dataMax, time);
             }
         }
         
@@ -228,10 +219,8 @@ public class HistoryFragment extends Fragment {
             calendarView.setMinDate(min);
         }
         
-        // Highlights the data range by restricting the calendar
-        if (dataMax > 0) {
-            calendarView.setMaxDate(Math.min(dataMax, now));
-        }
+        // We always keep maxDate at NOW so users can pick current empty days and see the "No Data" message
+        calendarView.setMaxDate(now);
     }
 
     private long getAlertTimestamp(AlertModel alert) {

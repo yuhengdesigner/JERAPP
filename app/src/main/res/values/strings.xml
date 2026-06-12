@@ -148,4 +148,6 @@
     <string name="ongoing_emergency_warning_title">Ongoing Emergency</string>
     <string name="ongoing_emergency_warning_message">You have an ongoing emergency. Please wait until it is completed before logging out to ensure your safety and coordination with responders.</string>
     <string name="ongoing_emergency_register_message">You have an ongoing emergency. Please wait until it is completed before creating an account to ensure uninterrupted tracking.</string>
+    <string name="guest_user_name">Guest User</string>
+    <string name="guest_user_email">guest@example.com</string>
 </resources>
