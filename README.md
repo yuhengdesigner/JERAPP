@@ -53,3 +53,34 @@ IOS devices are not applicable to download JER App. Only Android devices are abl
 | Registered User | Send emergency alerts, track responses, view ETA and history, manage profile, access offline emergency tools |
 | Guest User | Browse emergency resources, use SOS Flashlight, access emergency tutorials and contact departments |
 | Department Admin | Monitor incoming alerts, process emergencies, resolve cases, and review alert history |
+
+## Verified Development Environment
+
+| Component | Version |
+| --- | --- |
+| Operating System | Windows 11 64-bit |
+| IDE | Android Studio |
+| Android SDK | Latest stable version |
+| Database | Firebase Realtime Database |
+| Testing Devices | Android Emulator and Physical Android Devices |
+| Minimum Android Version | Android 8.0 (API Level 26) |
+
+## Installation
+
+1. Visit the JER website.
+2. Download the latest APK file.
+3. Enable installation from unknown sources on your Android device.
+4. Install the APK.
+5. Launch JER and complete registration or continue as a guest user.
+
+## System Requirements
+
+- Android smartphone
+- Internet connection for online emergency features
+- GPS/Location services enabled
+- Camera flash access for SOS Flashlight
+- Android 8.0 (API Level 26) or later
+
+## Disclaimer
+
+JER is an academic project developed for educational purposes and is not officially integrated with Malaysian emergency response agencies. Users should continue to contact official emergency services through approved channels during actual emergencies.
