@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F5F5">
 
-    <!-- Header: Matching your centered/lowered style -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -40,7 +40,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,95 +98,61 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/what_is_cpr"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/headerWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/what_is_cpr"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhat"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="@string/cpr_definition"
-                        android:justificationMode="inter_word"
-                        android:textColor="#424242"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/why_understand_general_procedure"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/contentWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/brain_countdown"
-                            android:textColor="#424242"
+                            android:text="@string/cpr_definition"
                             android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
                             android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/simplifying_chaos"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
@@ -207,222 +174,278 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/who_applies_to"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/headerWhy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/why_understand_general_procedure"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhy"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/brain_countdown"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/brain_countdown"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/simplifying_chaos"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/who_applies_to"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWho"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="@string/who_applies_desc"
-                        android:justificationMode="inter_word"
-                        android:textColor="#424242"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/contentWho"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text=" 1. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/adults_age"
-                            android:textColor="#424242"
+                            android:text="@string/who_applies_desc"
                             android:justificationMode="inter_word"
+                            android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text=" 2. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="0dp"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 1. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/adults_age"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/children_age"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 2. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/children_age"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text=" 3. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="0dp"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 3. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/infants_age"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/infants_age"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 4. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 4. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/neonates_age"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/when_act_adapt_stop"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/when_to_act"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/when_to_adapt"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/when_to_stop"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/neonates_age"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -442,62 +465,242 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/where_ideal_cpr_env"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/headerWhen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/when_act_adapt_stop"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
+                        <ImageView
+                            android:id="@+id/arrowWhen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/when_to_act"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/safety_first"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/when_to_act"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/when_to_adapt"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/when_to_stop"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhere"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/where_ideal_cpr_env"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
+                        <ImageView
+                            android:id="@+id/arrowWhere"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/safety_first"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/hard_ground_rule"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/safety_first"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/hard_ground_rule"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -586,356 +789,395 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <androidx.cardview.widget.CardView
+                    <RelativeLayout
+                        android:id="@+id/headerHow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardPreventCornerOverlap="false">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@id/arrowHow"
+                            android:layout_centerVertical="true"
+                            android:text="@string/how_to_navigate_drsabcd"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
                         <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="700dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_cpr_drsabcd"
-                            android:contentDescription="@string/cpr_drsabcd_desc" />
-                    </androidx.cardview.widget.CardView>
+                            android:id="@+id/arrowHow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/previewHow"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/how_to_navigate_drsabcd"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="@string/follow_sequence"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_1_danger"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/danger_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_2_response"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/response_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_3_send_help"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/send_help_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_4_airway"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/contentHow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="4dp"
+                            app:cardPreventCornerOverlap="false">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="700dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_cpr_drsabcd"
+                                android:contentDescription="@string/cpr_drsabcd_desc" />
+                        </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/airway_check"
+                            android:text="@string/follow_sequence"
                             android:textColor="#424242"
                             android:justificationMode="inter_word"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_1_danger"
+                            android:textColor="@color/primary"
                             android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/airway_tilt"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_5_breathing"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/breathing_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
+                            android:text="@string/danger_desc"
                             android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/look_breathing"
                             android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_2_response"
+                            android:textColor="@color/primary"
                             android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/listen_breathing"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
+                            android:text="@string/response_desc"
                             android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/feel_breathing"
                             android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_3_send_help"
+                            android:textColor="@color/primary"
                             android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/critical_note_breathing"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_6_cpr"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cpr_action_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
+                            android:text="@string/send_help_desc"
                             android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="@string/cpr_ratios"
                             android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/bullet"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_4_airway"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/airway_check"
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/airway_tilt"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_5_breathing"
+                            android:textColor="@color/primary"
                             android:textSize="15sp" />
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:text="@string/breathing_desc"
                             android:textColor="#424242"
-                            android:text="@string/hands_only_mod"
                             android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/look_breathing"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/listen_breathing"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/feel_breathing"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/critical_note_breathing"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_6_cpr"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cpr_action_desc"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/cpr_ratios"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bullet"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="@string/hands_only_mod"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/step_7_defib"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/defib_desc"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/step_7_defib"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/defib_desc"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -950,5 +1192,4 @@
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

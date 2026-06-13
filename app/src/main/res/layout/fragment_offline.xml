@@ -13,11 +13,11 @@
         android:layout_height="match_parent"
         android:scrollbars="none">
 
-        <!-- FIX: This single vertical layout now safely holds all content inside the ScrollView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="32dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -30,7 +30,6 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="20dp"/>
 
-            <!-- SOS FLASH LIGHT CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSosFlashlight"
                 android:layout_width="match_parent"
@@ -41,44 +40,16 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_flashlight_bg" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#80000000" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_flashlight"
-                            app:tint="@color/white" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="SOS FLASH LIGHT"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:letterSpacing="0.1" />
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_flashlight_bg" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="16dp">
+                        <ImageView android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/ic_flashlight" app:tint="@color/white" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="SOS FLASH LIGHT" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.1" />
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- GENERAL CPR CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardGeneralCpr"
                 android:layout_width="match_parent"
@@ -89,58 +60,23 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_cpr_general_bg" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#80000000" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_cpr_kit"
-                            app:tint="@color/white" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="GENERAL CPR GUIDE"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:letterSpacing="0.1" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Emergency Resuscitation Basics"
-                            android:textColor="#E0E0E0"
-                            android:textSize="11sp" />
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_cpr_general_bg" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="16dp">
+                        <ImageView android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/ic_cpr_kit" app:tint="@color/white" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="GENERAL CPR GUIDE" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.1" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Emergency Resuscitation Basics" android:textColor="#E0E0E0" android:textSize="11sp" />
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- AGE-SPECIFIC CPR GRID -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
                 android:rowCount="2"
                 android:alignmentMode="alignBounds">
-
-                <!-- ADULT CPR -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardAdultCpr"
                     android:layout_width="0dp"
@@ -156,13 +92,11 @@
                         <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_cpr_adult_bg" />
                         <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
                         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="ADULT CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ADULT CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Age 8 and older" android:textColor="#D0D0D0" android:textSize="10sp" />
                         </LinearLayout>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- CHILD CPR -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardChildCpr"
                     android:layout_width="0dp"
@@ -178,13 +112,11 @@
                         <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_cpr_child_bg" />
                         <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
                         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="CHILD CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHILD CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Age 1 to 8" android:textColor="#D0D0D0" android:textSize="10sp" />
                         </LinearLayout>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- INFANT CPR -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardInfantCpr"
                     android:layout_width="0dp"
@@ -200,13 +132,11 @@
                         <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_cpr_infant_bg" />
                         <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
                         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="INFANT CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="INFANT CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Under 1 year old" android:textColor="#D0D0D0" android:textSize="10sp" />
                         </LinearLayout>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- NEONATE CPR -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardNeonateCpr"
                     android:layout_width="0dp"
@@ -222,12 +152,11 @@
                         <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_cpr_neonate_bg" />
                         <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" />
                         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="NEONATE CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NEONATE CPR" android:textStyle="bold" android:textColor="@color/white" android:textSize="14sp" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Newborn guidelines" android:textColor="#D0D0D0" android:textSize="10sp" />
                         </LinearLayout>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
-
             </GridLayout>
 
             <TextView
@@ -241,7 +170,6 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="20dp"/>
 
-            <!-- Fire -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardFire"
                 android:layout_width="match_parent"
@@ -252,25 +180,15 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Fire Emergency" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
                         <ImageView android:id="@+id/ivFireIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
                     </LinearLayout>
-                    <TextView
-                        android:id="@+id/tvFireContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone" />
+                    <TextView android:id="@+id/tvFireContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Bleeding -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBleeding"
                 android:layout_width="match_parent"
@@ -281,25 +199,15 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Severe Bleeding" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
                         <ImageView android:id="@+id/ivBleedingIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
                     </LinearLayout>
-                    <TextView
-                        android:id="@+id/tvBleedingContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone" />
+                    <TextView android:id="@+id/tvBleedingContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Snakebites -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSnakebites"
                 android:layout_width="match_parent"
@@ -309,27 +217,269 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="32dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                app:cardElevation="4dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Snakebites" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
                         <ImageView android:id="@+id/ivSnakebitesIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
                     </LinearLayout>
-                    <TextView
-                        android:id="@+id/tvSnakebitesContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone" />
+                    <TextView android:id="@+id/tvSnakebitesContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Step-by-Step Emergency Tutorials"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="20dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSeeingPersonEmergency"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_seeing_emergency" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEEING A PERSON IN EMERGENCY" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Universal DRSABCD Scene Prioritization" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFindUseAed"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_find_use_aed" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FIND AND USE AED" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Automated External Defibrillator Operation" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardEvacuateFire"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_evacuate_fire" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EVACUATE FROM FIRE" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Emergency Low-Crawl Building Escape Plan" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardChoking"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_choking" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHOKING &amp; OBSTRUCTION" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Adult Heimlich &amp; Infant Back Slaps" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSeeingFire"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_seeing_fire" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEEING FIRE (INITIAL RESPONSE)" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="RACE Framework &amp; Extinguisher PASS Steps" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCarAccident"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_car_accident" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CAR ACCIDENT MANAGEMENT" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Road Traffic Crash Scene Safety &amp; Stabilization" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSomeoneElectrocuted"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_someone_electrocuted" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SOMEONE ELECTROCUTED RESCUE" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Safe Isolation, Current Detachment &amp; Care" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardProtectElectricalShock"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_protect_shock" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PROTECT FROM ELECTRICAL SHOCK" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Personal Storm &amp; Flash Flood Safety Checks" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWildAnimal"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_wild_animal" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WILD ANIMAL ATTACK RESPONSE" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Defensive Postures &amp; Rabies Wound Flushing" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardEarthquake"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_earthquake" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EARTHQUAKE SAFETY" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Drop, Cover, and Hold On Protocol" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTornado"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_tornado" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TORNADO &amp; SEVERE WIND" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Lowest Interior Shelter &amp; Head Duck Protection" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTsunami"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_tsunami" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TSUNAMI SAFETY PLAN" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" android:letterSpacing="0.05" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Rapid Vertical &amp; Inland High Ground Evacuation" android:textColor="#E0E0E0" android:textSize="11sp" />
+                    </LinearLayout>
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

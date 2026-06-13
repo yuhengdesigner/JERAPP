@@ -97,95 +97,61 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WHAT is Neonate CPR?"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/headerWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Neonatal Cardiopulmonary Resuscitation is a highly specialized, ultra-gentle life-saving procedure designed exclusively for newborns in their first 4 weeks of life. Because a newborn's lungs are filled with fluid before birth, their first challenge in life is expanding their lungs with air. If their heart stops or drops dangerously low, it is almost always because their lungs failed to transition. Neonate CPR prioritizes rapid, highly frequent oxygen delivery mixed with tightly synchronized, shallow chest compressions."
-                        android:justificationMode="inter_word"
-                        android:textColor="#424242"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WHY must you perform it?"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHAT is Neonate CPR?"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="A Pure Oxygen Deficit: Unlike adults (whose hearts stop due to cardiac disease), a newborn's heart stops purely because they are suffocating."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
+                        <ImageView
+                            android:id="@+id/arrowWhat"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/previewWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:text="Neonatal Cardiopulmonary Resuscitation is a highly specialized, ultra-gentle life-saving procedure designed exclusively..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="The Critical Heart Threshold: A newborn's normal heart rate is incredibly fast (120–160 beats per minute). Medical guidelines state that if a newborn's heart rate drops below 60 beats per minute despite breathing support, it is treated as a total cardiac arrest. You must step in instantly to force oxygenated blood to their brain to prevent fatal damage."
-                            android:textColor="#424242"
+                            android:text="Neonatal Cardiopulmonary Resuscitation is a highly specialized, ultra-gentle life-saving procedure designed exclusively for newborns in their first 4 weeks of life. Because a newborn's lungs are filled with fluid before birth, their first challenge in life is expanding their lungs with air. If their heart stops or drops dangerously low, it is almost always because their lungs failed to transition. Neonate CPR prioritizes rapid, highly frequent oxygen delivery mixed with tightly synchronized, shallow chest compressions."
                             android:justificationMode="inter_word"
+                            android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
@@ -207,72 +173,103 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WHO needs it?"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/headerWhy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Any baby under 28 days old who displays both of these signs:"
-                        android:justificationMode="inter_word"
-                        android:textColor="#424242"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=" 1. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHY must you perform it?"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Unresponsive and Limp: They are completely floppy, pale or bluish, and do not cry, wiggle their limbs, or blink when their skin is rubbed."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
+                        <ImageView
+                            android:id="@+id/arrowWhy"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/previewWhy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:text="A Pure Oxygen Deficit: Unlike adults whose hearts stop due to cardiac disease, a newborn's heart stops purely because..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 2. "
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                    <LinearLayout
+                        android:id="@+id/contentWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
 
-                        <TextView
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Not Breathing / Apneic: They are not breathing at all, or they are making weak, irregular, gasping attempts to catch air."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="A Pure Oxygen Deficit: Unlike adults (whose hearts stop due to cardiac disease), a newborn's heart stops purely because they are suffocating."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="The Critical Heart Threshold: A newborn's normal heart rate is incredibly fast (120–160 beats per minute). Medical guidelines state that if a newborn's heart rate drops below 60 beats per minute despite breathing support, it is treated as a total cardiac arrest. You must step in instantly to force oxygenated blood to their brain to prevent fatal damage."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -292,87 +289,112 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
+                    <RelativeLayout
+                        android:id="@+id/headerWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHO needs it?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWho"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WHEN should you start and stop?"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <LinearLayout
+                        android:id="@+id/previewWho"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="When to Start: Start the moment you see the newborn is limp, cold/blue, and not breathing normally."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
+                        android:text="Any baby under 28 days old who displays unresponsiveness, limpness, and is not breathing normally..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/contentWho"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="The 1-Minute Rule: If you are completely alone with no phone, perform 1 full minute of newborn CPR right where you are before stopping to run and call emergency services."
-                            android:textColor="#424242"
+                            android:text="Any baby under 28 days old who displays both of these signs:"
                             android:justificationMode="inter_word"
+                            android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="0dp"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 1. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Unresponsive and Limp: They are completely floppy, pale or bluish, and do not cry, wiggle their limbs, or blink when their skin is rubbed."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="When to Stop: Only stop when the baby begins crying and breathing vigorously on their own, professional medical help takes over, or you are physically unable to continue."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 2. "
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Not Breathing / Apneic: They are not breathing at all, or they are making weak, irregular, gasping attempts to catch air."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -392,62 +414,238 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WHERE should it be performed?"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/headerWhen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:text="WHEN should you start and stop?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
+                        <ImageView
+                            android:id="@+id/arrowWhen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Start immediately upon confirming unresponsiveness. Understand the crucial 1-Minute Rule..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="An Elevated, Firm, Warm Surface: Place the newborn flat on their back on a clean, solid, waist-high surface like a sturdy table, kitchen counter, or changing pad."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="When to Start: Start the moment you see the newborn is limp, cold/blue, and not breathing normally."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="The 1-Minute Rule: If you are completely alone with no phone, perform 1 full minute of newborn CPR right where you are before stopping to run and call emergency services."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="When to Stop: Only stop when the baby begins crying and breathing vigorously on their own, professional medical help takes over, or you are physically unable to continue."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhere"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#424242"
-                            android:textSize="15sp" />
+                            android:text="WHERE should it be performed?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
+                        <ImageView
+                            android:id="@+id/arrowWhere"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="An Elevated, Firm, Warm Surface: Place the newborn flat on their back on a solid surface..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#424242"
-                            android:text="Keep Them Warm: Newborns lose body heat rapidly, and severe cold makes resuscitation harder. Ensure they are placed on a dry towel or cloth, and if possible, lightly wrap their body while leaving their chest bare for your hands. Never place them on soft, plush pillows."
-                            android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="An Elevated, Firm, Warm Surface: Place the newborn flat on their back on a clean, solid, waist-high surface like a sturdy table, kitchen counter, or changing pad."
+                                android:textColor="#424242"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#424242"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#424242"
+                                android:text="Keep Them Warm: Newborns lose body heat rapidly, and severe cold makes resuscitation harder. Ensure they are placed on a dry towel or cloth, and if possible, lightly wrap their body while leaving their chest bare for your hands. Never place them on soft, plush pillows."
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -536,201 +734,240 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <androidx.cardview.widget.CardView
+                    <RelativeLayout
+                        android:id="@+id/headerHow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardPreventCornerOverlap="false">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@id/arrowHow"
+                            android:layout_centerVertical="true"
+                            android:text="HOW to Perform Neonate CPR (Step-by-Step Guide)"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
                         <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="700dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/img_cpr_neonate" />
-                    </androidx.cardview.widget.CardView>
+                            android:id="@+id/arrowHow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="HOW to Perform Neonate CPR (Step-by-Step Beginner Guide)"
-                        android:textColor="@color/primary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 1: D – Check for Danger"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ensure your immediate surroundings are safe, dry, and clean. Ensure there are no drafty cold winds or hazards near the baby."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 2: R – Check for Response &amp; Warm (Dry &amp; Stimulate)"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="The Newborn Rub: Do not shake a newborn. Instead, take a dry, warm cloth or towel and briskly but gently rub the baby's back, chest, and the soles of their feet.\n\nThe Assessment: This action dual-purposes as a response check and a survival trigger—the friction often stimulates a dormant newborn to take their first deep breath. If they remain limp, silent, and blue, they are unresponsive."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 3: S – Send for Help"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="With assistance: Command them to call emergency services immediately.\n\nAlone with a phone: Call emergency services, put it on loudspeaker, place it next to the newborn’s head, and immediately begin the physical steps below.\n\nAlone with NO phone: Resuscitate the newborn for 1 full minute first, then carry them with you to find help."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 4: A – Open the Airway (The Precise Neutral Position)"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="The Check: Look quickly inside the tiny mouth. If there is amniotic fluid, mucus, or fluid blocking the mouth or nose, use a clean cloth or a bulb syringe to gently wipe it away.\n\nThe Neutral Position: Place the newborn flat on their back. Place one hand flat on their forehead and a single finger under their chin. Tilt the head back microscopically into a strictly neutral position."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <LinearLayout
+                        android:id="@+id/previewHow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:text="Step-by-step newborn DRSABCD resuscitation guide layout with explicit 3:1 compression-to-breath ratios..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentHow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="4dp"
+                            app:cardPreventCornerOverlap="false">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="700dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/img_cpr_neonate" />
+                        </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="•"
-                            android:paddingEnd="8dp"
-                            android:textColor="#DC3545"
-                            android:textSize="15sp" />
+                            android:text="Step 1: D – Check for Danger"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#DC3545"
-                            android:text="Beginner Warning: A newborn's neck is incredibly pliable. If you tilt the head back too far (like an adult), you will completely collapse their windpipe. Imagine their nose pointing perfectly straight up at the ceiling—this is the safe, open position."
-                            android:textStyle="bold"
+                            android:text="Ensure your immediate surroundings are safe, dry, and clean. Ensure there are no drafty cold winds or hazards near the baby."
+                            android:textColor="#424242"
                             android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 2: R – Check for Response &amp; Warm (Dry &amp; Stimulate)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="The Newborn Rub: Do not shake a newborn. Instead, take a dry, warm cloth or towel and briskly but gently rub the baby's back, chest, and the soles of their feet.\n\nThe Assessment: This action dual-purposes as a response check and a survival trigger—the friction often stimulates a dormant newborn to take their first deep breath. If they remain limp, silent, and blue, they are unresponsive."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 3: S – Send for Help"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="With assistance: Command them to call emergency services immediately.\n\nAlone with a phone: Call emergency services, put it on loudspeaker, place it next to the newborn’s head, and immediately begin the physical steps below.\n\nAlone with NO phone: Resuscitate the newborn for 1 full minute first, then carry them with you to find help."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 4: A – Open the Airway (The Precise Neutral Position)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="The Check: Look quickly inside the tiny mouth. If there is amniotic fluid, mucus, or fluid blocking the mouth or nose, use a clean cloth or a bulb syringe to gently wipe it away.\n\nThe Neutral Position: Place the newborn flat on their back. Place one hand flat on their forehead and a single finger under their chin. Tilt the head back microscopically into a strictly neutral position."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="•"
+                                android:paddingEnd="8dp"
+                                android:textColor="#DC3545"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="#DC3545"
+                                android:text="Beginner Warning: A newborn's neck is incredibly pliable. If you tilt the head back too far (like an adult), you will completely collapse their windpipe. Imagine their nose pointing perfectly straight up at the ceiling—this is the safe, open position."
+                                android:textStyle="bold"
+                                android:justificationMode="inter_word"
+                                android:textSize="15sp"
+                                android:lineSpacingExtra="4dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 5: B – Give 5 Initial Rescue Breaths (Mouth-and-Nose Puff)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Because newborns are severely oxygen-deprived, breaths are the absolute priority.\n\nMaintain the precise neutral head tilt.\n\nOpen your mouth and place your lips completely over the newborn's mouth and nose simultaneously, forming a absolute airtight seal.\n\nTake a normal breath, and puff air gently using only your cheeks (like blowing a tiny bubble) for 1 second. Do not blow from your lungs; a newborn's lungs are the size of walnuts, and too much air force will rupture them.\n\nWatch the chest out of the corner of your eye: blow only until you see the chest rise gently.\n\nRelease your mouth, let the chest deflate, and deliver a total of 5 initial puff breaths."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 6: C – Begin Chest Compressions (The 2-Thumb Encircling Method)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="If the baby is still not breathing or moving after your 5 initial breaths, you must start synchronized compressions.\n\nThe Encircling Technique: Slide both of your hands under the newborn's back. Wrap your fingers around their sides to support their spine. Place both of your thumbs side-by-side on the lower half of the breastbone (just below an imaginary line running between the nipples).\n\nAlternative 2-Finger Technique: If your hands are too small to wrap around, place two fingers perpendicularly on the center of the chest instead, keeping your other hand on their forehead to maintain the head position.\n\nDepth &amp; Speed: Press straight down smoothly, compressing the chest one-third of its depth (about 3 to 4 cm).\n\nThe 3:1 Ratio (Critical Newborn Shift): Unlike adults and older kids, newborns require a highly coordinated 3 compressions to 1 breath rhythm. You must deliver 90 compressions and 30 breaths per minute (a total of 120 actions).\n\nCount out loud to keep the rhythm steady: &quot;One, and, Two, and, Three, and, Breathe.&quot;"
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#E9ECEF"
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:layout_marginTop="12dp"
+                            android:text="[Compress] -> [Compress] -> [Compress] -> [1 Puff Breath] -> Repeat"
+                            android:textColor="#495057"
+                            android:fontFamily="monospace"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 7: D – Defibrillation (AED Restriction)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Standard First Aid Rule: Automated External Defibrillators (AEDs) are not routinely used on neonates (newborns under 1 month old) in basic beginner first aid.\n\nYour Task: Do not look for or wait for an AED. Focus entirely on maintaining the flawless, continuous 3:1 compression-to-breath loop to keep their brain oxygenated until paramedics arrive with specialized neonatal equipment."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 5: B – Give 5 Initial Rescue Breaths (Mouth-and-Nose Puff)"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Because newborns are severely oxygen-deprived, breaths are the absolute priority.\n\nMaintain the precise neutral head tilt.\n\nOpen your mouth and place your lips completely over the newborn's mouth and nose simultaneously, forming a absolute airtight seal.\n\nTake a normal breath, and puff air gently using only your cheeks (like blowing a tiny bubble) for 1 second. Do not blow from your lungs; a newborn's lungs are the size of walnuts, and too much air force will rupture them.\n\nWatch the chest out of the corner of your eye: blow only until you see the chest rise gently.\n\nRelease your mouth, let the chest deflate, and deliver a total of 5 initial puff breaths."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 6: C – Begin Chest Compressions (The 2-Thumb Encircling Method)"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="If the baby is still not breathing or moving after your 5 initial breaths, you must start synchronized compressions.\n\nThe Encircling Technique: Slide both of your hands under the newborn's back. Wrap your fingers around their sides to support their spine. Place both of your thumbs side-by-side on the lower half of the breastbone (just below an imaginary line running between the nipples).\n\nAlternative 2-Finger Technique: If your hands are too small to wrap around, place two fingers perpendicularly on the center of the chest instead, keeping your other hand on their forehead to maintain the head position.\n\nDepth &amp; Speed: Press straight down smoothly, compressing the chest one-third of its depth (about 3 to 4 cm).\n\nThe 3:1 Ratio (Critical Newborn Shift): Unlike adults and older kids, newborns require a highly coordinated 3 compressions to 1 breath rhythm. You must deliver 90 compressions and 30 breaths per minute (a total of 120 actions).\n\nCount out loud to keep the rhythm steady: &quot;One, and, Two, and, Three, and, Breathe.&quot;"
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#E9ECEF"
-                        android:gravity="center"
-                        android:padding="12dp"
-                        android:layout_marginTop="12dp"
-                        android:text="[Compress] -> [Compress] -> [Compress] -> [1 Puff Breath] -> Repeat"
-                        android:textColor="#495057"
-                        android:fontFamily="monospace"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Step 7: D – Defibrillation (AED Restriction)"
-                        android:textColor="@color/primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Standard First Aid Rule: Automated External Defibrillators (AEDs) are not routinely used on neonates (newborns under 1 month old) in basic beginner first aid.\n\nYour Task: Do not look for or wait for an AED. Focus entirely on maintaining the flawless, continuous 3:1 compression-to-breath loop to keep their brain oxygenated until paramedics arrive with specialized neonatal equipment."
-                        android:textColor="#424242"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="8dp"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="4dp" />
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
