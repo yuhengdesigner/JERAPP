@@ -17,61 +17,50 @@ public class OfflineFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offline, container, false);
 
-        MaterialCardView cardSos = view.findViewById(R.id.cardSosFlashlight);
-        MaterialCardView cardGeneralCpr = view.findViewById(R.id.cardGeneralCpr);
-        MaterialCardView cardAdultCpr = view.findViewById(R.id.cardAdultCpr);
-        MaterialCardView cardChildCpr = view.findViewById(R.id.cardChildCpr);
-        MaterialCardView cardInfantCpr = view.findViewById(R.id.cardInfantCpr);
-        MaterialCardView cardNeonateCpr = view.findViewById(R.id.cardNeonateCpr);
+        view.findViewById(R.id.cardSosFlashlight).setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), FlashlightActivity.class)));
 
-        cardSos.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), FlashlightActivity.class);
-            startActivity(intent);
-        });
-
-        cardGeneralCpr.setOnClickListener(v ->
+        view.findViewById(R.id.cardGeneralCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprGeneralActivity.class)));
 
-        cardAdultCpr.setOnClickListener(v ->
+        view.findViewById(R.id.cardAdultCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprAdultActivity.class)));
 
-        cardChildCpr.setOnClickListener(v ->
+        view.findViewById(R.id.cardChildCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprChildActivity.class)));
 
-        cardInfantCpr.setOnClickListener(v ->
+        view.findViewById(R.id.cardInfantCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprInfantActivity.class)));
 
-        cardNeonateCpr.setOnClickListener(v ->
+        view.findViewById(R.id.cardNeonateCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprNeonateActivity.class)));
 
         setupExpandableCard(view, R.id.cardFire, R.id.tvFireContent, R.id.ivFireIcon, "<b>Fire Emergency</b><br>1. Stop, Drop, and Roll if your clothes catch fire.<br>2. Crawl low under smoke to escape.<br>3. Evacuate immediately and call 999.<br>4. Do not use elevators.");
         setupExpandableCard(view, R.id.cardBleeding, R.id.tvBleedingContent, R.id.ivBleedingIcon, "<b>Severe Bleeding</b><br>1. Apply direct pressure to the wound with a clean cloth.<br>2. Elevate the injured area if possible.<br>3. Do not remove the cloth if it becomes soaked; add more layers.<br>4. Call emergency services immediately.");
         setupExpandableCard(view, R.id.cardSnakebites, R.id.tvSnakebitesContent, R.id.ivSnakebitesIcon, "<b>Snakebites</b><br>1. Keep the victim calm and still to slow the spread of venom.<br>2. Remove rings and constricting items.<br>3. Do NOT attempt to suck out the venom or cut the wound.<br>4. Immobilize the bitten limb and seek medical help immediately.");
 
-        setupGuideNavigation(view, R.id.cardSeeingPersonEmergency, "Seeing a Person in Emergency");
-        setupGuideNavigation(view, R.id.cardFindUseAed, "Find and Use AED");
-        setupGuideNavigation(view, R.id.cardEvacuateFire, "Evacuate From Fire");
-        setupGuideNavigation(view, R.id.cardChoking, "Choking");
-        setupGuideNavigation(view, R.id.cardSeeingFire, "Seeing Fire");
-        setupGuideNavigation(view, R.id.cardCarAccident, "Car Accident");
-        setupGuideNavigation(view, R.id.cardSomeoneElectrocuted, "Someone Electrocuted");
-        setupGuideNavigation(view, R.id.cardProtectElectricalShock, "Protect from Electrical Shock");
-        setupGuideNavigation(view, R.id.cardWildAnimal, "Wild Animal Attack");
-        setupGuideNavigation(view, R.id.cardEarthquake, "Earthquake");
-        setupGuideNavigation(view, R.id.cardTornado, "Tornado");
-        setupGuideNavigation(view, R.id.cardTsunami, "Tsunami");
+        bindCardClick(view, R.id.cardFindUseAed, AedActivity.class);
+        bindCardClick(view, R.id.cardSeeingPersonEmergency, SeeingEmergencyActivity.class);
+        bindCardClick(view, R.id.cardSeeingFire, SeeingFireActivity.class);
+        bindCardClick(view, R.id.cardUrgentBleeding, UrgentBleedingActivity.class);
+        bindCardClick(view, R.id.cardChoking, ChokingActivity.class);
+        bindCardClick(view, R.id.cardEvacuateFire, EvacuateFireActivity.class);
+        bindCardClick(view, R.id.cardSnakebite, SnakebiteActivity.class);
+        bindCardClick(view, R.id.cardCarAccident, CarAccidentActivity.class);
+        bindCardClick(view, R.id.cardWildAnimal, WildAnimalActivity.class);
+        bindCardClick(view, R.id.cardEarthquake, EarthquakeActivity.class);
+        bindCardClick(view, R.id.cardTornado, TornadoActivity.class);
+        bindCardClick(view, R.id.cardTsunami, TsunamiActivity.class);
+        bindCardClick(view, R.id.cardSomeoneElectrocuted, SomeoneElectrocutedActivity.class);
+        bindCardClick(view, R.id.cardProtectElectricalShock, ProtectShockActivity.class);
 
         return view;
     }
 
-    private void setupGuideNavigation(View root, int cardResId, final String guideKey) {
+    private void bindCardClick(View root, int cardResId, final Class<?> targetActivity) {
         MaterialCardView card = root.findViewById(cardResId);
         if (card != null) {
-            card.setOnClickListener(v -> {
-                Intent intent = new Intent(getActivity(), OfflineGuideActivity.class);
-                intent.putExtra("guide_key", guideKey);
-                startActivity(intent);
-            });
+            card.setOnClickListener(v -> startActivity(new Intent(getActivity(), targetActivity)));
         }
     }
 

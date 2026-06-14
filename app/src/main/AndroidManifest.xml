@@ -169,6 +169,21 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".AedActivity" />
+        <activity android:name=".SeeingEmergencyActivity" />
+        <activity android:name=".SeeingFireActivity" />
+        <activity android:name=".UrgentBleedingActivity" />
+        <activity android:name=".ChokingActivity" />
+        <activity android:name=".EvacuateFireActivity" />
+        <activity android:name=".SnakebiteActivity" />
+        <activity android:name=".CarAccidentActivity" />
+        <activity android:name=".WildAnimalActivity" />
+        <activity android:name=".EarthquakeActivity" />
+        <activity android:name=".TornadoActivity" />
+        <activity android:name=".TsunamiActivity" />
+        <activity android:name=".SomeoneElectrocutedActivity" />
+        <activity android:name=".ProtectShockActivity" />
+
     </application>
 
     <queries>
