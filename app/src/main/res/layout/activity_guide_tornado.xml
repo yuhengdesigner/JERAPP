@@ -18,8 +18,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             app:tint="@color/white"
@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="SOS FlashLight"
+            android:text="Emergency Guide"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -47,29 +47,107 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="20dp"
             android:gravity="center_horizontal">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchFlashlight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:scaleX="4"
-                android:scaleY="4"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/switch_track_selector"
-                android:checked="false" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardPreventCornerOverlap="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bg_tornado" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Offline Guide: Tornado &amp; Storm Emergency"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:gravity="center_horizontal"
-                android:text="SOS Morse Code"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:textColor="@color/black" />
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHO is at risk &amp; WHO to alert?"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/arrowWho"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="The Vulnerable: Drivers on low roads, flood-prone areas, campers. The Leader (You): Keep calm..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• The Vulnerable: Drivers stuck on low-lying roads, residents in flood-prone areas (e.g., near Sungai Skudai or Muar), and campers near rivers or waterfalls.\n\n• The Leader (You): Keep your team calm. Do not attempt to cross moving water or high-wind zones.\n\n• Emergency Response: Call 999 for immediate rescue. Keep track of updates from the Malaysian Meteorological Department (MetMalaysia) and JPS (Jabatan Pengairan dan Saliran)."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -99,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="What is SOS?"
+                            android:text="WHAT is happening &amp; WHAT to do?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -119,7 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using..."
+                        android:text="Seek shelter in concrete buildings. Abandon vehicle if water rises. DO NOT shelter under trees..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -137,7 +215,157 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using a flashing pattern (... --- ...) that is recognised worldwide by emergency responders and people nearby."
+                            android:text="What is happening:\nSudden heavy downpours combined with strong winds that cause localized structural damage, fallen trees, rapid rising of water levels, and blocked drainage.\n\nWhat to DO Immediately:\n• Seek immediate shelter inside a solid, permanent concrete building.\n• If driving and water rises above your car's floorboards, abandon the vehicle immediately and move to higher ground.\n\nWhat NOT to DO:\n❌ DO NOT park or shelter your vehicle under big trees, old billboards, or high-voltage power lines.\n❌ DO NOT try to walk, swim, or drive through moving floodwaters (even a shallow depth can sweep you away).\n❌ DO NOT let children play in rain or floodwaters due to hidden open drains and water-borne diseases."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHERE to seek safety &amp; WHERE to avoid?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhere"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Safe Zone: Upper floors of concrete structures or PPS. Avoid bridges, riverbanks, and old trees..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Safe Evacuation Zone: The upper floors of stable concrete structures or officially designated flood relief centers (Pusat Pemindahan Sementara - PPS).\n\ Danger Zones to Avoid:\n• Under bridges or flyovers (can cause severe traffic traps or structural debris hazards).\n• Near riverbanks, monsoon drains, and low-lying basements.\n• Underneath old trees common along Johor roads (e.g., old rain trees that easily uproot)."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHEN to react?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Pre-Storm: Move vehicle to elevated ground. During Flood: Turn off main breaker switch..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Pre-Storm (Early Warning):\nMove your vehicle and valuable items to elevated ground the moment dark storm clouds roll in and continuous heavy thunder begins.\n\n• During the Flash Flood:\nIf water enters your house or building, turn off the main electricity breaker switch immediately before the water level reaches your wall plug sockets.\n\n• Post-Storm:\nStay clear of flooded areas for a few hours. Receding floodwaters can still hide sinkholes, sharp objects, and displaced wildlife (like snakes or stray dogs)."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
@@ -175,7 +403,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="Why use it?"
+                            android:text="WHY are these rules mandatory?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -195,7 +423,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="It is used to quickly attract attention when you are in danger and cannot call, speak..."
+                        android:text="Water stalls engine and floats cars. Submerged sockets create lethal shock hazards..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -213,235 +441,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="It is used to quickly attract attention when you are in danger and cannot call, speak, or send messages. It increases your chances of being noticed and rescued faster."
-                            android:justificationMode="inter_word"
+                            android:text="• Why avoid driving through floodwater?\nJust 15cm (6 inches) of rushing water can stall a car engine and cause loss of steering control. 30cm (1 foot) of water will float most passenger vehicles entirely.\n\n• Why cut the main power breaker?:\nWater conducts electricity. If rising indoor floodwater submerges live electrical outlets while the main breaker is on, the entire pool of water becomes a lethal shock hazard.\n\n• Why avoid sheltering under trees?:\nHigh monsoon winds cause severe branch snapping (dahan patah) or complete uprooting, which can crush vehicles and shelter tents instantly."
                             android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Who uses it?"
-                            android:textColor="@color/primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:id="@+id/arrowWho"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="It is used by anyone facing an emergency, especially JER App users such as citizens..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It is used by anyone facing an emergency, especially JER App users such as citizens or tourists who need immediate help but cannot communicate directly."
                             android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="When to use it?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhen"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="It should be used during serious situations like getting lost, accidents, injuries..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It should be used during serious situations like getting lost, accidents, injuries, being trapped, natural disasters, or when your phone has no network but you still need to signal for help."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Where can it be used?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhere"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Can be used anywhere, especially in low visibility places such as at night, forests..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It can be used anywhere, especially in low visibility places such as at night, forests, roadsides, buildings during blackout, or disaster areas where calling for help is difficult."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
@@ -472,11 +474,11 @@
                         android:background="?attr/selectableItemBackground">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/arrowHow"
                             android:layout_centerVertical="true"
-                            android:text="How to use it in JER App?"
+                            android:text="HOW to survive a storm &amp; flood? (Step-by-Step)"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
@@ -496,7 +498,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will..."
+                        android:text="[ Step 1: Secure Shelter ] ➔ [ Step 2: Kill Main Power ] ➔ [ Step 3: Evacuate Upward ]..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -514,15 +516,83 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will automatically flash the SOS pattern repeatedly using the camera light. Tap Stop SOS when you are safe or no longer need help. The flashing light is designed to be easily seen by nearby people and rescuers even from a distance."
-                            android:justificationMode="inter_word"
+                            android:background="#E9ECEF"
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:text="[ Step 1: Secure Shelter ] ➔ [ Step 2: Kill Main Power ] ➔ [ Step 3: Evacuate Upward ]"
+                            android:textColor="#495057"
+                            android:fontFamily="monospace"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Step 1: Secure Yourself During Heavy Winds"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Move inside away from glass panels and windows. Close all windows and doors tightly to prevent wind pressure from ripping off roofing structures from the inside."
                             android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 2: Protect Your Home From Flooding"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Go straight to your main distribution board (DB Box) and flip the main breaker switch OFF. Unplug all high-value electrical appliances (refrigerators, TVs, washing machines)."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 3: Safely Evacuate a Flooded Area on Foot"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="• If you must walk through shallow standing water to reach higher ground, use a stick or umbrella to poke the ground ahead of you. This ensures you do not accidentally step into an uncovered manhole or deep drainage ditch.\n\n• Open the JER App to find emergency contacts or locate the closest major hospital if anyone suffers cuts or hypothermia during the storm."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="© 2026 JER - Chia Jing Xian. All rights reserved."
+                android:textColor="#9E9E9E"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </ScrollView>

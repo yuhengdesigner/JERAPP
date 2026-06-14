@@ -18,8 +18,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             app:tint="@color/white"
@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="SOS FlashLight"
+            android:text="Emergency Guide"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -47,29 +47,107 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="20dp"
             android:gravity="center_horizontal">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchFlashlight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:scaleX="4"
-                android:scaleY="4"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/switch_track_selector"
-                android:checked="false" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardPreventCornerOverlap="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bg_earthquake" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Offline Guide: Earthquake Emergency"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:gravity="center_horizontal"
-                android:text="SOS Morse Code"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:textColor="@color/black" />
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHO is at risk &amp; WHO to guide?"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/arrowWho"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="The Vulnerable: Everyone inside structural buildings. The Leader (You): Stay calm..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• The Vulnerable: Everyone inside or near structural buildings, especially children, the elderly, or tourists unfamiliar with the area.\n\n• The Leader (You): Stay calm. Use clear, loud verbal commands to direct others to follow safety protocols. Do not panic-run.\n\n• Emergency Response: Civil Defence Force (APM), Fire and Rescue Department (Bomba), and local rescue squads."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -99,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="What is SOS?"
+                            android:text="WHAT is happening &amp; WHAT to do?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -119,7 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using..."
+                        android:text="Practice DROP, COVER, and HOLD ON. DO NOT run outside while shaking or use elevators..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -137,7 +215,157 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using a flashing pattern (... --- ...) that is recognised worldwide by emergency responders and people nearby."
+                            android:text="What is happening:\nSudden shaking of the ground caused by seismic shifts. In Malaysia, tremors are usually felt from neighboring regions or localized weak faults.\n\nWhat to DO Immediately:\n• If Indoors: Practice DROP, COVER, and HOLD ON.\n• If Outdoors: Move immediately to an open area away from hazards.\n• If Driving: Pull over safely to an open spot, set the parking brake, and stay inside.\n\nWhat NOT to DO:\n❌ DO NOT run outside while the ground is shaking (most injuries happen due to falling debris during flight).\n❌ DO NOT use elevators/lifts under any circumstances.\n❌ DO NOT stand near windows, glass panels, heavy furniture, or hanging fixtures.\n❌ DO NOT use matches, lighters, or camp stoves (risk of gas leaks and explosions)."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHERE to seek shelter?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhere"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Inside: Under sturdy tables. High-Rises: Stay on your floor. Outside: Find open fields clear of lines..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Inside a Room: Seek shelter under sturdy tables, desks, or along interior load-bearing walls. Avoid structural perimeters and glass.\n\nInside High-Rise Buildings: Stay on the floor you are on. Drop, cover, and hold. Do not rush for the stairs or exits during the shaking.\n\nOutside Safety Zones: Find open fields, parking lots, or vacant lands clear of buildings, trees, streetlights, and overhead power lines."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHEN to act?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="During Shaking: Act instantly. After Shaking: Evacuate via stairs. Hours After: Watch for aftershocks..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• During the Shaking (0–2 Minutes):\nAct instantly. Protect your head and torso. Do not try to move more than a few steps.\n\n• Immediately After the Shaking Stops:\nCheck yourself and others for injuries. Safely evacuate the building using the stairs.\n\n• The Hours After:\nBe prepared for aftershocks. These secondary tremors can happen minutes, hours, or days later and can collapse weakened structures."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
@@ -175,7 +403,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="Why use it?"
+                            android:text="WHY are these steps critical?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -195,7 +423,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="It is used to quickly attract attention when you are in danger and cannot call, speak..."
+                        android:text="Falling objects cause most injuries. Elevators lose power and trap you. Ruptured gas lines cause fires..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -213,235 +441,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="It is used to quickly attract attention when you are in danger and cannot call, speak, or send messages. It increases your chances of being noticed and rescued faster."
-                            android:justificationMode="inter_word"
+                            android:text="• Why Drop, Cover, and Hold On?\nMost earthquake injuries are not caused by building collapses, but by falling objects, shattering glass, and heavy furniture tipping over.\n\n• Why avoid elevators?:\nPower grids frequently fail during or right after tremors, which will trap you inside the lift shaft indefinitely.\n\n• Why check for gas leaks post-quake?:\nRuptured gas lines are the leading cause of secondary fires following an earthquake, which can be far more destructive than the tremor itself."
                             android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Who uses it?"
-                            android:textColor="@color/primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:id="@+id/arrowWho"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="It is used by anyone facing an emergency, especially JER App users such as citizens..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWho"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It is used by anyone facing an emergency, especially JER App users such as citizens or tourists who need immediate help but cannot communicate directly."
                             android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="When to use it?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhen"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="It should be used during serious situations like getting lost, accidents, injuries..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It should be used during serious situations like getting lost, accidents, injuries, being trapped, natural disasters, or when your phone has no network but you still need to signal for help."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Where can it be used?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhere"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Can be used anywhere, especially in low visibility places such as at night, forests..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It can be used anywhere, especially in low visibility places such as at night, forests, roadsides, buildings during blackout, or disaster areas where calling for help is difficult."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
@@ -472,11 +474,11 @@
                         android:background="?attr/selectableItemBackground">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/arrowHow"
                             android:layout_centerVertical="true"
-                            android:text="How to use it in JER App?"
+                            android:text="HOW to survive the tremor? (Step-by-Step)"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
@@ -496,7 +498,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will..."
+                        android:text="[ Step 1: DROP to Floor ] ➔ [ Step 2: COVER Head/Torso ] ➔ [ Step 3: HOLD ON Sturdy Base ]..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -514,15 +516,83 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will automatically flash the SOS pattern repeatedly using the camera light. Tap Stop SOS when you are safe or no longer need help. The flashing light is designed to be easily seen by nearby people and rescuers even from a distance."
-                            android:justificationMode="inter_word"
+                            android:background="#E9ECEF"
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:text="[ Step 1: DROP to Floor ] ➔ [ Step 2: COVER Head/Torso ] ➔ [ Step 3: HOLD ON Sturdy Base ]"
+                            android:textColor="#495057"
+                            android:fontFamily="monospace"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Step 1: Execute Drop, Cover, and Hold On"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="• DROP down onto your hands and knees. This protects you from being knocked over and keeps you low to move if needed.\n\n• COVER your head and neck under a sturdy table or desk. If no shelter is nearby, get down next to an interior wall and cover your head with your arms.\n\n• HOLD ON to your shelter with one hand and stay prepared to move with it if it shifts."
                             android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 2: Evacuate After the Shaking Stops"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Grab your emergency bag (if nearby). Walk quickly and orderly out via emergency stairwells. Check the JER App's offline map or follow local authorities to locate designated emergency assembly points."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 3: Signal for Help if Trapped Under Debris"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Do not shout continuously (to avoid inhaling dangerous dust and losing stamina). Tap repeatedly on a pipe, wall, or structure so rescuers can locate your audio signal. Protect your mouth and nose with a piece of clothing."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="© 2026 JER - Chia Jing Xian. All rights reserved."
+                android:textColor="#9E9E9E"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </ScrollView>

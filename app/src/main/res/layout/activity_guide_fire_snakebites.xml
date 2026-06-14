@@ -18,8 +18,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             app:tint="@color/white"
@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="SOS FlashLight"
+            android:text="Emergency Guide"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -47,181 +47,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="20dp"
             android:gravity="center_horizontal">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchFlashlight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:scaleX="4"
-                android:scaleY="4"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/switch_track_selector"
-                android:checked="false" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardPreventCornerOverlap="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bg_sb" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:gravity="center_horizontal"
-                android:text="SOS Morse Code"
-                android:textStyle="bold"
+                android:layout_marginTop="15dp"
+                android:text="Venomous Snakebite Envenomation"
+                android:textColor="@color/black"
                 android:textSize="22sp"
-                android:textColor="@color/black" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="What is SOS?"
-                            android:textColor="@color/primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhat"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="SOS is a simple emergency distress signal that means “I need help urgently.” It is shown using a flashing pattern (... --- ...) that is recognised worldwide by emergency responders and people nearby."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Why use it?"
-                            android:textColor="@color/primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhy"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="It is used to quickly attract attention when you are in danger and cannot call, speak..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="It is used to quickly attract attention when you are in danger and cannot call, speak, or send messages. It increases your chances of being noticed and rescued faster."
-                            android:justificationMode="inter_word"
-                            android:textColor="#424242"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -251,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="Who uses it?"
+                            android:text="WHO is involved &amp; WHO is the authority?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -271,7 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="It is used by anyone facing an emergency, especially JER App users such as citizens..."
+                        android:text="High-Risk Groups: Hikers, estate workers. Authority: Tertiary government hospitals with antivenom..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -289,13 +139,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="It is used by anyone facing an emergency, especially JER App users such as citizens or tourists who need immediate help but cannot communicate directly."
+                            android:text="• The High-Risk Groups: Hikers, agricultural workers in oil palm estates, and rural residents across Johor.\n\n• The Authorized Medical Response: Emergency Department medical officers at specific tertiary government hospitals. Community clinics (Klinik Kesihatan) and private general practitioners do not stock antivenom.\n\n• The First Responder (You): Restrict your role to stabilization and rapid evacuation transport orchestration."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -314,25 +163,26 @@
                     android:padding="20dp">
 
                     <RelativeLayout
-                        android:id="@+id/headerWhen"
+                        android:id="@+id/headerWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:minHeight="48dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="When to use it?"
+                            android:text="WHAT is happening &amp; WHAT actions are barred?"
                             android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/arrowWhen"
+                            android:id="@+id/arrowWhat"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
@@ -342,11 +192,11 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/previewWhen"
+                        android:id="@+id/previewWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="It should be used during serious situations like getting lost, accidents, injuries..."
+                        android:text="Toxins spreading via lymphatics. Enforce immobility. DO NOT cut, suction, tie tourniquets, or apply ice..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -354,7 +204,7 @@
                         android:visibility="visible" />
 
                     <LinearLayout
-                        android:id="@+id/contentWhen"
+                        android:id="@+id/contentWhat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -364,13 +214,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="It should be used during serious situations like getting lost, accidents, injuries, being trapped, natural disasters, or when your phone has no network but you still need to signal for help."
+                            android:text="What is happening:\nInjected toxins (neurotoxins causing respiratory paralysis, or hemotoxins causing tissue necrosis and internal bleeding) spreading through the lymphatic system.\n\nWhat to DO Immediately:\n• Enforce total physical immobility on the victim.\n• Remove all constrictive bands, rings, watches, or tight sleeves from the affected limb before local edema (swelling) sets in.\n\nWhat NOT to DO:\n❌ DO NOT perform incisional cutting, suction, or vacuum pumping on the fang punctures.\n❌ DO NOT apply a tight arterial tourniquet or tie off blood circulation with ropes, cords, or belts.\n❌ DO NOT apply ice packs, cold compresses, or traditional topical herbal poultices to the wound.\n❌ DO NOT administer aspirin, NSAID painkillers, alcohol, or caffeine (these exacerbate internal bleeding and elevate heart rates)."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -401,7 +250,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:text="Where can it be used?"
+                            android:text="WHERE to immobilize &amp; WHERE to transport?"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
@@ -421,7 +270,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Can be used anywhere, especially in low visibility places such as at night, forests..."
+                        android:text="Position limb at/below heart level. Transport directly to HSA, HSI, Batu Pahat or Kluang Hospitals..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -439,13 +288,162 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="It can be used anywhere, especially in low visibility places such as at night, forests, roadsides, buildings during blackout, or disaster areas where calling for help is difficult."
+                            android:text="Anatomical Positioning: Keep the bitten limb splinted and resting at or slightly below the horizontal level of the heart. Do not elevate the limb.\n\nAntivenom Stocking Centers (Johor Government Hospitals):\n• Hospital Sultanah Aminah (HSA), Johor Bahru\n• Hospital Sultan Ismail (HSI), Johor Bahru\n• Hospital Sultanah Nora Ismail, Batu Pahat\n• Hospital Enche' Besar Hajjah Khalsom, Kluang"
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHEN to observe &amp; WHEN to rush?"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="0-10 Mins: Back away and note time. 1-Hour Golden Window: Rush to hospital before symptoms appear..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• 0 to 10 Minutes:\nSafely back away from the strike radius, initiate immobility, and note the exact time of the strike.\n\n• The 1-Hour Golden Window:\nTransport the victim to an antivenom-equipped hospital immediately. Do not wait for symptoms (like drooping eyelids, swelling, or bleeding) to appear before traveling.\n\n• During Transport:\nMonitor breathing continuously. Neurotoxic bites can cause sudden respiratory failure within hours."
+                            android:justificationMode="inter_word"
+                            android:textColor="#424242"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWhy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:id="@+id/headerWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="WHY are these specific protocols enforced?"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/arrowWhy"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/primary" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/previewWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Immobility delays lymphatic spread. Tourniquets concentrate venom, causing tissue necrosis and amputation..."
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/contentWhy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Why splint and immobilize the limb?\nSnake venom has a high molecular weight and travels primarily through the lymphatic system, driven by muscle contractions. Immobilizing muscles slows the systemic absorption of toxins into the bloodstream.\n\n• Why forbid tight tourniquets?:\nBlocking arterial blood flow traps hemotoxic venom in the limb, concentrating the cellular destruction and leading to massive local tissue necrosis, gangrene, and mandatory amputation.\n\n• Why go only to major government hospitals?:\nAntivenom is highly specific, expensive, and carries a high risk of severe allergic anaphylaxis. Only major hospitals possess the critical care units and specialists required to safely administer it."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -472,11 +470,11 @@
                         android:background="?attr/selectableItemBackground">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/arrowHow"
                             android:layout_centerVertical="true"
-                            android:text="How to use it in JER App?"
+                            android:text="HOW to execute stabilization &amp; extraction?"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
@@ -496,7 +494,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will..."
+                        android:text="Clean site gently, log time borders. Apply PIT compression wrap, splint joints. Photo snake safely..."
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
@@ -512,17 +510,72 @@
                         android:layout_marginTop="12dp">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will automatically flash the SOS pattern repeatedly using the camera light. Tap Stop SOS when you are safe or no longer need help. The flashing light is designed to be easily seen by nearby people and rescuers even from a distance."
-                            android:justificationMode="inter_word"
+                            android:text="Step 1: Secure the Bite Site Safely"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clean the puncture marks gently with a damp cloth to remove surface venom residue. Do not scrub or squeeze the tissue. Mark the border of the swelling on the skin with a pen and write down the exact time next to it to help doctors track the venom's progression rate."
                             android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 2: Apply Pressure Immobilization Technique (PIT)"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Wrap a broad, elasticated bandage (or strips of cloth) over the bite site firmly. Extend the wrapping upward to cover the entire limb (fingers to shoulder for arms; toes to groin for legs). Ensure it is snug—about the same tightness as a sprained ankle wrap—but do not cut off deep blood circulation. Splint the limb with a rigid branch, board, or rolled newspaper to prevent the joints from bending."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Step 3: Identification and Transfer Execution"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="If the snake is dead or visible, take a digital photograph of its head and scale patterns from a safe distance. Never try to capture or handle a live snake. Arrange immediate transport via ambulance (999) or private vehicle directly to the nearest major hospital listed in the WHERE section. Keep the victim lying flat during transit."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:layout_marginTop="4dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="© 2026 JER - Chia Jing Xian. All rights reserved."
+                android:textColor="#9E9E9E"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </ScrollView>
