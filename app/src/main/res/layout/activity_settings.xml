@@ -259,7 +259,8 @@
                         android:layout_marginStart="40dp"
                         android:text="@string/contact_details"
                         android:textColor="#757575"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textIsSelectable="true"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
