@@ -23,7 +23,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             app:tint="@color/white"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:contentDescription="@string/back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="20dp"
             android:gravity="center_horizontal">
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -71,6 +71,7 @@
                 android:textSize="22sp"
                 android:textColor="@color/black" />
 
+            <!-- What is SOS Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,11 +89,15 @@
                     <RelativeLayout
                         android:id="@+id/headerWhat"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:text="What is SOS?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
@@ -102,14 +107,14 @@
                             android:id="@+id/arrowWhat"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
-
-
 
                     <TextView
                         android:id="@+id/previewWhat"
@@ -120,8 +125,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhat"
@@ -140,10 +144,10 @@
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Card Why -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,7 +165,10 @@
                     <RelativeLayout
                         android:id="@+id/headerWhy"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -177,11 +184,13 @@
                             android:id="@+id/arrowWhy"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -193,8 +202,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhy"
@@ -213,10 +221,10 @@
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Who Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -234,7 +242,10 @@
                     <RelativeLayout
                         android:id="@+id/headerWho"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -250,11 +261,13 @@
                             android:id="@+id/arrowWho"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -266,8 +279,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWho"
@@ -286,10 +298,10 @@
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- When Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -307,7 +319,10 @@
                     <RelativeLayout
                         android:id="@+id/headerWhen"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -316,18 +331,20 @@
                             android:layout_centerVertical="true"
                             android:text="When to use it?"
                             android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <ImageButton
                             android:id="@+id/arrowWhen"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -339,8 +356,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhen"
@@ -359,10 +375,10 @@
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Where Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -380,7 +396,10 @@
                     <RelativeLayout
                         android:id="@+id/headerWhere"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -389,18 +408,20 @@
                             android:layout_centerVertical="true"
                             android:text="Where can it be used?"
                             android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <ImageButton
                             android:id="@+id/arrowWhere"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -412,8 +433,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhere"
@@ -432,10 +452,10 @@
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- How Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -453,7 +473,10 @@
                     <RelativeLayout
                         android:id="@+id/headerHow"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -462,18 +485,20 @@
                             android:layout_centerVertical="true"
                             android:text="How to use it in JER App?"
                             android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <ImageButton
                             android:id="@+id/arrowHow"
                             android:layout_width="48dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
                             android:src="@android:drawable/arrow_down_float"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -485,8 +510,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentHow"
@@ -499,13 +523,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will automatically flash the SOS pattern repeatedly using the camera light. Tap Stop SOS when you are safe or no longer need help. The flashing light is designed to be easily seen by nearby people and rescuers even from a distance."
+                            android:text="Open the SOS Flashlight feature in the JER App and tap Start SOS. The phone will automatically flash the SOS pattern repeatedly using the camera light. Tap Stop SOS when you are safe or no longer need help."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

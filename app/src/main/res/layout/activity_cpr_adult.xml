@@ -22,7 +22,8 @@
             android:layout_marginBottom="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:contentDescription="@string/back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:text="Emergency Guide"
+            android:text="Adult CPR (Ages 8+)"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -60,28 +61,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_cpr_adult_bg" />
+                    android:src="@drawable/ic_cpr_adult_bg"
+                    android:contentDescription="Adult CPR Guide Image" />
             </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Example picture of adults"
-                android:gravity="center_horizontal"
-                android:textColor="#757575"
-                android:textSize="14sp"
-                android:lineSpacingExtra="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="16dp"
                 android:text="Adult CPR (Ages 8+)"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+            <!-- What is CPR Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,8 +95,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -121,8 +113,10 @@
                             android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -134,8 +128,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhat"
@@ -158,6 +151,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Why perform it Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,8 +172,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -197,8 +190,10 @@
                             android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -210,8 +205,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWhy"
@@ -221,59 +215,20 @@
                         android:visibility="gone"
                         android:layout_marginTop="12dp">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Brain Survival Timeline: Brain cells begin to die within 4 minutes of oxygen deprivation. After 10 minutes, the damage is almost always irreversible."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="The Bridge to Life: Emergency response services take time to arrive. Your hands are the casualty’s only lifelines during those critical minutes. You are keeping them alive until an Automated External Defibrillator (AED) or paramedics arrive."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
+                            android:text="Brain cells begin to die within 4 minutes of oxygen deprivation. After 10 minutes, the damage is almost always irreversible. Emergency response services take time to arrive. Your hands are the casualty’s only lifelines during those critical minutes. You are keeping them alive until an Automated External Defibrillator (AED) or paramedics arrive."
+                            android:textColor="#424242"
+                            android:justificationMode="inter_word"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
                     </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- WHO needs it Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -294,8 +249,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -313,8 +267,10 @@
                             android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -326,8 +282,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentWho"
@@ -340,397 +295,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Any adult (roughly anyone who has gone through puberty or is aged 8 and above) who meets both of these criteria:"
+                            android:text="Any adult (aged 8 and above) who is unresponsive and not breathing normally. Unresponsive means they do not wake up, blink, move, or react when you firmly shake their shoulders and shout. Treat infrequent, heavy, irregular gasps as NOT breathing."
                             android:justificationMode="inter_word"
                             android:textColor="#424242"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 1. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text='Unresponsive: They do not wake up, blink, move, or react when you firmly shake their shoulders and shout loudly, "Hello! Are you okay?!"'
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 2. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Not Breathing Normally: They are either not breathing at all, or they are making infrequent, heavy, irregular snoring/gasping sounds (known as agonal breathing). Treat gasping as NOT breathing."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="WHEN should you start and stop?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhen"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Start immediately upon confirmation. Understand the 4 specific situations when you should stop..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="When to Start: Start immediately the moment you confirm the person is unresponsive and not breathing normally. Every second counts."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="When to Stop: Only stop compressions in these 4 situations:"
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 1. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Professional medical help (paramedics) arrives and takes over."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 2. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="An AED arrives, is turned on, and commands you to step away to analyze the heart rhythm."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 3. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="The casualty clearly wakes up, moves, opens their eyes, and begins breathing normally."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 4. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="You are completely physically exhausted and can no longer physically continue."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:id="@+id/headerWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="WHERE should it be performed?"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowWhere"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/previewWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="On a Firm, Flat Surface: The casualty must be placed flat on their back on the ground, floor..."
-                        android:textColor="#757575"
-                        android:textSize="14sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/contentWhere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="On a Firm, Flat Surface: The casualty must be placed flat on their back on the ground, floor, or sidewalk. Never perform CPR on a soft sofa or a plush mattress if you can avoid it; when you push down, the bed will absorb your force, and the chest won't compress effectively."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="In a Safe Zone: Perform it exactly where they collapsed unless the immediate environment puts you in danger."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
+            <!-- Metronome Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -792,14 +367,14 @@
                                 android:background="@drawable/circle_thumb"
                                 android:backgroundTint="@color/thumb_color"
                                 android:backgroundTintMode="src_over"
-                                android:elevation="4dp"
-                                android:stateListAnimator="@null" />
+                                android:elevation="4dp" />
 
                         </RelativeLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- How to Perform Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -818,9 +393,9 @@
                         android:id="@+id/headerHow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:focusable="true">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -838,8 +413,10 @@
                             android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/primary"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </RelativeLayout>
 
                     <TextView
@@ -851,8 +428,7 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:maxLines="2"
-                        android:ellipsize="end"
-                        android:visibility="visible" />
+                        android:ellipsize="end" />
 
                     <LinearLayout
                         android:id="@+id/contentHow"
@@ -862,561 +438,12 @@
                         android:visibility="gone"
                         android:layout_marginTop="12dp">
 
-                        <androidx.cardview.widget.CardView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="4dp"
-                            app:cardPreventCornerOverlap="false">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="700dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_cpr_drsabcd" />
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Follow the DRSABCD workflow carefully."
-                            android:textColor="#424242"
+                            android:text="Step 1: Check for Danger. Scan the area for wires, traffic, or fire. \n\nStep 2: Check for Response. Shake their shoulders and shout. \n\nStep 3: Call for Help. \n\nStep 4: Airway. Tilt the head back and lift the chin. \n\nStep 5: Check Breathing. \n\nStep 6: Compressions. Push down 5-6cm deep at 100-120 beats per minute. \n\nStep 7: Breaths. Give 2 rescue breaths for every 30 compressions."
                             android:justificationMode="inter_word"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 1: D – Check for Danger"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Before you touch the casualty, scan the immediate area for 2–3 seconds. Look for hazards like live electrical wires, heavy traffic, fire, deep water, breaking glass, or unstable structures. If the scene is unsafe, do not approach. You cannot help them if you become a casualty yourself. Move obstacles like stray chairs or debris out of the way to give yourself room to work."
                             android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 2: R – Check for Response"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text='Kneel beside the person shoulders. Firmly tap or shake both of their shoulders and shout loudly into both ears: "Hello! Wake up! Can you hear me?!" If there is no groan, eye movement, or physical flinch, they are unresponsive.'
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 3: S – Shout for Help"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text='If someone is with you, point directly at them and say: "You, in the red shirt! Call emergency services right now and find an AED!" If you are alone, pull out your phone, call emergency services, and immediately switch it to loudspeaker. Place the phone on the ground right next to the casualty head. Talk to the dispatcher while keeping both of your hands completely free to start saving their life.'
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 4: A – Open the Airway &amp; Clear the Mouth"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="The Check: Gently turn their head toward you. Look inside their mouth to see if there is any visible blockage like vomit, blood, loose dentures, or food. If you see something, tilt their head to the side and use two fingers to sweep it out."
-                                android:textColor="#424242"
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="The Tilt: If the mouth is clear, perform the Head-Tilt, Chin-Lift maneuver. Place one hand flat on their forehead and the fingertips of your other hand under the bony point of their chin. Gently tilt the head backward and lift the chin upward. This pulls the tongue away from the back of the throat, opening the airway wide."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 5: B – Check for Breathing"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Keep the head tilted back. Put your ear down close to their mouth and nose, while looking down the length of their chest. Spend no more than 10 seconds doing three things simultaneously:"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Look: See if the chest is rising and falling smoothly."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Listen: Listen for normal, quiet breath sounds."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Feel: Feel for warm breath against your cheek."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Reminder: If they are only gasping or snoring irregularly once every few seconds, this is a sign the heart has stopped. Start CPR."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 6: C – Begin Chest Compressions"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="If they are not breathing, sit on your knees right next to their chest and set up your body posture perfectly:"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Hand Placement: Locate the center of the casualty's chest (the lower half of the breastbone, right between the nipples). Place the heel of your dominant hand directly on that spot. Interlock the fingers of your second hand over the first, pulling your fingers upward so only the heel of your bottom hand touches their chest."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Body Posture: Position your body so your shoulders are directly over your hands. Your arms must be completely straight, and your elbows must be locked locked tight. Do not bend your arms."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="The Motion: Lean forward and use your entire body weight, not just arm muscle, to push straight down on the chest."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="•"
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text='Depth &amp; Speed: Compress the chest down between 5 to 6 cm (about 2 inches) deep. Release the pressure completely to let the chest snap back up to its normal shape before pushing down again, but do not lift your hand heel off their skin. Do this at a rapid pace of 100 to 120 compressions per minute (matching the beat of the song "Stayin Alive").'
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 7: The Rescue Breaths (Blow Air)"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="After 30 compressions, deliver 2 rescue breaths:"
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
-                            android:textSize="15sp"
-                            android:lineSpacingExtra="4dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 1. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Ensure the head is still tilted back and the chin lifted."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 2. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Use the thumb and index finger of the hand on their forehead to pinch their nostrils tightly shut (this stops air escaping out of their nose)."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 3. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Take a normal breath, open your mouth wide, and place your lips completely around the outside of their mouth, creating an airtight seal."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 4. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Blow steadily into their mouth for exactly 1 second. Watch out of the corner of your eye to see if their chest gently rises."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 5. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Take your mouth away, let the chest fall completely, and then deliver a second 1-second breath."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" 6. "
-                                android:paddingEnd="8dp"
-                                android:textColor="#424242"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#424242"
-                                android:text="Note for Beginners: If you do not have a protective face shield and do not want to perform mouth-to-mouth on a stranger, skip the breaths entirely and perform continuous, non-stop chest compressions."
-                                android:justificationMode="inter_word"
-                                android:textSize="15sp"
-                                android:lineSpacingExtra="4dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Step 8: D – Defibrillation (When the AED arrives)"
-                            android:textColor="@color/primary"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="The moment an AED arrives on the scene, open the lid and turn it on immediately. The machine will speak aloud and give you step-by-step vocal instructions. It will tell you exactly where to stick the sticky pads onto the adult's bare chest. Follow its voice prompts blindly—it will tell you exactly when to stop compressing so it can check the heart, and it will tell you if you need to press the flashing 'Shock' button safely."
-                            android:textColor="#424242"
-                            android:justificationMode="inter_word"
-                            android:layout_marginTop="8dp"
                             android:textSize="15sp"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>

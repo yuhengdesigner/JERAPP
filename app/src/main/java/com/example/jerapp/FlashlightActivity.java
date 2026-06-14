@@ -9,14 +9,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
-public class FlashlightActivity extends AppCompatActivity {
+public class FlashlightActivity extends BaseActivity { // Inherit from BaseActivity for Light Mode and Screen Share fixes
 
     private String cameraId;
     private CameraManager cameraManager;
@@ -35,13 +33,13 @@ public class FlashlightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashlight);
 
+        // Enable layout transition animations for smooth dropdowns
         ViewGroup rootLayout = (ViewGroup) findViewById(android.view.Window.ID_ANDROID_CONTENT);
         if (rootLayout != null && rootLayout.getLayoutTransition() != null) {
             rootLayout.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
         }
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         setupDropdown(
                 findViewById(R.id.headerWhat),
@@ -89,7 +87,9 @@ public class FlashlightActivity extends AppCompatActivity {
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         try {
-            cameraId = cameraManager.getCameraIdList()[0];
+            if (cameraManager.getCameraIdList().length > 0) {
+                cameraId = cameraManager.getCameraIdList()[0];
+            }
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -128,7 +128,9 @@ public class FlashlightActivity extends AppCompatActivity {
         isSosActive = false;
         sosHandler.removeCallbacks(sosRunnable);
         try {
-            cameraManager.setTorchMode(cameraId, false);
+            if (cameraId != null) {
+                cameraManager.setTorchMode(cameraId, false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,7 +158,7 @@ public class FlashlightActivity extends AppCompatActivity {
     };
 
     private void playSignal(int duration) throws Exception {
-        if (!isSosActive) return;
+        if (!isSosActive || cameraId == null) return;
         cameraManager.setTorchMode(cameraId, true);
         Thread.sleep(duration);
         cameraManager.setTorchMode(cameraId, false);
@@ -166,7 +168,7 @@ public class FlashlightActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (switchFlashlight.isChecked()) {
+        if (switchFlashlight != null && switchFlashlight.isChecked()) {
             switchFlashlight.setChecked(false);
         }
     }
