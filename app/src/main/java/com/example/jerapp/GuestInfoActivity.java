@@ -3,18 +3,18 @@ package com.example.jerapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class GuestInfoActivity extends AppCompatActivity {
+public class GuestInfoActivity extends BaseActivity { // Inherit from BaseActivity for dark mode fix
 
     private EditText etGuestName, etGuestPhone, etGuestEmail;
     private RadioGroup rgGuestGender;
 
-    // Hold incoming department parameters from DepartmentListActivity routing
     private String deptId, deptName, deptPhone, emergencyType;
     private double deptLat, deptLng, userLat, userLng;
 
@@ -23,7 +23,6 @@ public class GuestInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest_info);
 
-        // Extract parameters passed from DepartmentListActivity selection
         Intent fromIntent = getIntent();
         deptId = fromIntent.getStringExtra("dept_id");
         deptName = fromIntent.getStringExtra("dept_name");
@@ -34,7 +33,6 @@ public class GuestInfoActivity extends AppCompatActivity {
         userLat = fromIntent.getDoubleExtra("user_lat", 0);
         userLng = fromIntent.getDoubleExtra("user_lng", 0);
 
-        // Bind layout controls
         etGuestName = findViewById(R.id.etGuestName);
         etGuestPhone = findViewById(R.id.etGuestPhone);
         etGuestEmail = findViewById(R.id.etGuestEmail);
@@ -46,28 +44,49 @@ public class GuestInfoActivity extends AppCompatActivity {
         btnProceed.setOnClickListener(v -> {
             String name = etGuestName.getText().toString().trim();
             String phone = etGuestPhone.getText().toString().trim();
-            String email = etGuestEmail != null ? etGuestEmail.getText().toString().trim() : "No Email";
+            String email = etGuestEmail.getText().toString().trim();
             String gender = "Male";
 
             if (rgGuestGender.getCheckedRadioButtonId() == R.id.rbFemale) {
                 gender = "Female";
             }
 
-            // Quick validation to prevent empty submissions to admin
+            // REQUIREMENT 4: Strict Validations
+            
+            // 1. Name: No symbols and numbers
             if (TextUtils.isEmpty(name)) {
-                Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show();
+                etGuestName.setError("Name is required");
                 return;
             }
-            if (TextUtils.isEmpty(phone)) {
-                Toast.makeText(this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (TextUtils.isEmpty(email)) {
-                Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show();
+            if (!name.matches("^[a-zA-Z\\s]+$")) {
+                etGuestName.setError("Name must contain only letters and spaces");
                 return;
             }
 
-            // Forward everything safely to ConfirmationActivity
+            // 2. Phone: Invalid or single digit
+            if (TextUtils.isEmpty(phone)) {
+                etGuestPhone.setError("Phone number is required");
+                return;
+            }
+            if (!Patterns.PHONE.matcher(phone).matches() || phone.length() < 7) {
+                etGuestPhone.setError("Please enter a valid phone number");
+                return;
+            }
+
+            // 3. Email: Invalid format or starts with digit/symbol
+            if (TextUtils.isEmpty(email)) {
+                etGuestEmail.setError("Email is required");
+                return;
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etGuestEmail.setError("Invalid email format");
+                return;
+            }
+            if (Character.isDigit(email.charAt(0)) || !Character.isLetter(email.charAt(0))) {
+                etGuestEmail.setError("Email cannot start with numbers or symbols");
+                return;
+            }
+
             Intent intent = new Intent(GuestInfoActivity.this, ConfirmationActivity.class);
             intent.putExtra("isGuestFlow", true);
             intent.putExtra("guest_name", name);
@@ -75,7 +94,6 @@ public class GuestInfoActivity extends AppCompatActivity {
             intent.putExtra("guest_email", email);
             intent.putExtra("guest_gender", gender);
 
-            // Re-bundle original department metadata properties
             intent.putExtra("dept_id", deptId);
             intent.putExtra("dept_name", deptName);
             intent.putExtra("dept_phone", deptPhone);

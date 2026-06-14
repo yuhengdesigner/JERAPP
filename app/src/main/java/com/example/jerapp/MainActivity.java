@@ -42,9 +42,9 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
 
     private final ActivityResultLauncher<String[]> permissionPicker =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                // Safely handle Boolean unboxing to prevent NullPointerException
                 boolean locationGranted = Boolean.TRUE.equals(result.get(android.Manifest.permission.ACCESS_FINE_LOCATION));
                 boolean cameraGranted = Boolean.TRUE.equals(result.get(android.Manifest.permission.CAMERA));
+                
                 savePermissionCheckDone();
                 if (!locationGranted || !cameraGranted) showEncouragementDialog();
             });
@@ -64,7 +64,6 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
 
         toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         
-        // Show history for guests so they can see their session results
         bottomNav.getMenu().findItem(R.id.nav_history).setVisible(true);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

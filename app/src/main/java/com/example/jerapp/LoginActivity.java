@@ -3,12 +3,14 @@ package com.example.jerapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -41,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // REQUIREMENT 5: Disable screen share darkness (Clear FLAG_SECURE)
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
@@ -56,16 +62,27 @@ public class LoginActivity extends AppCompatActivity {
         btnGuest = findViewById(R.id.btnGuestMode);
         MaterialButtonToggleGroup toggleGroup = findViewById(R.id.loginToggleGroup);
 
-        // REQUIREMENT: Allow user to auto login
+        // REQUIREMENT 1: Guest auto-login logic
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             if (currentUser.isAnonymous()) {
-                mAuth.signOut();
-                SessionUtils.clearGuestSession(this);
+                SharedPreferences emergencyPrefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+                boolean hasOngoing = emergencyPrefs.getBoolean("has_active_emergency", false);
+                
+                if (hasOngoing) {
+                    // Auto-login only if guest has an ongoing emergency
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("isGuest", true);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // Not calling emergency? Force fresh login
+                    mAuth.signOut();
+                    SessionUtils.clearGuestSession(this);
+                }
             } else {
-                // If a registered user is already authenticated, attempt auto-login
+                // Registered users auto-login normally
                 checkUserRole();
-                // We don't finish() here yet because checkUserRole is asynchronous
             }
         }
 
@@ -197,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
                     String role = snapshot.child("role").getValue(String.class);
                     String deptId = snapshot.child("dept_id").getValue(String.class);
 
-                    // Robust Check: Handle navigation based on role from database
                     if ("admin".equalsIgnoreCase(role)) {
                         getSharedPreferences("AdminPrefs", MODE_PRIVATE)
                                 .edit()
@@ -213,7 +229,6 @@ public class LoginActivity extends AppCompatActivity {
                         android.content.SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         String guestUid = prefs.getString("guest_uid", null);
                         
-                        // Transfer history if user was a guest on this device
                         if (guestUid != null && !uid.equals(guestUid)) {
                             DatabaseReference oldRef = FirebaseDatabase.getInstance().getReference("UserHistory").child(guestUid);
                             DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("UserHistory").child(uid);
@@ -243,14 +258,11 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
-                        // Unknown role
                         mAuth.signOut();
                         showErrorDialog("Access Denied", "Invalid account role.");
                     }
                 } else {
-                    // This is for users who have no database record (e.g. deleted but still have auth session)
                     mAuth.signOut();
-                    // Don't show error dialog during auto-login to avoid popping it up on start if session is invalid
                     if (findViewById(android.R.id.content).isShown()) {
                          showErrorDialog("Database Error", "User data not found.");
                     }
