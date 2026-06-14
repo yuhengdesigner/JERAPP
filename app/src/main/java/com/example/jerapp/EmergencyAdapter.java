@@ -16,8 +16,8 @@ import java.util.Locale;
 
 public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int TYPE_HEADER = 0;
-    public static final int TYPE_ONGOING = 1;
+    public static final int TYPE_ONGOING = 0;
+    public static final int TYPE_HEADER = 1;
     public static final int TYPE_ITEM = 2;
 
     private final List<EmergencyModel> emergencyList;
@@ -42,8 +42,9 @@ public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) return TYPE_HEADER;
-        if (position <= ongoingAlerts.size()) return TYPE_ONGOING;
+        // REQUIREMENT 2: Ongoing cards ABOVE the header (clock)
+        if (position < ongoingAlerts.size()) return TYPE_ONGOING;
+        if (position == ongoingAlerts.size()) return TYPE_HEADER;
         return TYPE_ITEM;
     }
 
@@ -51,12 +52,12 @@ public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == TYPE_HEADER) {
-            View view = inflater.inflate(R.layout.item_dashboard_header, parent, false);
-            return new HeaderViewHolder(view);
-        } else if (viewType == TYPE_ONGOING) {
+        if (viewType == TYPE_ONGOING) {
             View view = inflater.inflate(R.layout.item_ongoing_emergency, parent, false);
             return new OngoingViewHolder(view);
+        } else if (viewType == TYPE_HEADER) {
+            View view = inflater.inflate(R.layout.item_dashboard_header, parent, false);
+            return new HeaderViewHolder(view);
         } else {
             View view = inflater.inflate(R.layout.item_emergency_card, parent, false);
             return new ItemViewHolder(view);
@@ -65,15 +66,13 @@ public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HeaderViewHolder) {
+        if (holder instanceof OngoingViewHolder) {
+            AlertModel alert = ongoingAlerts.get(position);
+            ((OngoingViewHolder) holder).bind(alert, listener);
+        } else if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).bind();
-        } else if (holder instanceof OngoingViewHolder) {
-            if (position - 1 < ongoingAlerts.size()) {
-                AlertModel alert = ongoingAlerts.get(position - 1);
-                ((OngoingViewHolder) holder).bind(alert, listener);
-            }
         } else if (holder instanceof ItemViewHolder) {
-            int gridPos = position - 1 - ongoingAlerts.size();
+            int gridPos = position - ongoingAlerts.size() - 1;
             if (gridPos >= 0 && gridPos < emergencyList.size()) {
                 EmergencyModel model = emergencyList.get(gridPos);
                 ItemViewHolder itemHolder = (ItemViewHolder) holder;
@@ -86,8 +85,10 @@ public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return 1 + ongoingAlerts.size() + (emergencyList != null ? emergencyList.size() : 0);
+        return ongoingAlerts.size() + 1 + (emergencyList != null ? emergencyList.size() : 0);
     }
+
+    // --- VIEW HOLDERS ---
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private final TextView textDay, textDate, textTime;
@@ -134,6 +135,7 @@ public class EmergencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.cardIcon);

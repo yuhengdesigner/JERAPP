@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +30,7 @@ public class DashboardFragment extends Fragment {
     private List<AlertModel> ongoingAlertList = new ArrayList<>();
     private ValueEventListener ongoingAlertsListener;
     private DatabaseReference userHistoryRef;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Nullable
     @Override
@@ -40,6 +43,11 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = view.findViewById(R.id.dashboardRecyclerView);
+        swipeRefresh = view.findViewById(R.id.swipeRefreshDashboard);
+
+        if (swipeRefresh != null) {
+            swipeRefresh.setOnRefreshListener(this::loadData);
+        }
 
         // 1. Static grid items
         List<EmergencyModel> emergencyList = new ArrayList<>();
@@ -87,22 +95,36 @@ public class DashboardFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        loadData();
+    }
+
+    private void loadData() {
         listenForOngoingAlerts();
     }
 
     private void listenForOngoingAlerts() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = null;
         
-        // REQUIREMENT: Strict session isolation. No user = No emergency card.
-        if (user == null) {
+        if (user != null) {
+            uid = user.getUid();
+        } else if (SessionUtils.isGuest(requireContext())) {
+            uid = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getString("guest_uid", null);
+        }
+
+        if (uid == null) {
             ongoingAlertList.clear();
-            if (adapter != null) adapter.setOngoingAlerts(new ArrayList<>());
+            adapter.setOngoingAlerts(new ArrayList<>());
+            if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             return;
         }
 
-        String uid = user.getUid();
+        // Clean up previous listener if any
+        if (userHistoryRef != null && ongoingAlertsListener != null) {
+            userHistoryRef.removeEventListener(ongoingAlertsListener);
+        }
+
         userHistoryRef = FirebaseDatabase.getInstance().getReference("UserHistory").child(uid);
-        
         ongoingAlertsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -114,7 +136,6 @@ public class DashboardFragment extends Fragment {
                             alert.setKey(ds.getKey());
                             String status = alert.getStatus();
                             
-                            // Only display cards that the user hasn't confirmed/finished yet
                             if (!"Confirmed".equalsIgnoreCase(status) && 
                                 !"Resolved".equalsIgnoreCase(status) && 
                                 !"Failed".equalsIgnoreCase(status) &&
@@ -124,12 +145,14 @@ public class DashboardFragment extends Fragment {
                         }
                     }
                 }
-                if (adapter != null) adapter.setOngoingAlerts(ongoingAlertList);
+                adapter.setOngoingAlerts(ongoingAlertList);
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseActive", error.getMessage());
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             }
         };
 
@@ -139,7 +162,6 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Prevent "Request Timeout" and leaks by detaching the listener correctly
         if (userHistoryRef != null && ongoingAlertsListener != null) {
             userHistoryRef.removeEventListener(ongoingAlertsListener);
         }

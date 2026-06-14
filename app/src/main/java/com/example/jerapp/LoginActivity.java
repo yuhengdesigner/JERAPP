@@ -3,7 +3,6 @@ package com.example.jerapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -31,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private TextInputEditText emailInput, passwordInput;
     private TextInputLayout emailInputLayout, passwordInputLayout;
@@ -44,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // REQUIREMENT 5: Disable screen share darkness (Clear FLAG_SECURE)
+        // Ensure screen sharing is enabled for demonstration
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         
         setContentView(R.layout.activity_login);
@@ -62,26 +61,15 @@ public class LoginActivity extends AppCompatActivity {
         btnGuest = findViewById(R.id.btnGuestMode);
         MaterialButtonToggleGroup toggleGroup = findViewById(R.id.loginToggleGroup);
 
-        // REQUIREMENT 1: Guest auto-login logic
+        // REQUIREMENT: Allow user to auto login (Registered Users Only)
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             if (currentUser.isAnonymous()) {
-                SharedPreferences emergencyPrefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
-                boolean hasOngoing = emergencyPrefs.getBoolean("has_active_emergency", false);
-                
-                if (hasOngoing) {
-                    // Auto-login only if guest has an ongoing emergency
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("isGuest", true);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    // Not calling emergency? Force fresh login
-                    mAuth.signOut();
-                    SessionUtils.clearGuestSession(this);
-                }
+                // To prevent the "guest auto-login mistake", we sign out anonymous users
+                mAuth.signOut();
+                SessionUtils.clearGuestSession(this);
             } else {
-                // Registered users auto-login normally
+                // Auto-login for registered members/admins
                 checkUserRole();
             }
         }
