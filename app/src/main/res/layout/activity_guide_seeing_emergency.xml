@@ -90,29 +90,27 @@
                     <RelativeLayout
                         android:id="@+id/headerWho"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/arrowWho"
                             android:text="WHO is involved &amp; WHO to coordinate?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowWho"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -166,29 +164,27 @@
                     <RelativeLayout
                         android:id="@+id/headerWhat"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/arrowWhat"
                             android:text="WHAT is happening &amp; WHAT to do?"
                             android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowWhat"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -242,28 +238,27 @@
                     <RelativeLayout
                         android:id="@+id/headerWhere"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/arrowWhere"
                             android:text="WHERE to evaluate &amp; WHERE to position?"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowWhere"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -317,29 +312,28 @@
                     <RelativeLayout
                         android:id="@+id/headerWhen"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/arrowWhen"
                             android:text="WHEN to intervene &amp; WHEN to wait?"
                             android:textColor="@color/primary"
                             android:textStyle="bold"
                             android:textSize="18sp" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowWhen"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/primary" />
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/primary"/>
                     </RelativeLayout>
 
                     <TextView
@@ -392,11 +386,7 @@
                     <RelativeLayout
                         android:id="@+id/headerWhy"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:minHeight="48dp">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -408,13 +398,14 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowWhy"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -468,10 +459,7 @@
                     <RelativeLayout
                         android:id="@+id/headerHow"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -483,13 +471,14 @@
                             android:textStyle="bold"
                             android:textSize="18sp" />
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/arrowHow"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 

@@ -108,11 +108,12 @@
 
                         <ImageView
                             android:id="@+id/arrowWho"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -184,11 +185,12 @@
 
                         <ImageView
                             android:id="@+id/arrowWhat"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -259,11 +261,12 @@
 
                         <ImageView
                             android:id="@+id/arrowWhere"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -334,11 +337,12 @@
 
                         <ImageView
                             android:id="@+id/arrowWhen"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -410,11 +414,12 @@
 
                         <ImageView
                             android:id="@+id/arrowWhy"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
@@ -485,11 +490,12 @@
 
                         <ImageView
                             android:id="@+id/arrowHow"
-                            android:layout_width="24dp"
+                            android:layout_width="48dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_down"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/arrow_down_float"
                             app:tint="@color/primary" />
                     </RelativeLayout>
 
