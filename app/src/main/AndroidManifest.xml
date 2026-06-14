@@ -183,6 +183,9 @@
         <activity android:name=".TsunamiActivity" />
         <activity android:name=".SomeoneElectrocutedActivity" />
         <activity android:name=".ProtectShockActivity" />
+        <activity android:name=".FireEmergencyActivity" />
+        <activity android:name=".SevereBleedingActivity" />
+        <activity android:name=".SBActivity" />
 
     </application>
 

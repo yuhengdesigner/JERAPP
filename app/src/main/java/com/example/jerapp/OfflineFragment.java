@@ -35,9 +35,9 @@ public class OfflineFragment extends Fragment {
         view.findViewById(R.id.cardNeonateCpr).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), CprNeonateActivity.class)));
 
-        setupExpandableCard(view, R.id.cardFire, R.id.tvFireContent, R.id.ivFireIcon, "<b>Fire Emergency</b><br>1. Stop, Drop, and Roll if your clothes catch fire.<br>2. Crawl low under smoke to escape.<br>3. Evacuate immediately and call 999.<br>4. Do not use elevators.");
-        setupExpandableCard(view, R.id.cardBleeding, R.id.tvBleedingContent, R.id.ivBleedingIcon, "<b>Severe Bleeding</b><br>1. Apply direct pressure to the wound with a clean cloth.<br>2. Elevate the injured area if possible.<br>3. Do not remove the cloth if it becomes soaked; add more layers.<br>4. Call emergency services immediately.");
-        setupExpandableCard(view, R.id.cardSnakebites, R.id.tvSnakebitesContent, R.id.ivSnakebitesIcon, "<b>Snakebites</b><br>1. Keep the victim calm and still to slow the spread of venom.<br>2. Remove rings and constricting items.<br>3. Do NOT attempt to suck out the venom or cut the wound.<br>4. Immobilize the bitten limb and seek medical help immediately.");
+        bindCardClick(view, R.id.cardFire, FireEmergencyActivity.class);
+        bindCardClick(view, R.id.cardBleeding, SevereBleedingActivity.class);
+        bindCardClick(view, R.id.cardSnakebites, SBActivity.class);
 
         bindCardClick(view, R.id.cardFindUseAed, AedActivity.class);
         bindCardClick(view, R.id.cardSeeingPersonEmergency, SeeingEmergencyActivity.class);

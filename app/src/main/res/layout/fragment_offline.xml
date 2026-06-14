@@ -177,60 +177,62 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardFire"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:layout_margin="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Fire Emergency" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
-                        <ImageView android:id="@+id/ivFireIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_fire_emergency" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fire Emergency" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Evacuation &amp; PASS Technique" android:textColor="#E0E0E0" android:textSize="11sp" />
                     </LinearLayout>
-                    <TextView android:id="@+id/tvFireContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
-                </LinearLayout>
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBleeding"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:layout_margin="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Severe Bleeding" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
-                        <ImageView android:id="@+id/ivBleedingIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_severe_bleeding" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Severe Bleeding" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Direct Pressure &amp; Hemorrhage Control" android:textColor="#E0E0E0" android:textSize="11sp" />
                     </LinearLayout>
-                    <TextView android:id="@+id/tvBleedingContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
-                </LinearLayout>
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSnakebites"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:layout_margin="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Snakebites" android:textStyle="bold" android:textColor="@color/primary" android:textSize="18sp"/>
-                        <ImageView android:id="@+id/ivSnakebitesIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/primary"/>
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_bg_sb" />
+                    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#85000000" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom|start" android:orientation="vertical" android:padding="20dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Snakebites" android:textStyle="bold" android:textColor="@color/white" android:textSize="16sp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Immobilization &amp; Rapid Medical Triage" android:textColor="#E0E0E0" android:textSize="11sp" />
                     </LinearLayout>
-                    <TextView android:id="@+id/tvSnakebitesContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
-                </LinearLayout>
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
-
 
             <TextView
                 android:layout_width="wrap_content"
