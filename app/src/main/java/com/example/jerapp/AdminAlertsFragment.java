@@ -45,7 +45,9 @@ public class AdminAlertsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) departmentFilter = getArguments().getString("dept_filter");
+        if (getArguments() != null) {
+            departmentFilter = getArguments().getString("dept_filter");
+        }
     }
 
     @Nullable
@@ -67,7 +69,6 @@ public class AdminAlertsFragment extends Fragment {
             public void onDetailsClick(AlertModel alert) {
                 Intent intent = new Intent(requireContext(), EmergencyDetailActivity.class);
                 intent.putExtra("alert_key", alert.getKey());
-                // REQUIREMENT FIX: Pass dept_id so detail page can load data
                 intent.putExtra("dept_id", alert.getAssignedDept()); 
                 startActivity(intent);
             }
@@ -128,14 +129,17 @@ public class AdminAlertsFragment extends Fragment {
     }
 
     private void listenForAlerts() {
-        String adminDeptId = requireContext().getSharedPreferences("AdminPrefs", Context.MODE_PRIVATE)
-                .getString("dept_id", "default_dept");
+        // FIX: Use departmentFilter passed via arguments instead of uninitialized SharedPreferences
+        if (departmentFilter == null || departmentFilter.isEmpty()) {
+            Log.e("AdminAlertsFragment", "No department filter provided for listener");
+            return;
+        }
 
         if (listenerRef != null && valueEventListener != null) {
             listenerRef.removeEventListener(valueEventListener);
         }
 
-        listenerRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(adminDeptId);
+        listenerRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(departmentFilter);
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -147,6 +151,7 @@ public class AdminAlertsFragment extends Fragment {
                     if (alert != null) {
                         alert.setKey(ds.getKey());
                         newList.add(alert);
+                        // Detect if this is a brand new alert (not in current list)
                         if (!isInitialLoad && getAlertFromList(alert.getKey()) == null) {
                             hasNewAlerts = true;
                         }
@@ -154,24 +159,32 @@ public class AdminAlertsFragment extends Fragment {
                 }
 
                 if (isAdded() && getActivity() != null) {
-                    final boolean flashAlarm = hasNewAlerts;
+                    final boolean shouldAlert = hasNewAlerts;
                     alertList.clear();
                     alertList.addAll(newList);
                     adapter.notifyDataSetChanged();
+                    
                     if (statusText != null) {
-                        statusText.setText(alertList.isEmpty() ? "No pending alerts" : "Active Alerts");
+                        statusText.setText(alertList.isEmpty() ? "No pending alerts" : "Active Alerts (" + alertList.size() + ")");
                     }
-                    if (!isInitialLoad && flashAlarm) playSound();
+                    
+                    if (!isInitialLoad && shouldAlert) {
+                        playSound();
+                    }
                     isInitialLoad = false;
                 }
             }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Alerts listener cancelled: " + error.getMessage());
+            }
         };
         listenerRef.addValueEventListener(valueEventListener);
     }
 
     private AlertModel getAlertFromList(String key) {
-        for (AlertModel a : alertList) if (a.getKey().equals(key)) return a;
+        for (AlertModel a : alertList) {
+            if (a.getKey() != null && a.getKey().equals(key)) return a;
+        }
         return null;
     }
 
@@ -179,14 +192,24 @@ public class AdminAlertsFragment extends Fragment {
         try {
             stopAlarm();
             mediaPlayer = new MediaPlayer();
+            // Ensure this sound file exists in res/raw/emergency_alert_sound.mp3 or .wav
             Uri soundUri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.emergency_alert_sound);
             mediaPlayer.setDataSource(requireContext(), soundUri);
-            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build());
+            mediaPlayer.setLooping(true);
             mediaPlayer.prepare();
             mediaPlayer.start();
-            mediaPlayer.setLooping(true);
         } catch (Exception e) {
-            Log.e("SOUND_ERROR", "Error: " + e.getMessage());
+            Log.e("SOUND_ERROR", "Error playing sound: " + e.getMessage());
+            // Fallback to default notification sound if custom one fails
+            try {
+                Uri defaultUri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM);
+                mediaPlayer = MediaPlayer.create(requireContext(), defaultUri);
+                mediaPlayer.start();
+            } catch (Exception e2) {}
         }
     }
     
