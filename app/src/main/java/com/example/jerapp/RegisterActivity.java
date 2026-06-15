@@ -224,7 +224,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         oldRef.removeValue();
                     }
-                    prefs.edit().remove("guest_uid").apply();
+                    SessionUtils.clearGuestSession(RegisterActivity.this);
                     goToDashboard();
                 }
 

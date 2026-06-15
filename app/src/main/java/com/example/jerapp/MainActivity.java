@@ -158,9 +158,10 @@ public class MainActivity extends BaseActivity implements OnMapsSdkInitializedCa
     }
 
     private void checkPermissionsOnStartup() {
-        if (!isGuest && !getSharedPreferences("UserPrefs", MODE_PRIVATE).getBoolean("perm_check_done", false)) {
+        boolean isCurrentGuestMode = SessionUtils.isGuest(this);
+        if (!isCurrentGuestMode && !getSharedPreferences("UserPrefs", MODE_PRIVATE).getBoolean("perm_check_done", false)) {
             requestEmergencyPermissions();
-        } else if (isGuest && !guestPermissionsCheckedThisSession) {
+        } else if (isCurrentGuestMode && !guestPermissionsCheckedThisSession) {
             requestEmergencyPermissions();
         }
     }

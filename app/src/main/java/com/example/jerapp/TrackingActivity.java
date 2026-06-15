@@ -50,18 +50,11 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng userLoc;
     private TextView tvCountdownETA;
-    private EditText etTimerInput;
-    private android.os.CountDownTimer etaTimer;
-    private Button btnStartUserTimer, btnViewGoogleMapsETA;
     private Ringtone alarmRingtone;
-    private DatabaseReference trackingDatabaseRef;
-    private ValueEventListener trackingListener;
-    private static final int PERMISSION_REQUEST_CODE = 100;
-    private android.view.View collapsibleContent;
-    private android.widget.ImageButton btnToggleExpand;
-    private java.io.File cameraVideoFile;
-    private Uri pendingVideoUri;
+    private DatabaseReference trackingDatabaseRef, statusDatabaseRef;
+    private ValueEventListener trackingListener, statusListener;
     private boolean isCardExpanded = true;
+    private boolean isAdminResolved = false; // New flag for swipe restriction
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +76,10 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         TextView tvDetail = findViewById(R.id.deptDetail);
         if (tvDetail != null) tvDetail.setText("Responding: " + deptName);
 
+        findViewById(R.id.btnViewGoogleMapsETA).setOnClickListener(v -> launchGoogleMapsNavigation());
 
-        btnViewGoogleMapsETA = findViewById(R.id.btnViewGoogleMapsETA);
-
-        collapsibleContent = findViewById(R.id.collapsibleContent);
-        btnToggleExpand = findViewById(R.id.btnToggleExpand);
+        final android.view.View collapsibleContent = findViewById(R.id.collapsibleContent);
+        final android.widget.ImageButton btnToggleExpand = findViewById(R.id.btnToggleExpand);
 
         btnToggleExpand.setOnClickListener(v -> {
             if (isCardExpanded) {
@@ -107,45 +99,18 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         videoLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        if (cameraVideoFile != null && cameraVideoFile.exists() && cameraVideoFile.length() > 0) {
-                            uploadVideoToFirebase(Uri.fromFile(cameraVideoFile));
-                        }
-                        else if (result.getData() != null && result.getData().getData() != null) {
-                            Uri returnedUri = result.getData().getData();
-                            copyContentUriAndUpload(returnedUri);
-                        }
-                        else if (pendingVideoUri != null) {
-                            copyContentUriAndUpload(pendingVideoUri);
-                        }
-                        else {
-                            Toast.makeText(this, "Could not retrieve the recorded video.", Toast.LENGTH_SHORT).show();
-                        }
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri videoUri = result.getData().getData();
+                        if (videoUri != null) uploadVideoToFirebase(videoUri);
                     }
                 });
 
-        btnViewGoogleMapsETA.setOnClickListener(v -> launchGoogleMapsNavigation());
-
         findViewById(R.id.btnBack).setOnClickListener(v -> navigateToDashboardHome());
-
-        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navigateToDashboardHome();
-            }
-        });
-
-        // Fixed Call Dept button for both guest and registered
         findViewById(R.id.btnCall).setOnClickListener(v -> {
             if (deptPhone != null && !deptPhone.isEmpty()) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + deptPhone));
-                startActivity(callIntent);
-            } else {
-                Toast.makeText(this, "Department phone number unavailable.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + deptPhone)));
             }
         });
-
         findViewById(R.id.btnRecord).setOnClickListener(v -> checkCameraPermission());
 
         SeekBar btnSwipe = findViewById(R.id.btnSwipe);
@@ -153,10 +118,16 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress >= 99) {
-                    stopActiveRingtone();
-                    seekBar.setEnabled(false);
-                    clearTrackingState();
-                    confirmArrivalWithFirebase();
+                    if (!isAdminResolved) {
+                        // REQUIREMENT 2: Block swipe if admin hasn't resolved
+                        seekBar.setProgress(0);
+                        Toast.makeText(TrackingActivity.this, "Emergency has not been resolved by admin yet. Cannot swipe.", Toast.LENGTH_LONG).show();
+                    } else {
+                        stopActiveRingtone();
+                        seekBar.setEnabled(false);
+                        clearTrackingState();
+                        confirmArrivalWithFirebase();
+                    }
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -164,6 +135,46 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         });
 
         setupLiveETATracking();
+        listenForAdminResolution();
+    }
+
+    private void listenForAdminResolution() {
+        if (deptId == null || alertKey == null) return;
+        
+        // We listen to the status in ProcessingAlerts. 
+        // If it moves to ResolvedAlerts, we can also check that, 
+        // but typically the status "Resolved" is set before deletion from Processing.
+        statusDatabaseRef = FirebaseDatabase.getInstance().getReference("ProcessingAlerts").child(deptId).child(alertKey);
+        statusListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String status = snapshot.child("status").getValue(String.class);
+                    // If status is "Resolved", we allow swipe.
+                    if ("Resolved".equalsIgnoreCase(status)) {
+                        isAdminResolved = true;
+                    }
+                } else {
+                    // If it's gone from ProcessingAlerts, check if it's in ResolvedAlerts
+                    checkIfInResolvedNode();
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        statusDatabaseRef.addValueEventListener(statusListener);
+    }
+
+    private void checkIfInResolvedNode() {
+        DatabaseReference resRef = FirebaseDatabase.getInstance().getReference("ResolvedAlerts").child(deptId).child(alertKey);
+        resRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    isAdminResolved = true;
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     private void navigateToDashboardHome() {
@@ -178,330 +189,71 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("has_active_emergency", true);
         editor.putString("alert_key", alertKey);
-        editor.putString("active_alert_key", alertKey);
-        editor.putString("dept_name", deptName);
-        editor.putString("dept_phone", deptPhone);
         editor.putString("dept_id", deptId);
-        editor.putLong("dept_lat_bits", Double.doubleToRawLongBits(deptLat));
-        editor.putLong("dept_lng_bits", Double.doubleToRawLongBits(deptLng));
-        editor.putBoolean("isGuestFlow", getIntent().getBooleanExtra("isGuestFlow", false));
-        String uid = FirebaseAuth.getInstance().getUid();
-        if (uid != null) editor.putString("owner_uid", uid);
         editor.apply();
     }
 
     private void clearTrackingState() {
-        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.apply();
-    }
-
-    private void launchGoogleMapsNavigation() {
-        if (deptLat == 0 || userLoc == null) {
-            Toast.makeText(this, "Awaiting current location mapping coordinates...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String mapUriString = String.format(java.util.Locale.US,
-                "https://www.google.com/maps/dir/?api=1&origin=%f,%f&destination=%f,%f&travelmode=driving",
-                deptLat, deptLng, userLoc.latitude, userLoc.longitude);
-
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString));
-        mapIntent.setPackage("com.google.android.apps.maps");
-
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(mapIntent);
-        } else {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mapUriString)));
-        }
-    }
-
-    private void startUserETACountdown(long durationMs) {
-        if (etaTimer != null) {
-            etaTimer.cancel();
-        }
-
-        long endTimeMs = System.currentTimeMillis() + durationMs;
-        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
-        prefs.edit().putLong("timer_end_time_ms", endTimeMs).apply();
-
-        etaTimer = new android.os.CountDownTimer(durationMs, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                long minutes = (millisUntilFinished / 1000) / 60;
-                long seconds = (millisUntilFinished / 1000) % 60;
-                if (tvCountdownETA != null) {
-                    tvCountdownETA.setText(String.format(java.util.Locale.getDefault(),
-                            "Ringing in: %02d:%02d", minutes, seconds));
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                if (tvCountdownETA != null) tvCountdownETA.setText("Time's Up! Responders Due.");
-                playDeviceAlarmSound();
-            }
-        }.start();
-    }
-
-    private void playDeviceAlarmSound() {
-        try {
-            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            if (alarmUri == null) {
-                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            }
-
-            alarmRingtone = RingtoneManager.getRingtone(getApplicationContext(), alarmUri);
-            if (alarmRingtone != null) {
-                alarmRingtone.play();
-                Toast.makeText(this, "Timer Finished! Checking arrival status.", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Log.e("ALARM_SOUND_ERROR", "Could not trigger alarm: " + e.getMessage());
-        }
-    }
-
-    private void stopActiveRingtone() {
-        if (alarmRingtone != null && alarmRingtone.isPlaying()) {
-            alarmRingtone.stop();
-        }
+        getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE).edit().clear().apply();
     }
 
     private void setupLiveETATracking() {
         if (deptId == null || alertKey == null) return;
-
         trackingDatabaseRef = FirebaseDatabase.getInstance().getReference("ActiveAlerts").child(deptId).child(alertKey);
-
         trackingListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     Double dLat = snapshot.child("deptLat").getValue(Double.class);
                     Double dLng = snapshot.child("deptLng").getValue(Double.class);
-                    Double uLat = snapshot.child("userLat").getValue(Double.class);
-                    Double uLng = snapshot.child("userLng").getValue(Double.class);
-
-                    if (uLat == null || uLng == null) {
-                        if (userLoc != null) {
-                            uLat = userLoc.latitude;
-                            uLng = userLoc.longitude;
-                        }
-                    }
-
-                    if (dLat != null && dLng != null && uLat != null && uLng != null) {
-                        deptLat = dLat;
-                        deptLng = dLng;
-                        userLoc = new LatLng(uLat, uLng);
-
+                    if (dLat != null && dLng != null) {
+                        deptLat = dLat; deptLng = dLng;
                         updateMapWithRoute();
-                        fitMapBounds();
                     }
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FIREBASE_TRACK", error.getMessage());
-            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         };
-
         trackingDatabaseRef.addValueEventListener(trackingListener);
     }
 
     private void confirmArrivalWithFirebase() {
-        if (alertKey == null || deptId == null) {
-            Toast.makeText(this, "Error: Missing Alert details. Cannot confirm.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-        root.child("ActiveAlerts").child(deptId).child(alertKey).child("status").setValue("Confirmed");
-        root.child("ProcessingAlerts").child(deptId).child(alertKey).child("status").setValue("Confirmed");
-
-        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
+        root.child("ResolvedAlerts").child(deptId).child(alertKey).child("status").setValue("Confirmed");
+        
         String uid = FirebaseAuth.getInstance().getUid();
-        if (uid == null) uid = prefs.getString("owner_uid", null);
         if (uid != null) {
             root.child("UserHistory").child(uid).child(alertKey).child("status").setValue("Confirmed");
         }
 
-        Toast.makeText(TrackingActivity.this, "Arrival confirmed!", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(TrackingActivity.this, MainActivity.class);
+        Toast.makeText(this, "Arrival confirmed!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("NAVIGATE_TO", "HISTORY");
         startActivity(intent);
         finish();
     }
 
-    private void copyContentUriAndUpload(Uri contentUri) {
-        new Thread(() -> {
-            try {
-                java.io.File tempFile = new java.io.File(getCacheDir(), "videos/temp_upload_" + System.currentTimeMillis() + ".mp4");
-                tempFile.getParentFile().mkdirs();
-
-                InputStream in = getContentResolver().openInputStream(contentUri);
-                if (in == null) {
-                    runOnUiThread(() -> Toast.makeText(this, "Could not read video file.", Toast.LENGTH_SHORT).show());
-                    return;
-                }
-
-                OutputStream out = new FileOutputStream(tempFile);
-                byte[] buffer = new byte[8192];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, bytesRead);
-                }
-                out.close();
-                in.close();
-
-                if (tempFile.length() == 0) {
-                    runOnUiThread(() -> Toast.makeText(this, "Recorded video is empty.", Toast.LENGTH_SHORT).show());
-                    tempFile.delete();
-                    return;
-                }
-
-                cameraVideoFile = tempFile;
-                runOnUiThread(() -> uploadVideoToFirebase(Uri.fromFile(tempFile)));
-
-            } catch (Exception e) {
-                Log.e("VideoCopy", "Failed to copy content URI to file: ", e);
-                runOnUiThread(() -> Toast.makeText(this, "Failed to process video: " + e.getMessage(), Toast.LENGTH_LONG).show());
-            }
-        }).start();
-    }
-
     private void uploadVideoToFirebase(Uri videoUri) {
-        if (videoUri == null || alertKey == null || deptId == null) {
-            Toast.makeText(this, "Upload error: Invalid alert session details.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        java.io.File fileToUpload = null;
-        if ("file".equals(videoUri.getScheme())) {
-            fileToUpload = new java.io.File(videoUri.getPath());
-        }
-        else if (cameraVideoFile != null && cameraVideoFile.exists() && cameraVideoFile.length() > 0) {
-            fileToUpload = cameraVideoFile;
-        }
-
-        if (fileToUpload == null || !fileToUpload.exists() || fileToUpload.length() == 0) {
-            Toast.makeText(this, "Upload error: Video file not found or empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Toast.makeText(this, "Uploading video evidence (" + (fileToUpload.length() / 1024) + " KB)...", Toast.LENGTH_SHORT).show();
-
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://jerapp-2026.firebasestorage.app");
         StorageReference ref = storage.getReference().child("emergency_evidence/" + alertKey + "/" + System.currentTimeMillis() + ".mp4");
-
-        final java.io.File finalFile = fileToUpload;
-        try {
-            java.io.FileInputStream fis = new java.io.FileInputStream(finalFile);
-
-            ref.putStream(fis)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        try { fis.close(); } catch (Exception ignored) {}
-                        if (finalFile.getAbsolutePath().contains("cache")) {
-                            finalFile.delete();
-                        }
-                        cameraVideoFile = null;
-
-                        ref.getDownloadUrl().addOnSuccessListener(downloadUrl -> {
-                            String videoUrlString = downloadUrl.toString();
-
-                            // FIX: Update video URLs in ALL relevant paths (Active, Processing, History)
-                            updateVideoUrlsInDatabase(videoUrlString);
-                        });
-                    })
-                    .addOnFailureListener(e -> {
-                        try { fis.close(); } catch (Exception ignored) {}
-                        if (finalFile.getAbsolutePath().contains("cache")) {
-                            finalFile.delete();
-                        }
-                        cameraVideoFile = null;
-                        Log.e("FirebaseUpload", "Upload FAILED", e);
-                        Toast.makeText(TrackingActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
-
-        } catch (java.io.FileNotFoundException e) {
-            Log.e("FirebaseUpload", "File not found for upload", e);
-            Toast.makeText(this, "Video file not found for upload.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void updateVideoUrlsInDatabase(String videoUrlString) {
-        String[] paths = {"ActiveAlerts", "ProcessingAlerts"};
-        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-        
-        for (String path : paths) {
-            DatabaseReference targetRef = root.child(path).child(deptId).child(alertKey);
-            runVideoUrlTransaction(targetRef, videoUrlString);
-        }
-
-        SharedPreferences prefs = getSharedPreferences("OngoingEmergencyPrefs", MODE_PRIVATE);
-        String uid = FirebaseAuth.getInstance().getUid();
-        if (uid == null) uid = prefs.getString("owner_uid", null);
-        if (uid != null) {
-            DatabaseReference historyRef = root.child("UserHistory").child(uid).child(alertKey);
-            runVideoUrlTransaction(historyRef, videoUrlString);
-        }
-    }
-
-    private void runVideoUrlTransaction(DatabaseReference ref, String videoUrl) {
-        ref.runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                if (currentData.getValue() == null) return Transaction.success(currentData);
-                List<String> urlsList = new ArrayList<>();
-                MutableData urlsSnapshot = currentData.child("video_urls");
-                if (urlsSnapshot.getValue() != null) {
-                    for (MutableData child : urlsSnapshot.getChildren()) {
-                        String url = child.getValue(String.class);
-                        if (url != null) urlsList.add(url);
-                    }
-                }
-                urlsList.add(videoUrl);
-                currentData.child("video_urls").setValue(urlsList);
-                return Transaction.success(currentData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot snapshot) {
-                if (committed) Log.d("FirebaseUpload", "Video URL updated in: " + ref.getPath().toString());
-            }
+        ref.putFile(videoUri).addOnSuccessListener(taskSnapshot -> {
+            ref.getDownloadUrl().addOnSuccessListener(url -> {
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ProcessingAlerts").child(deptId).child(alertKey).child("video_urls");
+                dbRef.push().setValue(url.toString());
+            });
         });
     }
 
-    private void launchCamera() {
-        Intent takeVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-        try {
-            java.io.File videoDir = new java.io.File(getCacheDir(), "videos");
-            videoDir.mkdirs();
-            cameraVideoFile = new java.io.File(videoDir, "evidence_" + System.currentTimeMillis() + ".mp4");
-            pendingVideoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".fileprovider", cameraVideoFile);
-            takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, pendingVideoUri);
-            takeVideoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } catch (Exception e) {
-            Log.e("CameraLaunch", "Failed to create FileProvider URI", e);
-            cameraVideoFile = null;
-            pendingVideoUri = null;
-        }
-
-        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
-            videoLauncher.launch(takeVideoIntent);
-        } else {
-            Toast.makeText(this, "No camera app found!", Toast.LENGTH_SHORT).show();
-        }
+    private void launchGoogleMapsNavigation() {
+        if (deptLat == 0 || userLoc == null) return;
+        String mapUri = String.format(java.util.Locale.US, "https://www.google.com/maps/dir/?api=1&origin=%f,%f&destination=%f,%f", deptLat, deptLng, userLoc.latitude, userLoc.longitude);
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mapUri)));
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         updateMapWithRoute();
-        fitMapBounds();
     }
 
     private void updateMapWithRoute() {
@@ -509,6 +261,14 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.clear();
         mMap.addMarker(new MarkerOptions().position(userLoc).title("You"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(deptLat, deptLng)).title(deptName));
+        fitMapBounds();
+    }
+
+    private void fitMapBounds() {
+        if (mMap == null || userLoc == null || deptLat == 0) return;
+        LatLng deptLoc = new LatLng(deptLat, deptLng);
+        com.google.android.gms.maps.model.LatLngBounds bounds = new com.google.android.gms.maps.model.LatLngBounds.Builder().include(userLoc).include(deptLoc).build();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
     }
 
     private void checkLocationPermissionAndFetch() {
@@ -517,65 +277,27 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 if (location != null) {
                     userLoc = new LatLng(location.getLatitude(), location.getLongitude());
                     updateMapWithRoute();
-                    fitMapBounds();
                 }
             });
         }
     }
+
     private void checkCameraPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 100);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         } else {
-            launchCamera();
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                launchCamera();
-            } else {
-                Toast.makeText(this, "Camera permission is required to record evidence.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    private void fitMapBounds() {
-        if (mMap == null || userLoc == null || deptLat == 0) return;
-        LatLng deptLoc = new LatLng(deptLat, deptLng);
-        com.google.android.gms.maps.model.LatLngBounds.Builder builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-        builder.include(userLoc);
-        builder.include(deptLoc);
-        com.google.android.gms.maps.model.LatLngBounds bounds = builder.build();
-        int padding = 100;
-        try {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-        } catch (IllegalStateException e) {
-            mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding)));
+            videoLauncher.launch(new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE));
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mMap != null) mMap.clear();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mMap != null) {
-            updateMapWithRoute();
-            fitMapBounds();
-        }
+    private void stopActiveRingtone() {
+        if (alarmRingtone != null && alarmRingtone.isPlaying()) alarmRingtone.stop();
     }
 
     @Override
     protected void onDestroy() {
-        if (trackingDatabaseRef != null && trackingListener != null) {
-            trackingDatabaseRef.removeEventListener(trackingListener);
-        }
-        if (etaTimer != null) etaTimer.cancel();
+        if (trackingDatabaseRef != null && trackingListener != null) trackingDatabaseRef.removeEventListener(trackingListener);
+        if (statusDatabaseRef != null && statusListener != null) statusDatabaseRef.removeEventListener(statusListener);
         super.onDestroy();
     }
 }
